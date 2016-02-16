@@ -55,5 +55,21 @@
             FieldInfo fieldInfo = m_ObjectType.GetField(name, bindingFlags);
             fieldInfo.SetValue(m_Instance, value);
         }
+
+        /// <summary>
+        /// Gets a value of a wrapped field or property based on the name.
+        /// </summary>
+        /// <param name="name">The name of the private field or property to get.</param>
+        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted. The type of lookup need not be specified.</param>
+        /// <returns>The value set for the name field or property.</returns>
+        /// <remarks>
+        /// This method is intended to be a simplified version of the existing method: 
+        /// https://msdn.microsoft.com/en-us/library/ms243787.aspx
+        /// </remarks>
+        public object GetFieldOrProperty(string name, BindingFlags bindingFlags)
+        {
+            FieldInfo fieldInfo = m_ObjectType.GetField(name, bindingFlags);
+            return fieldInfo.GetValue(m_Instance);
+        }
     }
 }
