@@ -24,6 +24,20 @@
         }
 
         /// <summary>
+        /// Initialize the new instance of PrivateObject class using the type.
+        /// </summary>
+        /// <param name="objectType">The type of the object.</param>
+        /// <param name="args">The parameters to pass to the object types constructor.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="objectType"/> and <paramref name="args"/> may not be null.</exception>
+        public PrivateObject(Type objectType, params object[] args)
+        {
+            if (objectType == null) throw new ArgumentNullException("objectType");
+            if (args == null) throw new ArgumentNullException("args");
+            m_ObjectType = objectType;
+            m_Instance = Activator.CreateInstance(m_ObjectType, args);
+        }
+
+        /// <summary>
         /// Invoke private methods on a <see cref="PrivateObject"/> object.
         /// </summary>
         /// <param name="name">The name of the method to be invoked.</param>
