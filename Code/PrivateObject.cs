@@ -38,6 +38,17 @@
         }
 
         /// <summary>
+        /// Get the created object of the given type.
+        /// </summary>
+        public object UnderlyingInstance
+        {
+            get
+            {
+                return m_Instance;
+            }
+        }
+
+        /// <summary>
         /// Invoke private methods on a <see cref="PrivateObject"/> object.
         /// </summary>
         /// <param name="name">The name of the method to be invoked.</param>
