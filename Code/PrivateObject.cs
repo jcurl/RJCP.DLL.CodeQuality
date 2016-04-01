@@ -71,6 +71,7 @@
         /// <param name="field">The name of the private field or property to set.</param>
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted.</param>
         /// <param name="value">The value to set.</param>
+        /// <exception cref="ArgumentException">Thrown if the field or property given by name, is not found.</exception>
         /// <remarks>
         /// This method is intended to be a simplified version of the existing method: 
         /// https://msdn.microsoft.com/en-us/library/ms243964.aspx
@@ -78,7 +79,18 @@
         public void SetFieldOrProperty(string name, BindingFlags bindingFlags, object value)
         {
             FieldInfo fieldInfo = m_ObjectType.GetField(name, bindingFlags);
-            fieldInfo.SetValue(m_Instance, value);
+            if (fieldInfo != null) {
+                fieldInfo.SetValue(m_Instance, value);
+                return;
+            }
+
+            PropertyInfo propertyInfo = m_ObjectType.GetProperty(name, bindingFlags);
+            if (propertyInfo != null) {
+                propertyInfo.SetValue(m_Instance, value, null);
+                return;
+            }
+
+            throw new ArgumentException("Could not find provided field or property name", "name");
         }
 
         /// <summary>
