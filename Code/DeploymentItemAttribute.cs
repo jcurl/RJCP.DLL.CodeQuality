@@ -36,8 +36,6 @@ namespace NUnit.Framework
             string binFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             // NUnit uses an obscure ShadowCopyCache directory which can be hard to find, so let's output it so the poor developer can get at it more easily
-            Debug.WriteLine("DeploymentItem: Copying " + itemPath + " to " + binFolderPath);
-
             string itemPathInBin;
             if (string.IsNullOrEmpty(outputDirectory)) {
                 itemPathInBin = new Uri(Path.Combine(binFolderPath, itemName)).LocalPath;
@@ -50,18 +48,31 @@ namespace NUnit.Framework
             if (File.Exists(itemPath)) {
                 string parentFolderPathInBin = new DirectoryInfo(itemPathInBin).Parent.FullName;
 
-                // If the target directory does not exist, create it
-                if (!Directory.Exists(parentFolderPathInBin)) {
-                    Directory.CreateDirectory(parentFolderPathInBin);
-                }
+                if (!File.Exists(itemPathInBin)) {
+                    // If the target directory does not exist, create it
+                    if (!Directory.Exists(parentFolderPathInBin)) {
+                        Directory.CreateDirectory(parentFolderPathInBin);
+                    }
 
-                // copy source-file to the destination
-                File.Copy(itemPath, itemPathInBin, true);
+                    // copy source-file to the destination
+                    File.Copy(itemPath, itemPathInBin, true);
 
-                // We must allow the destination file to be deletable
-                FileAttributes fileAttributes = File.GetAttributes(itemPathInBin);
-                if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
-                    File.SetAttributes(itemPathInBin, fileAttributes & ~FileAttributes.ReadOnly);
+                    // We must allow the destination file to be deletable
+                    FileAttributes fileAttributes = File.GetAttributes(itemPathInBin);
+                    if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
+                        File.SetAttributes(itemPathInBin, fileAttributes & ~FileAttributes.ReadOnly);
+                    }
+                } else {
+                    // copy source-file to the destination
+                    try {
+                        File.Copy(itemPath, itemPathInBin, true);
+                    } catch (System.IO.IOException) {
+                        // Assume this is a access violation, in which case we ignore it.
+                    } catch (System.Exception /* e */) {
+                        //using (StreamWriter w = new StreamWriter(@"C:\Users\jcurl\log.txt", true)) {
+                        //    w.WriteLine("EX: {0}", e.ToString());
+                        //}
+                    }
                 }
             } else if (Directory.Exists(itemPath)) {
                 if (Directory.Exists(itemPathInBin)) {
@@ -88,8 +99,8 @@ namespace NUnit.Framework
                     }
                 }
             } else {
-                Debug.WriteLine("Warning: Deployment item does not exist - \"" + itemPath + "\"");
+                Console.WriteLine("Warning: Deployment item does not exist - \"" + itemPath + "\"");
+            }
             }
         }
-    }
 }
