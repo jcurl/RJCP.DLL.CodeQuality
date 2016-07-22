@@ -35,7 +35,6 @@ namespace NUnit.Framework
             // Get the target-path where to copy the deployment item to
             string binFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            // NUnit uses an obscure ShadowCopyCache directory which can be hard to find, so let's output it so the poor developer can get at it more easily
             string itemPathInBin;
             if (string.IsNullOrEmpty(outputDirectory)) {
                 itemPathInBin = new Uri(Path.Combine(binFolderPath, itemName)).LocalPath;
@@ -45,62 +44,68 @@ namespace NUnit.Framework
                 itemPathInBin = new Uri(Path.Combine(binFolderPath, outputDirectory, itemName)).LocalPath;
             }
 
-            if (File.Exists(itemPath)) {
-                string parentFolderPathInBin = new DirectoryInfo(itemPathInBin).Parent.FullName;
+            try {
+                if (File.Exists(itemPath)) {
+                    string parentFolderPathInBin = new DirectoryInfo(itemPathInBin).Parent.FullName;
 
-                if (!File.Exists(itemPathInBin)) {
-                    // If the target directory does not exist, create it
-                    if (!Directory.Exists(parentFolderPathInBin)) {
-                        Directory.CreateDirectory(parentFolderPathInBin);
+                    if (!File.Exists(itemPathInBin)) {
+                        if (!Directory.Exists(parentFolderPathInBin)) {
+                            Directory.CreateDirectory(parentFolderPathInBin);
+                        }
                     }
 
-                    // copy source-file to the destination
-                    File.Copy(itemPath, itemPathInBin, true);
+                    if (!CopyFile(itemPath, itemPathInBin)) {
+                        Console.WriteLine("Could not copy from {0} to {1}", itemPath, itemPathInBin);
+                    }
+                } else if (Directory.Exists(itemPath)) {
+                    if (Directory.Exists(itemPathInBin)) {
+                        Directory.Delete(itemPathInBin, true);
+                    }
 
-                    // We must allow the destination file to be deletable
-                    FileAttributes fileAttributes = File.GetAttributes(itemPathInBin);
-                    if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
-                        File.SetAttributes(itemPathInBin, fileAttributes & ~FileAttributes.ReadOnly);
+                    Directory.CreateDirectory(itemPathInBin);
+                    foreach (string dirPath in Directory.GetDirectories(itemPath, "*", SearchOption.AllDirectories)) {
+                        Directory.CreateDirectory(dirPath.Replace(itemPath, itemPathInBin));
+                    }
+
+                    foreach (string sourcePath in Directory.GetFiles(itemPath, "*.*", SearchOption.AllDirectories)) {
+                        string destinationPath = sourcePath.Replace(itemPath, itemPathInBin);
+                        if (!CopyFile(sourcePath, destinationPath)) {
+                            Console.WriteLine("Could not copy from {0} to {1}", itemPath, itemPathInBin);
+                        }
                     }
                 } else {
-                    // copy source-file to the destination
-                    try {
-                        File.Copy(itemPath, itemPathInBin, true);
-                    } catch (System.IO.IOException) {
-                        // Assume this is a access violation, in which case we ignore it.
-                    } catch (System.Exception /* e */) {
-                        //using (StreamWriter w = new StreamWriter(@"C:\Users\jcurl\log.txt", true)) {
-                        //    w.WriteLine("EX: {0}", e.ToString());
-                        //}
-                    }
+                    Console.WriteLine("Warning: Deployment item does not exist - \"" + itemPath + "\"");
                 }
-            } else if (Directory.Exists(itemPath)) {
-                if (Directory.Exists(itemPathInBin)) {
-                    Directory.Delete(itemPathInBin, true);
-                }
-
-                // Create target directory
-                Directory.CreateDirectory(itemPathInBin);
-
-                // Now Create all of the sub-directories
-                foreach (string dirPath in Directory.GetDirectories(itemPath, "*", SearchOption.AllDirectories)) {
-                    Directory.CreateDirectory(dirPath.Replace(itemPath, itemPathInBin));
-                }
-
-                // Copy all the files & Replace any files with the same name
-                foreach (string sourcePath in Directory.GetFiles(itemPath, "*.*", SearchOption.AllDirectories)) {
-                    string destinationPath = sourcePath.Replace(itemPath, itemPathInBin);
-                    File.Copy(sourcePath, destinationPath, true);
-
-                    // We must allow the destination file to be deletable
-                    FileAttributes fileAttributes = File.GetAttributes(destinationPath);
-                    if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
-                        File.SetAttributes(destinationPath, fileAttributes & ~FileAttributes.ReadOnly);
-                    }
-                }
-            } else {
-                Console.WriteLine("Warning: Deployment item does not exist - \"" + itemPath + "\"");
-            }
+            } catch (System.Exception ex) {
+                Console.WriteLine("Exception during deployment: {0}", ex.ToString());
+                throw;
             }
         }
+
+        private static bool CopyFile(string source, string destination)
+        {
+            if (!File.Exists(source)) return false;
+
+            FileInfo itemInfo = new FileInfo(source);
+
+            // Check if we need to copy the file. We only do so if it doesn't exist or if it's
+            // different (regardless of why).
+            if (File.Exists(destination)) {
+                FileInfo itemPathInBinInfo = new FileInfo(destination);
+                if (itemInfo.Length == itemPathInBinInfo.Length &&
+                    itemInfo.LastWriteTime == itemPathInBinInfo.LastWriteTime &&
+                    itemInfo.CreationTime == itemPathInBinInfo.CreationTime) return true;
+            }
+
+            File.Copy(source, destination, true);
+
+            // Allow destination file to be deletable and set the creation time to be identical to the source
+            FileAttributes fileAttributes = File.GetAttributes(destination);
+            if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
+                File.SetAttributes(destination, fileAttributes & ~FileAttributes.ReadOnly);
+            }
+            File.SetCreationTime(destination, itemInfo.CreationTime);
+            return true;
+        }
+    }
 }
