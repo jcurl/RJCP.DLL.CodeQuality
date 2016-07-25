@@ -20,8 +20,15 @@ namespace NUnit.Framework
         /// Marks an item to be relevant for a unit-test and copies it to deployment-directory for this unit-test.
         /// </summary>
         /// <param name="path">The relative or absolute path to the file or directory to deploy. The path is relative to the build output directory.</param>
+        public DeploymentItemAttribute(string path) : this (path, null) { }
+
+        /// <summary>
+        /// NUnit replacement for Microsoft.VisualStudio.TestTools.UnitTesting.DeploymentItemAttribute
+        /// Marks an item to be relevant for a unit-test and copies it to deployment-directory for this unit-test.
+        /// </summary>
+        /// <param name="path">The relative or absolute path to the file or directory to deploy. The path is relative to the build output directory.</param>
         /// <param name="outputDirectory">The path of the directory to which the items are to be copied. It can be either absolute or relative to the deployment directory.</param>
-        public DeploymentItemAttribute(string path, string outputDirectory = null)
+        public DeploymentItemAttribute(string path, string outputDirectory)
         {
             // Escape input-path to correct back-slashes for Windows
             string filePath = path.Replace("/", "\\");
