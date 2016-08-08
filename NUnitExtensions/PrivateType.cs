@@ -25,7 +25,6 @@ namespace NUnit.Framework
         /// Invokes static methods on the <see cref="PrivateType"/>.
         /// </summary>
         /// <param name="name">The name of the method to invoke.</param>
-        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the method is conducted.</param>
         /// <param name="args">Any array of arguments to pass.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="ArgumentException">There is no method <paramref name="name"/> for this object.</exception>

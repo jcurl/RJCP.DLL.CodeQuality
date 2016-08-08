@@ -68,7 +68,7 @@
         /// <summary>
         /// Sets a value for the field or property of the wrapped object, identified by name.
         /// </summary>
-        /// <param name="field">The name of the private field or property to set.</param>
+        /// <param name="name">The name of the private field or property to set.</param>
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted.</param>
         /// <param name="value">The value to set.</param>
         /// <exception cref="ArgumentException">Thrown if the field or property given by name, is not found.</exception>
