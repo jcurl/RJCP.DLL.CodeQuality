@@ -40,7 +40,7 @@ namespace NUnit.Framework
             string itemName = Path.GetFileName(itemPath);
 
             // Get the target-path where to copy the deployment item to
-            string binFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string binFolderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
 
             string itemPathInBin;
             if (string.IsNullOrEmpty(outputDirectory)) {
