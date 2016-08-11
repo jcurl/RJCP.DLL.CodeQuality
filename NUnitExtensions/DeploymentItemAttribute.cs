@@ -1,7 +1,6 @@
 namespace NUnit.Framework
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
 
@@ -52,7 +51,7 @@ namespace NUnit.Framework
             DirectoryInfo environmentDir = new DirectoryInfo(Environment.CurrentDirectory);
 
             // Get the full path and name of the deployment item
-            string itemPath = new Uri(Path.Combine(environmentDir.FullName, filePath)).LocalPath;
+            string itemPath = GetPath(environmentDir.FullName, filePath);
             string itemName = Path.GetFileName(itemPath);
 
             // Get the target-path where to copy the deployment item to
@@ -63,11 +62,11 @@ namespace NUnit.Framework
             string normalizedDir = outputDirectory == null ? string.Empty : outputDirectory.Trim();
             string itemPathInBin;
             if (string.IsNullOrEmpty(normalizedDir)) {
-                itemPathInBin = new Uri(Path.Combine(binFolderPath, itemName)).LocalPath;
+                itemPathInBin = GetPath(binFolderPath, itemName);
             } else if (!string.IsNullOrEmpty(Path.GetPathRoot(normalizedDir))) {
-                itemPathInBin = new Uri(Path.Combine(normalizedDir, itemName)).LocalPath;
+                itemPathInBin = GetPath(normalizedDir, itemName);
             } else {
-                itemPathInBin = new Uri(Path.Combine(binFolderPath, normalizedDir, itemName)).LocalPath;
+                itemPathInBin = GetPath(binFolderPath, normalizedDir, itemName);
             }
 
             if (File.Exists(itemPath)) {
@@ -102,7 +101,29 @@ namespace NUnit.Framework
             }
         }
 
-        private static bool CreateDirectory(string directory)
+        private string GetPath(params string[] paths)
+        {
+            int platform = (int)Environment.OSVersion.Platform;
+            bool onUnix = platform == 4 || platform == 6 || platform == 128;
+
+            // See http://www.mono-project.com/docs/faq/technical/#how-to-detect-the-execution-platform
+            if (!onUnix) {
+                return new Uri(Path.Combine(paths)).LocalPath;
+            }
+
+            // For Linux we have to remove the "file:" from the begining of the absolute path, otherwise,
+            // after calling Path.Combine, the "file://<root_folder>" part shall be removed and the 
+            // resulting combined path shall be invalid.
+            for (int index = 0; index < paths.Length; index++) {
+                if (paths[index].StartsWith("file:")) {
+                    paths[index] = paths[index].Replace("file:", string.Empty);
+                }
+            }
+
+            return new Uri(Path.Combine(paths)).LocalPath;
+        }
+
+        private bool CreateDirectory(string directory)
         {
             if (Directory.Exists(directory)) return true;
 
@@ -156,12 +177,17 @@ namespace NUnit.Framework
                 }
             } while (!copyFinished && attempts > 0);
 
+            if (!File.Exists(destination)) {
+                return false;
+            }
+
             // Allow destination file to be deletable and set the creation time to be identical to the source
             FileAttributes fileAttributes = File.GetAttributes(destination);
             if ((fileAttributes & FileAttributes.ReadOnly) != 0) {
                 File.SetAttributes(destination, fileAttributes & ~FileAttributes.ReadOnly);
             }
             File.SetCreationTime(destination, itemInfo.CreationTime);
+
             return true;
         }
     }
