@@ -1,4 +1,5 @@
 *The MIT License (MIT)*
+
 Copyright (c) 2011-2016 Jason Curl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
