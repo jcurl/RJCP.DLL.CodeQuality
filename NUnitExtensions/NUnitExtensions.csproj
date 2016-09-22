@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deploy.cs" />
     <Compile Include="DeploymentItemAttribute.cs" />
     <Compile Include="PrivateObject.cs" />
     <Compile Include="PrivateType.cs" />
