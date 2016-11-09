@@ -38,13 +38,46 @@
         }
 
         /// <summary>
-        /// Get the created object of the given type.
+        /// Initializes a new instance of the <see cref="PrivateObject"/> class. This creates the object of the specified type and wraps it in the private object.
         /// </summary>
-        public object UnderlyingInstance
+        /// <param name="assemblyName">Name of the assembly that contains the type.</param>
+        /// <param name="typeName">Fully qualified name of the type.</param>
+        /// <param name="args">Arguments to pass to the constructor of the object.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <value>null</value>.
+        /// </exception>
+        /// <remarks>
+        /// An object is created by using the <paramref name="typeName"/> and <paramref name="args"/>.
+        /// </remarks>
+        public PrivateObject(string assemblyName, string typeName, params object[] args)
+        {
+            if (assemblyName == null) throw new ArgumentNullException("assemblyName");
+            if (typeName == null) throw new ArgumentNullException("typeName");
+
+            m_ObjectType = Assembly.Load(assemblyName).GetType(typeName);
+            m_Instance = Activator.CreateInstance(m_ObjectType, args);
+        }
+
+        /// <summary>
+        /// Gets or sets the wrapped object.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        /// Try to set this property to <value>null</value>.
+        /// </exception>
+        /// <value>
+        /// The wrapped object.
+        /// </value>
+        public object Target
         {
             get
             {
                 return m_Instance;
+            }
+
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                m_Instance = value;
             }
         }
 
@@ -73,7 +106,7 @@
         /// <param name="value">The value to set.</param>
         /// <exception cref="ArgumentException">Thrown if the field or property given by name, is not found.</exception>
         /// <remarks>
-        /// This method is intended to be a simplified version of the existing method: 
+        /// This method is intended to be a simplified version of the existing method:
         /// https://msdn.microsoft.com/en-us/library/ms243964.aspx
         /// </remarks>
         public void SetFieldOrProperty(string name, BindingFlags bindingFlags, object value)
@@ -100,13 +133,18 @@
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted. The type of lookup need not be specified.</param>
         /// <returns>The value set for the name field or property.</returns>
         /// <remarks>
-        /// This method is intended to be a simplified version of the existing method: 
+        /// This method is intended to be a simplified version of the existing method:
         /// https://msdn.microsoft.com/en-us/library/ms243787.aspx
         /// </remarks>
         public object GetFieldOrProperty(string name, BindingFlags bindingFlags)
         {
             FieldInfo fieldInfo = m_ObjectType.GetField(name, bindingFlags);
-            return fieldInfo.GetValue(m_Instance);
+            if (fieldInfo != null) return fieldInfo.GetValue(m_Instance);
+
+            PropertyInfo propertyInfo = m_ObjectType.GetProperty(name, bindingFlags);
+            if (propertyInfo != null) return propertyInfo.GetValue(m_Instance, null);
+
+            throw new ArgumentException("Could not find provided field or property name", "name");
         }
     }
 }

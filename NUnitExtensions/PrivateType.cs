@@ -22,6 +22,22 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PrivateType"/> class.
+        /// </summary>
+        /// <param name="assemblyName">The assembly name.</param>
+        /// <param name="typeName">Fully qualified name of the type.</param>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <value>null</value> or empty.
+        /// </exception>
+        public PrivateType(string assemblyName, string typeName)
+        {
+            if (string.IsNullOrWhiteSpace(assemblyName)) throw new ArgumentException("Cannot be null or empty", "assemblyName");
+            if (string.IsNullOrWhiteSpace(typeName)) throw new ArgumentException("Cannot be null or empty", "typeName");
+
+            m_ObjectType = Assembly.Load(assemblyName).GetType(typeName);
+        }
+
+        /// <summary>
         /// Invokes static methods on the <see cref="PrivateType"/>.
         /// </summary>
         /// <param name="name">The name of the method to invoke.</param>
