@@ -3,11 +3,46 @@
     using System;
     using System.IO;
 
-    [TestFixture]
+    [TestFixture(Category = "NUnitExtensions.Deployment")]
     public class NUnitExtensionsTest
     {
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
+        {
+            Deploy.ItemsWithAttribute(this);
+        }
+
+        private static bool DeleteFile(string path)
+        {
+            int attempts = 4;
+            bool first = true;
+            while (attempts > 0 && File.Exists(path)) {
+                if (!first) System.Threading.Thread.Sleep(100);
+                File.Delete(path);
+                --attempts;
+                first = false;
+            }
+            return !File.Exists(path);
+        }
+
+        private static bool DeleteDirectory(string path)
+        {
+            int attempts = 4;
+            bool first = true;
+            while (attempts > 0 && Directory.Exists(path)) {
+                if (!first) System.Threading.Thread.Sleep(100);
+                try {
+                    Directory.Delete(path, true);
+                } catch (DirectoryNotFoundException) {
+                    /* We ignore this case, and retry */
+                }
+                --attempts;
+                first = false;
+            }
+            return !Directory.Exists(path);
+        }
+
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         [DeploymentItem("Resources/test1.txt")]
         public void DeployFile()
         {
@@ -15,7 +50,6 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         [DeploymentItem("Resources", "folder")]
         public void DeployFolder()
         {
@@ -24,7 +58,6 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         [DeploymentItem("Resources/test1.txt", "Resources")]
         public void DeployToSource()
         {
@@ -32,7 +65,6 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         [DeploymentItem("Resources/test1.txt", "Resources")]
         public void DeployToSourceSecondCopy()
         {
@@ -40,20 +72,27 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
+        [DeploymentItem("Resources/test1.txt", "files")]
+        [DeploymentItem("Resources/test2.txt", "files")]
+        public void DeployTwoItemsToOtherDirectory()
+        {
+            Assert.That(File.Exists(Path.Combine("files", "test1.txt")), "File 'files/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("files", "test2.txt")), "File 'files/test2.txt' not found");
+        }
+
+        [Test]
         public void DeployFileInLine()
         {
-            if (File.Exists("test1.txt")) File.Delete("test1.txt");
+            DeleteFile("test1.txt");
 
             Deploy.Item("Resources/test1.txt");
             Assert.That(File.Exists("test1.txt"));
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         public void DeployFolderInLine()
         {
-            if (Directory.Exists("folder2")) Directory.Delete("folder2", true);
+            DeleteDirectory("folder2");
             Deploy.Item("Resources", "folder2");
 
             Assert.That(File.Exists(Path.Combine("folder2", "Resources", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -61,7 +100,36 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
+        public void DeployFolderInLineWithTrailingSlash1()
+        {
+            DeleteDirectory("folder2");
+            Deploy.Item("Resources", "folder2/");
+
+            Assert.That(File.Exists(Path.Combine("folder2", "Resources", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder2", "Resources", "test2.txt")), "File 'folder2/Resources/test2.txt' not found");
+        }
+
+        [Test]
+        public void DeployFolderInLineWithTrailingSlash2()
+        {
+            DeleteDirectory("folder2");
+            Deploy.Item("Resources/", "folder2");
+
+            Assert.That(File.Exists(Path.Combine("folder2", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder2", "test2.txt")), "File 'folder2/Resources/test2.txt' not found");
+        }
+
+        [Test]
+        public void DeployFolderInLineWithTrailingSlash3()
+        {
+            DeleteDirectory("folder2");
+            Deploy.Item("Resources/", "folder2/");
+
+            Assert.That(File.Exists(Path.Combine("folder2", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder2", "test2.txt")), "File 'folder2/Resources/test2.txt' not found");
+        }
+
+        [Test]
         public void DeployToSourceInLine()
         {
             Deploy.Item("Resources/test1.txt", "Resources");
@@ -69,7 +137,6 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         public void DeployItemToAbsolutePath()
         {
             string currentDirectory = Environment.CurrentDirectory;
@@ -80,7 +147,6 @@
         }
 
         [Test]
-        [Category("NUnitExtensions.Deployment")]
         public void DeployItemToAbsolutePath2()
         {
             string currentDirectory = Path.Combine(Environment.CurrentDirectory, "sub");
@@ -88,6 +154,20 @@
 
             string file = Path.Combine(currentDirectory, "test1.txt");
             Assert.That(File.Exists(file), "File '{0}' not found", file);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void DeployNullItem()
+        {
+            Deploy.Item(null);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void DeployNullItem2()
+        {
+            Deploy.Item(null, ".");
         }
     }
 }

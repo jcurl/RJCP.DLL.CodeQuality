@@ -1,51 +1,82 @@
 namespace NUnit.Framework
 {
     using System;
-    using System.IO;
-    using System.Reflection;
 
     /// <summary>
     /// Class DeploymentItemAttribute.
     /// </summary>
     /// <remarks>
-    /// Takes a compatible MSTest type DeploymentItem attribute for usage with nUnit. You specify this for the test
-    /// case, or the test fixture. As NUnit reflects over the assembly looking for test csaes, it will reflect over
-    /// this attribute also causing the copy to occur. Therefore, the deployment occurs during test case discovery
-    /// regardless if your test case is being executed or not.
-    /// <para>This attribute will work for nUnit shadow copy enabled or disabled, as it relies on the test case
-    /// assembly <see cref="Assembly.CodeBase"/> property.</para>
-    /// <para>When using this attribute, ensure that two test cases don't clobber each other. This might occur
-    /// if you try to do strange things such as deploying directory A/B in one test case and then deploying the
-    /// parent directory A in a different test case.</para>
-    /// <para>Before the file is deployed, it is checked if the copy has already been done by comparing the length,
-    /// the create time stamp and modify time stamp. If any of these differ, the file is copied. If they're all the same,
-    /// no copy occurs. This makes the copy as fast as possible and ensures also that files can't be copied on top
-    /// of themselves.</para>
-    /// <para>When deploying directories, the files are <b>merged</b> with the destination directory.</para>
-    /// <para>If you have two different files that are being deployed to the same location as the same name, the
-    /// results are undefined. Don't do it. Your test cases may pass or fail depending on the position of the moon,
-    /// or if your cat just sneezed a few minutes ago. The same applies if your deploying two different directories
-    /// to the same location that have different content but where filenames overlap.</para>
+    /// This attribute emulates the Microsoft Test DeploymentItemAttribute for NUnit fixtures. The attribute
+    /// alone does not deploy any of the files given. To actually deploy all the files before any of the test
+    /// cases in your fixture are executed, you should decorate your test methods with the DeploymentItemAttribute,
+    /// then in the TestFixtureSetup, execute a method to cause NUnit to do the deployment.
+    /// <para>See the example for a template on how to implement deployments. See the documentation for the
+    /// individual methods on how the deployment works.</para>
+    ///
+    /// <code language="csharp">
+    /// [TestFixture]
+    /// public class NUnitExtensionsTest {
+    ///     [TestFixtureSetUp]
+    ///     public void SetUpFixture() {
+    ///         Deploy.ItemsWithAttribute(this);
+    ///     }
+    ///
+    ///     [Test]
+    ///     [DeploymentItem("test.txt")]
+    ///     public void MyTest() {
+    ///         Assert.That(File.Exists("test.txt"));
+    ///     }
+    /// }
+    /// </code>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
     public class DeploymentItemAttribute : Attribute
     {
         /// <summary>
         /// NUnit replacement for Microsoft.VisualStudio.TestTools.UnitTesting.DeploymentItemAttribute
-        /// Marks an item to be relevant for a unit-test and copies it to deployment-directory for this unit-test.
+        /// Marks a method to be relevant for a unit-test and copies it to deployment-directory for
+        /// this unit-test.
         /// </summary>
-        /// <param name="path">The relative or absolute path to the file or directory to deploy. The path is relative to the build output directory.</param>
+        /// <param name="path">The relative or absolute path to the file or directory to deploy.
+        /// The path is relative to the build output directory. If the path is a directory, that directory
+        /// is also deployed into the current directory.</param>
+        /// <remarks>
+        /// Marks the method as containing files to deploy, that will be deployed with a call to
+        /// <seealso cref="Deploy.ItemsWithAttribute(object)"/>.
+        /// </remarks>
         public DeploymentItemAttribute(string path) : this(path, null) { }
 
         /// <summary>
         /// NUnit replacement for Microsoft.VisualStudio.TestTools.UnitTesting.DeploymentItemAttribute
-        /// Marks an item to be relevant for a unit-test and copies it to deployment-directory for this unit-test.
+        /// Marks a method to be relevant for a unit-test and copies it to deployment-directory for this unit-test.
         /// </summary>
-        /// <param name="path">The relative or absolute path to the file or directory to deploy. The path is relative to the build output directory.</param>
-        /// <param name="outputDirectory">The path of the directory to which the items are to be copied. It can be either absolute or relative to the deployment directory.</param>
+        /// <param name="path">The relative or absolute path to the file or directory to deploy.
+        /// The path is relative to the build output directory. If the path is a directory, that directory
+        /// is also deployed into the <paramref name="outputDirectory"/>. If you want to deploy everything
+        /// within the directory, but not the directory itself, append a directory slash path to this
+        /// path parameter.</param>
+        /// <param name="outputDirectory">The path of the directory to which the items are to be copied.
+        /// It can be either absolute or relative to the deployment directory.</param>
+        /// <remarks>
+        /// Marks the method as containing files to deploy, that will be deployed with a call to
+        /// <seealso cref="Deploy.ItemsWithAttribute(object)"/>.
+        /// </remarks>
         public DeploymentItemAttribute(string path, string outputDirectory)
         {
-            Deploy.Item(path, outputDirectory);
+            Path = path;
+            OutputDirectory = outputDirectory;
         }
+
+        /// <summary>
+        /// Gets the path of the file or directory to deploy.
+        /// </summary>
+        /// <value>The path of the file or directory to deploy.</value>
+        public string Path { get; private set; }
+
+        /// <summary>
+        /// Gets the output directory where to deploy to.
+        /// </summary>
+        /// <value>The output directory where to deploy to.</value>
+        public string OutputDirectory { get; private set; }
     }
 }
