@@ -38,7 +38,7 @@
         /// to identify the error.</para>
         /// </remarks>
         [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        public virtual void TestFixtureSetUp()
         {
             Deploy.ItemsWithAttribute(this);
         }

@@ -46,6 +46,7 @@
     <Compile Include="HelperClasses\InternalClassTest.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
     <Compile Include="NUnitExtensionsBaseClassTest.cs" />
+    <Compile Include="NUnitExtensionsBaseClassVirtualTest.cs" />
     <Compile Include="NUnitExtensionsTest.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeTest.cs" />
