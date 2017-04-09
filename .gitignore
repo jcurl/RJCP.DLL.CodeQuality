@@ -4,3 +4,6 @@
 distribute
 bin
 obj
+*.GhostDoc.xml
+*.userprefs
+
