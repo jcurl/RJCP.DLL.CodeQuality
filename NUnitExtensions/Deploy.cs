@@ -291,23 +291,21 @@
             int platform = (int)Environment.OSVersion.Platform;
             bool onUnix = platform == 4 || platform == 6 || platform == 128;
 
+            string systemNormalizedPath;
             if (!onUnix) {
                 // Convert forward slashes to windows paths.
-                string windowsPath = path.Replace("/", "\\");
-                string itemPath;
-                try {
-                    itemPath = new Uri(Path.Combine(basePath, windowsPath)).LocalPath;
-                } catch (UriFormatException e) {
-                    throw new ArgumentException("Invalid path", e);
-                }
-                return itemPath;
+                systemNormalizedPath = path.Replace("/", @"\");
             } else {
-                string itemPath = Path.Combine(basePath, path);
-                if (!Path.IsPathRooted(itemPath)) {
-                    throw new ArgumentException("Invalid path - not rooted");
-                }
-                return itemPath;
+                // Convert back slashes to Unix paths
+                systemNormalizedPath = path.Replace(@"\", "/");
             }
+            string itemPath;
+            try {
+                itemPath = new Uri(Path.Combine(basePath, systemNormalizedPath)).LocalPath;
+            } catch (UriFormatException e) {
+                throw new ArgumentException("Invalid path", e);
+            }
+            return itemPath;
         }
 
         private static bool CreateDirectory(string directory)

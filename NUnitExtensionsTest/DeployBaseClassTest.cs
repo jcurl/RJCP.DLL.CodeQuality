@@ -4,7 +4,7 @@
     using System.IO;
 
     [TestFixture(Category = "NUnitExtensions.Deployment.BaseClass")]
-    public class NUnitExtensionsBaseClassTest : NUnitExtensions
+    public class DeployBaseClassTest : NUnitExtensions
     {
         [Test]
         [DeploymentItem("Resources/test1.txt", "BaseClassResources")]

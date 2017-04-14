@@ -4,7 +4,7 @@
     using System.IO;
 
     [TestFixture(Category = "NUnitExtensions.Deployment.BaseClass")]
-    public class NUnitExtensionsBaseVirtualClassTest : NUnitExtensions
+    public class DeployBaseVirtualClassTest : NUnitExtensions
     {
         public override void TestFixtureSetUp()
         {
