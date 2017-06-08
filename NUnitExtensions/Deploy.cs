@@ -237,9 +237,6 @@
 
         private static void CopyFiles(string path, string outputDirectory)
         {
-            int platform = (int)Environment.OSVersion.Platform;
-            bool onUnix = platform == 4 || platform == 6 || platform == 128;
-
             if (File.Exists(path)) {
                 // Copy the file.
                 string fileName = Path.GetFileName(path);
@@ -250,7 +247,6 @@
             } else if (Directory.Exists(path)) {
                 // Get the files and directories and copy.
                 string[] files = GetFiles(path);
-                HashSet<string> copiedFiles = new HashSet<string>();
 
                 // Copy the files from this directory to the destination.
                 foreach (string file in files) {
@@ -259,8 +255,6 @@
                     if (!CopyFile(file, fullDestination)) {
                         Console.WriteLine("CopyFiles: Couldn't copy {0} to {1}", file, fullDestination);
                     }
-                    if (!onUnix) destFileName = destFileName.ToLowerInvariant();
-                    copiedFiles.Add(destFileName);
                 }
 
                 // Copy files for all sub-directories
