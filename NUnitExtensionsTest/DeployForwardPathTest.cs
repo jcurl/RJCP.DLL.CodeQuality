@@ -51,6 +51,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployFileInLine()
         {
             Tools.DeleteFile("test1.txt");
@@ -60,6 +61,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployFolderInLine()
         {
             Tools.DeleteDirectory("folder2");
@@ -70,6 +72,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash1()
         {
             Tools.DeleteDirectory("folder2");
@@ -80,6 +83,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash2()
         {
             Tools.DeleteDirectory("folder2");
@@ -90,6 +94,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash3()
         {
             Tools.DeleteDirectory("folder2");
@@ -100,6 +105,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployToSourceInLine()
         {
             Deploy.Item("Resources/test1.txt", "Resources");
@@ -107,6 +113,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployItemToAbsolutePath()
         {
             string currentDirectory = Environment.CurrentDirectory;
@@ -117,6 +124,7 @@
         }
 
         [Test]
+        [Repeat(100)]
         public void DeployItemToAbsolutePath2()
         {
             string currentDirectory = Path.Combine(Environment.CurrentDirectory, "sub");
