@@ -49,7 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HelperClasses\PublicClassTest.cs" />
     <Compile Include="DeployForwardPathTest.cs" />
-    <Compile Include="Tools.cs" />
     <Compile Include="DeployBaseClassTest.cs" />
     <Compile Include="DeployBaseClassVirtualTest.cs" />
     <Compile Include="DeployBackPathTest.cs" />

@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
 
     /// <summary>
     /// Methods for the deployment of test resources which NUnit doesn't do automatically.
@@ -19,6 +20,12 @@
     /// </remarks>
     public static class Deploy
     {
+        private static int c_DeleteMaxTime = 5000;
+        private static int c_DeletePollInterval = 100;
+        private static int c_DeleteWaitInterval = 250;
+        private static int c_CopyWaitInterval = 250;
+        private static int c_CopyWaitAttempts = 4;
+
         /// <summary>
         /// Deploy files for all methods containing the attribute <see cref="DeploymentItemAttribute"/> for the given class.
         /// </summary>
@@ -90,7 +97,7 @@
             foreach (MethodInfo method in testClass.GetMethods(BindingFlags.Public | BindingFlags.Instance)) {
                 exceptionFound |= DeployMember(method);
             }
-            
+
             if (exceptionFound) {
                 throw new ArgumentException("Error deploying test artifacts");
             }
@@ -241,32 +248,16 @@
                 // Copy the file.
                 string fileName = Path.GetFileName(path);
                 string fullDestination = Path.Combine(outputDirectory, fileName);
-                if (!CopyFile(path, fullDestination)) {
-                    Console.WriteLine("CopyFiles: Couldn't copy {0} to {1}", path, fullDestination);
-                }
-            } else if (Directory.Exists(path)) {
-                // Get the files and directories and copy.
-                string[] files = GetFiles(path);
-
-                // Copy the files from this directory to the destination.
-                foreach (string file in files) {
-                    string destFileName = Path.GetFileName(file);
-                    string fullDestination = Path.Combine(outputDirectory, destFileName);
-                    if (!CopyFile(file, fullDestination)) {
-                        Console.WriteLine("CopyFiles: Couldn't copy {0} to {1}", file, fullDestination);
-                    }
-                }
-
-                // Copy files for all sub-directories
-                string[] dirs = GetDirectories(path);
-                foreach (string dir in dirs) {
-                    string nextDir = Path.Combine(outputDirectory, Path.GetFileName(dir));
-                    CreateDirectory(nextDir);
-                    CopyFiles(dir, nextDir);
-                }
-            } else {
-                throw new ArgumentException("Given path doesn't exist", "path");
+                CopyFile(path, fullDestination);
+                return;
             }
+
+            if (Directory.Exists(path)) {
+                CopyDirectory(path, outputDirectory);
+                return;
+            }
+
+            throw new ArgumentException("Given path doesn't exist", "path");
         }
 
         private static string[] GetFiles(string path)
@@ -302,31 +293,113 @@
             return itemPath;
         }
 
-        private static bool CreateDirectory(string directory)
+        /// <summary>
+        /// Creates the directory if it doesn't exist already.
+        /// </summary>
+        /// <param name="directory">The directory to create.</param>
+        /// <exception cref="AccessViolationException">The <paramref name="directory"/> could not be created as it is in use.</exception>
+        /// <exception cref="UnauthorizedAccessException">The <paramref name="directory"/> could not be created due to insufficient permissions.</exception>
+        /// <exception cref="PathTooLongException">The <paramref name="directory"/> path name is too long.</exception>
+        /// <exception cref="NotSupportedException">The <paramref name="directory"/> has unsupported or invalid characters.</exception>
+        /// <exception cref="IOException">The network name is not known.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="directory"/> is a zero length string, contains only whitespace, or
+        /// contains invalid characters as defined by <see cref="System.IO.Path.GetInvalidPathChars()"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="directory"/> is <see langword="null"/>.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified <paramref name="directory"/> path is invalid (for example, it
+        /// is on an unmapped drive).</exception>
+        /// <remarks>
+        /// If the directory doesn't exist, it will be created. If there is a file in the place of the
+        /// directory, the file will be first deleted and overwritten as a new directory.
+        /// <para>In case of an access violation or unauthorized access, the operation is retried up to four times
+        /// with a 250ms delay between each attempt.</para>
+        /// </remarks>
+        public static void CreateDirectory(string directory)
         {
-            if (Directory.Exists(directory)) return true;
+            if (Directory.Exists(directory)) return;
 
-            if (File.Exists(directory)) {
-                File.Delete(directory);
-            }
+            bool created = false;
+            int attempts = c_CopyWaitAttempts;
 
-            // Creates all directories and subdirectories in the specified path. So we don't need to create each
-            // individual directory.
-            try {
-                Directory.CreateDirectory(directory);
-            } catch (UnauthorizedAccessException) {
-                // Permissions problem, couldn't create the directory...
-                return false;
-            }
-            return true;
+            DeleteFile(directory);
+            do {
+                try {
+                    Directory.CreateDirectory(directory);
+                    created = true;
+                } catch (AccessViolationException) {
+                    if (attempts == 0) throw;
+                } catch (UnauthorizedAccessException) {
+                    // On windows occurs if the file is already open.
+                    if (attempts == 0) throw;
+                }
+
+                if (!created) {
+                    // If the copy failed, it's because it's probably already open somewhere else. So we
+                    // wait 250ms and try again.
+                    --attempts;
+                    Thread.Sleep(c_CopyWaitInterval);
+                }
+            } while (!created);
         }
 
-        private static bool CopyFile(string source, string destination)
+        /// <summary>
+        /// Deletes the file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <exception cref="UnauthorizedAccessException">The caller doesn't have the required permissions; or
+        /// <paramref name="fileName" /> is a directory; or <paramref name="fileName" /> is a read-only file.</exception>
+        /// <exception cref="IOException">File cannot be deleted.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="fileName" /> contains one or more of the invalid
+        /// characters defined in <see cref="Path.GetInvalidPathChars()" />.</exception>
+        /// <exception cref="PathTooLongException">The <paramref name="fileName" /> is longer than the system
+        /// defined maximum length.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="fileName" /> is <see langword="null" />.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified <paramref name="fileName" /> path is invalid (for example, it
+        /// is on an unmapped drive).</exception>
+        /// <exception cref="NotSupportedException">The <paramref name="fileName" /> has unsupported or invalid characters.</exception>
+        /// <remarks>
+        /// Specify a file name with any relative or absolute path information for the path parameter.
+        /// Wildcard characters cannot be included. Relative path information is interpreted as relative to
+        /// the current working directory. To obtain the current working directory, see <see cref="Directory.GetCurrentDirectory"/> .
+        /// </remarks>
+        public static void DeleteFile(string fileName)
         {
-            if (!File.Exists(source)) return false;
+            if (Directory.Exists(fileName))
+                throw new UnauthorizedAccessException("Can't delete the file, it is a directory");
+            if (!File.Exists(fileName)) return;
+
+            string watchFile = Path.GetFileName(fileName);
+            string watchPath = Path.GetDirectoryName(fileName);
+            if (string.IsNullOrEmpty(watchPath)) watchPath = Environment.CurrentDirectory;
+
+            int tickCount = Environment.TickCount;
+            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath))
+            using (ManualResetEvent deleteEvent = new ManualResetEvent(false)) {
+                watcher.EnableRaisingEvents = true;
+                watcher.Filter = watchFile;
+                watcher.NotifyFilter = NotifyFilters.FileName;
+                watcher.Deleted += (s, e) => { deleteEvent.Set(); };
+                watcher.Error += (s, e) => { deleteEvent.Set(); };
+                int elapsed = unchecked(Environment.TickCount - tickCount);
+                while (elapsed < c_DeleteMaxTime) {
+                    File.Delete(fileName);
+                    deleteEvent.WaitOne(c_DeleteWaitInterval);
+                    if (!File.Exists(fileName)) return;
+                    Thread.Sleep(c_DeletePollInterval);
+                    elapsed = unchecked(Environment.TickCount - tickCount);
+                }
+                string message = string.Format("File '{0}' couldn't be deleted", fileName);
+                throw new IOException(message);
+            }
+        }
+
+        private static void CopyFile(string source, string destination)
+        {
+            if (!File.Exists(source)) {
+                throw new FileNotFoundException("File not found", source);
+            }
 
             bool copyFinished = false;
-            int attempts = 4;  // Retry every 250ms meaning maximum timeout of 1s.
+            int attempts = c_CopyWaitAttempts;
             FileInfo itemInfo;
             do {
                 itemInfo = new FileInfo(source);
@@ -337,34 +410,30 @@
                     FileInfo itemPathInBinInfo = new FileInfo(destination);
                     if (itemInfo.Length == itemPathInBinInfo.Length &&
                         itemInfo.LastWriteTime == itemPathInBinInfo.LastWriteTime &&
-                        itemInfo.CreationTime == itemPathInBinInfo.CreationTime) return true;
+                        itemInfo.CreationTime == itemPathInBinInfo.CreationTime) return;
                 }
 
-                bool fail = false;
                 try {
                     File.Copy(source, destination, true);
                     copyFinished = true;
                 } catch (AccessViolationException) {
-                    fail = true;
+                    if (attempts == 0) throw;
                 } catch (UnauthorizedAccessException) {
                     // On windows occurs if the file is already open.
-                    fail = true;
+                    if (attempts == 0) throw;
                 } catch (DirectoryNotFoundException) {
-                    return false;
+                    throw;
                 }
-                if (fail) {
+
+                if (!copyFinished) {
                     // If the copy failed, it's because it's probably already open and being copied already
                     // from another instance of DeployItemAttribute. So we wait 250ms and try again. The race
                     // condition occurs because at the time of the check it didn't exist, but between that
                     // and now the copy has started elsewhere.
                     --attempts;
-                    if (attempts > 0) System.Threading.Thread.Sleep(250);
+                    if (attempts > 0) System.Threading.Thread.Sleep(c_CopyWaitInterval);
                 }
             } while (!copyFinished && attempts > 0);
-
-            if (!File.Exists(destination)) {
-                return false;
-            }
 
             // Allow destination file to be deletable and set the creation time to be identical to the source
             FileAttributes fileAttributes = File.GetAttributes(destination);
@@ -372,8 +441,101 @@
                 File.SetAttributes(destination, fileAttributes & ~FileAttributes.ReadOnly);
             }
             File.SetCreationTime(destination, itemInfo.CreationTime);
+        }
 
-            return true;
+        private static void CopyDirectory(string sourceDirectory, string destDirectory)
+        {
+            if (!Directory.Exists(sourceDirectory)) {
+                string message = string.Format("Directory '{0}' not found", sourceDirectory);
+                throw new DirectoryNotFoundException(message);
+            }
+
+            // Copy each individual file
+            string[] files = GetFiles(sourceDirectory);
+            foreach (string file in files) {
+                string destFileName = Path.GetFileName(file);
+                string fullDestination = Path.Combine(destDirectory, destFileName);
+                CopyFile(file, fullDestination);
+            }
+
+            // Copy the subdirectories
+            string[] dirs = GetDirectories(sourceDirectory);
+            foreach (string dir in dirs) {
+                string nextDir = Path.Combine(destDirectory, Path.GetFileName(dir));
+                CreateDirectory(nextDir);
+                CopyDirectory(dir, nextDir);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the directory with retries.
+        /// </summary>
+        /// <param name="path">The path of the directory to delete.</param>
+        /// <exception cref="UnauthorizedAccessException">The caller doesn't have the required permissions; or
+        /// <paramref name="path" /> is a file.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="path" /> contains one or more of the invalid
+        /// characters defined in <see cref="Path.GetInvalidPathChars()" />.</exception>
+        /// <exception cref="PathTooLongException">The <paramref name="path" /> is longer than the system
+        /// defined maximum length.</exception>
+        /// <exception cref="ArgumentNullException">The <paramref name="path" /> is <see langword="null" />.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified <paramref name="path" /> path is invalid (for example, it
+        /// is on an unmapped drive).</exception>
+        /// <exception cref="NotSupportedException">The <paramref name="path" /> has unsupported or invalid characters.</exception>
+        /// <remarks>
+        /// The directory is scanned and each file is individually deleted and waited upon until the file is deleted
+        /// before continuing.
+        /// </remarks>
+        public static void DeleteDirectory(string path)
+        {
+            if (File.Exists(path))
+                throw new UnauthorizedAccessException("Can't delete the directory, it is a file");
+            if (!Directory.Exists(path)) return;
+            if (!Path.IsPathRooted(path))
+                path = Path.Combine(Environment.CurrentDirectory, path);
+
+            DeleteSubDirectory(path);
+            DeleteEmptyDirectory(path);
+        }
+
+        private static void DeleteSubDirectory(string path)
+        {
+            string[] files = GetFiles(path);
+            foreach (string file in files) {
+                DeleteFile(file);
+            }
+
+            string[] dirs = GetDirectories(path);
+            foreach (string dir in dirs) {
+                DeleteSubDirectory(dir);
+                DeleteEmptyDirectory(dir);
+            }
+        }
+
+        private static void DeleteEmptyDirectory(string path)
+        {
+            int tickCount = Environment.TickCount;
+            string watchDir = Path.GetFileName(path);
+            string watchPath = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(watchPath))
+                throw new ArgumentException("Invalid directory path");
+            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath))
+            using (ManualResetEvent deleteEvent = new ManualResetEvent(false)) {
+                watcher.EnableRaisingEvents = true;
+                watcher.Filter = watchDir;
+                watcher.NotifyFilter = NotifyFilters.DirectoryName;
+                watcher.Deleted += (s, e) => { deleteEvent.Set(); };
+                watcher.Error += (s, e) => { deleteEvent.Set(); };
+                int elapsed = unchecked(Environment.TickCount - tickCount);
+                Directory.Delete(path);
+                while (elapsed < c_DeleteMaxTime) {
+                    deleteEvent.WaitOne(c_DeleteWaitInterval);
+                    if (!Directory.Exists(path)) return;
+                    Thread.Sleep(c_DeletePollInterval);
+                    elapsed = unchecked(Environment.TickCount - tickCount);
+                }
+                string message = string.Format("Directory '{0}' couldn't be deleted", path);
+                throw new IOException(message);
+            }
         }
     }
 }

@@ -54,8 +54,7 @@
         [Repeat(100)]
         public void DeployFileInLine()
         {
-            Tools.DeleteFile("test1.txt");
-
+            Deploy.DeleteFile("test1.txt");
             Deploy.Item("Resources/test1.txt");
             Assert.That(File.Exists("test1.txt"));
         }
@@ -64,7 +63,7 @@
         [Repeat(100)]
         public void DeployFolderInLine()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item("Resources", "folder2");
 
             Assert.That(File.Exists(Path.Combine("folder2", "Resources", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -75,7 +74,7 @@
         [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash1()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item("Resources", "folder2/");
 
             Assert.That(File.Exists(Path.Combine("folder2", "Resources", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -86,7 +85,7 @@
         [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash2()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item("Resources/", "folder2");
 
             Assert.That(File.Exists(Path.Combine("folder2", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -97,7 +96,7 @@
         [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash3()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item("Resources/", "folder2/");
 
             Assert.That(File.Exists(Path.Combine("folder2", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -146,6 +145,37 @@
         public void DeployNullItem2()
         {
             Deploy.Item(null, ".");
+        }
+
+        [Test]
+        [Repeat(100)]
+        public void DeleteDirectory()
+        {
+            Deploy.Item("Resources", "folder3");
+
+            Assert.That(File.Exists(Path.Combine("folder3", "Resources", "test1.txt")), "File 'folder3/Resources/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder3", "Resources", "test2.txt")), "File 'folder3/Resources/test2.txt' not found");
+
+            Deploy.DeleteDirectory("folder3");
+
+            Assert.That(!Directory.Exists("folder3"));
+        }
+
+        [Test]
+        [Repeat(100)]
+        public void DeleteTwoDirectories()
+        {
+            Deploy.Item("Resources", "folder4/test1");
+            Deploy.Item("Resources", "folder4/test2");
+
+            Assert.That(File.Exists(Path.Combine("folder4", "test1", "Resources", "test1.txt")), "File 'folder4/Resources/test1/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder4", "test1", "Resources", "test2.txt")), "File 'folder4/Resources/test1/test2.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder4", "test2", "Resources", "test1.txt")), "File 'folder4/Resources/test2/test1.txt' not found");
+            Assert.That(File.Exists(Path.Combine("folder4", "test2", "Resources", "test2.txt")), "File 'folder4/Resources/test2/test2.txt' not found");
+
+            Deploy.DeleteDirectory("folder4");
+
+            Assert.That(!Directory.Exists("folder4"));
         }
     }
 }

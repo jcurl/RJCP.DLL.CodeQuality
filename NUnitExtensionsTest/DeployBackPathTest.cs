@@ -10,8 +10,7 @@
         [Repeat(100)]
         public void DeployFileInLine()
         {
-            Tools.DeleteFile("test1.txt");
-
+            Deploy.DeleteFile("test1.txt");
             Deploy.Item(@"Resources\test1.txt");
             Assert.That(File.Exists("test1.txt"));
         }
@@ -20,7 +19,7 @@
         [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash1()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item("Resources", @"folder2\");
 
             Assert.That(File.Exists(Path.Combine("folder2", "Resources", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -31,7 +30,7 @@
         [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash2()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item(@"Resources\", "folder2");
 
             Assert.That(File.Exists(Path.Combine("folder2", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
@@ -42,7 +41,7 @@
         [Repeat(100)]
         public void DeployFolderInLineWithTrailingSlash3()
         {
-            Tools.DeleteDirectory("folder2");
+            Deploy.DeleteDirectory("folder2");
             Deploy.Item(@"Resources\", @"folder2\");
 
             Assert.That(File.Exists(Path.Combine("folder2", "test1.txt")), "File 'folder2/Resources/test1.txt' not found");
