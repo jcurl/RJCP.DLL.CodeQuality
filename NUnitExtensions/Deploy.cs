@@ -20,11 +20,11 @@
     /// </remarks>
     public static class Deploy
     {
-        private static int c_DeleteMaxTime = 5000;
-        private static int c_DeletePollInterval = 100;
-        private static int c_DeleteWaitInterval = 250;
-        private static int c_CopyWaitInterval = 250;
-        private static int c_CopyWaitAttempts = 4;
+        private const int DeleteMaxTime = 5000;
+        private const int DeletePollInterval = 100;
+        private const int DeleteWaitInterval = 250;
+        private const int CopyWaitInterval = 250;
+        private const int CopyWaitAttempts = 4;
 
         /// <summary>
         /// Deploy files for all methods containing the attribute <see cref="DeploymentItemAttribute"/> for the given class.
@@ -318,7 +318,7 @@
             if (Directory.Exists(directory)) return;
 
             bool created = false;
-            int attempts = c_CopyWaitAttempts;
+            int attempts = CopyWaitAttempts;
 
             DeleteFile(directory);
             do {
@@ -336,7 +336,7 @@
                     // If the copy failed, it's because it's probably already open somewhere else. So we
                     // wait 250ms and try again.
                     --attempts;
-                    Thread.Sleep(c_CopyWaitInterval);
+                    Thread.Sleep(CopyWaitInterval);
                 }
             } while (!created);
         }
@@ -380,11 +380,11 @@
                 watcher.Deleted += (s, e) => { deleteEvent.Set(); };
                 watcher.Error += (s, e) => { deleteEvent.Set(); };
                 int elapsed = unchecked(Environment.TickCount - tickCount);
-                while (elapsed < c_DeleteMaxTime) {
+                while (elapsed < DeleteMaxTime) {
                     File.Delete(fileName);
-                    deleteEvent.WaitOne(c_DeleteWaitInterval);
+                    deleteEvent.WaitOne(DeleteWaitInterval);
                     if (!File.Exists(fileName)) return;
-                    Thread.Sleep(c_DeletePollInterval);
+                    Thread.Sleep(DeletePollInterval);
                     elapsed = unchecked(Environment.TickCount - tickCount);
                 }
                 string message = string.Format("File '{0}' couldn't be deleted", fileName);
@@ -399,7 +399,7 @@
             }
 
             bool copyFinished = false;
-            int attempts = c_CopyWaitAttempts;
+            int attempts = CopyWaitAttempts;
             FileInfo itemInfo;
             do {
                 itemInfo = new FileInfo(source);
@@ -431,7 +431,7 @@
                     // condition occurs because at the time of the check it didn't exist, but between that
                     // and now the copy has started elsewhere.
                     --attempts;
-                    if (attempts > 0) System.Threading.Thread.Sleep(c_CopyWaitInterval);
+                    if (attempts > 0) System.Threading.Thread.Sleep(CopyWaitInterval);
                 }
             } while (!copyFinished && attempts > 0);
 
@@ -527,10 +527,10 @@
                 watcher.Error += (s, e) => { deleteEvent.Set(); };
                 int elapsed = unchecked(Environment.TickCount - tickCount);
                 Directory.Delete(path);
-                while (elapsed < c_DeleteMaxTime) {
-                    deleteEvent.WaitOne(c_DeleteWaitInterval);
+                while (elapsed < DeleteMaxTime) {
+                    deleteEvent.WaitOne(DeleteWaitInterval);
                     if (!Directory.Exists(path)) return;
-                    Thread.Sleep(c_DeletePollInterval);
+                    Thread.Sleep(DeletePollInterval);
                     elapsed = unchecked(Environment.TickCount - tickCount);
                 }
                 string message = string.Format("Directory '{0}' couldn't be deleted", path);
