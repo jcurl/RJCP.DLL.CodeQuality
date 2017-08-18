@@ -71,13 +71,12 @@
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void SetTargetNull()
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", 7);
             Assert.NotNull(privateObject.Target);
-            privateObject.Target = null;
+            Assert.That(() => { privateObject.Target = null; }, Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]
@@ -149,39 +148,43 @@
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void SetInexistentProperty()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
-            privateObject.SetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, 9);
+            Assert.That(() => {
+                privateObject.SetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, 9);
+            }, Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void GetInexistentProperty()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
-            privateObject.GetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
+            Assert.That(() => {
+                privateObject.GetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
+            }, Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void SetInexistentField()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
-            privateObject.SetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, 9);
+            Assert.That(() => {
+                privateObject.SetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, 9);
+            }, Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void GetInexistentField()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
-            privateObject.GetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+            Assert.That(() => {
+                privateObject.GetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+            }, Throws.InstanceOf<ArgumentException>());
         }
     }
 }
