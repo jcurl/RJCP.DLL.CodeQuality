@@ -6,43 +6,38 @@
     public class PrivateTypeTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateType")]
         public void NullAssemblyName()
         {
-            new PrivateType(null, "NUnit.Framework.InternalClassTest");
+            Assert.That(() => { new PrivateType(null, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateType")]
         public void EmptyAssemblyName()
         {
-            new PrivateType(string.Empty, "NUnit.Framework.InternalClassTest");
+            Assert.That(() => { new PrivateType(string.Empty, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateType")]
         public void NullClassName()
         {
-            new PrivateType("NUnitExtensionsTest", null);
+            Assert.That(() => { new PrivateType("NUnitExtensionsTest", null); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateType")]
         public void EmptyClassName()
         {
-            new PrivateType("NUnitExtensionsTest", string.Empty);
+            Assert.That(() => { new PrivateType("NUnitExtensionsTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         [Category("NUnitExtensions.PrivateType")]
         public void NullType()
         {
-            new PrivateType(null);
+            Assert.That(() => { new PrivateType(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

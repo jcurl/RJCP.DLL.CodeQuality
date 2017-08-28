@@ -134,17 +134,15 @@
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DeployNullItem()
         {
-            Deploy.Item(null);
+            Assert.That(() => { Deploy.Item(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DeployNullItem2()
         {
-            Deploy.Item(null, ".");
+            Assert.That(() => { Deploy.Item(null, "."); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

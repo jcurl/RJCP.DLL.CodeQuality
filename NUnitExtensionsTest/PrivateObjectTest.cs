@@ -7,51 +7,45 @@
     public class PrivateObjectTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void NullAssemblyName()
         {
-            new PrivateObject(null, "NUnit.Framework.InternalClassTest");
+            Assert.That(() => { new PrivateObject(null, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void EmptyAssemblyName()
         {
-            new PrivateObject(string.Empty, "NUnit.Framework.InternalClassTest");
+            Assert.That(() => { new PrivateObject(string.Empty, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void NullClassName()
         {
-            new PrivateObject("NUnitExtensionsTest", null);
+            Assert.That(() => { new PrivateObject("NUnitExtensionsTest", null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void EmptyClassName()
         {
-            new PrivateObject("NUnitExtensionsTest", string.Empty);
+            Assert.That(() => { new PrivateObject("NUnitExtensionsTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void NullType()
         {
-            new PrivateObject(null);
+            Assert.That(() => { new PrivateObject(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         [Category("NUnitExtensions.PrivateObject")]
         public void NullArgs()
         {
-            new PrivateObject(typeof(ObjectClassTest), null);
+            Assert.That(() => { new PrivateObject(typeof(ObjectClassTest), null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -76,7 +70,7 @@
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", 7);
             Assert.NotNull(privateObject.Target);
-            Assert.That(() => { privateObject.Target = null; }, Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(() => { privateObject.Target = null; }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -154,7 +148,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, 9);
-            }, Throws.InstanceOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -164,7 +158,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.GetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
-            }, Throws.InstanceOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -174,7 +168,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, 9);
-            }, Throws.InstanceOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -184,7 +178,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.GetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
-            }, Throws.InstanceOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentException>());
         }
     }
 }
