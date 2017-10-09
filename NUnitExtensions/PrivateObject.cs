@@ -88,6 +88,7 @@
         /// <param name="args">The arguments required by the method that is to be invoked.</param>
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the method is conducted.</param>
         /// <returns>An object that represents the return value of a private member.</returns>
+        /// <exception cref="MissingMethodException">The method <paramref name="name"/> doesn't exist.</exception>
         /// <remarks>
         /// This method is intended to be a simplified version for the existing method:
         /// https://msdn.microsoft.com/en-us/library/ms243710.aspx.
@@ -95,6 +96,8 @@
         public object Invoke(string name, BindingFlags bindingFlags, params object[] args)
         {
             MethodInfo methodInfo = m_ObjectType.GetMethod(name, bindingFlags);
+            if (methodInfo == null) throw new MissingMethodException(m_Instance.ToString(), name);
+
             return methodInfo.Invoke(m_Instance, args);
         }
 
@@ -104,7 +107,7 @@
         /// <param name="name">The name of the private field or property to set.</param>
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted.</param>
         /// <param name="value">The value to set.</param>
-        /// <exception cref="ArgumentException">Thrown if the field or property given by name, is not found.</exception>
+        /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
         /// <remarks>
         /// This method is intended to be a simplified version of the existing method:
         /// https://msdn.microsoft.com/en-us/library/ms243964.aspx
@@ -123,7 +126,7 @@
                 return;
             }
 
-            throw new ArgumentException("Could not find provided field or property name", "name");
+            throw new MissingMethodException(m_Instance.ToString(), name);
         }
 
         /// <summary>
@@ -132,6 +135,7 @@
         /// <param name="name">The name of the private field or property to get.</param>
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted. The type of lookup need not be specified.</param>
         /// <returns>The value set for the name field or property.</returns>
+        /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
         /// <remarks>
         /// This method is intended to be a simplified version of the existing method:
         /// https://msdn.microsoft.com/en-us/library/ms243787.aspx
@@ -144,7 +148,7 @@
             PropertyInfo propertyInfo = m_ObjectType.GetProperty(name, bindingFlags);
             if (propertyInfo != null) return propertyInfo.GetValue(m_Instance, null);
 
-            throw new ArgumentException("Could not find provided field or property name", "name");
+            throw new MissingMethodException(m_Instance.ToString(), name);
         }
     }
 }

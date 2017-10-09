@@ -101,6 +101,17 @@
 
         [Test]
         [Category("NUnitExtensions.PrivateObject")]
+        public void CallInexistentMethod()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+
+            Assert.That(() => {
+                privateObject.Invoke("XYZ", BindingFlags.NonPublic | BindingFlags.Instance);
+            }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
+        [Category("NUnitExtensions.PrivateObject")]
         public void CallPublicMethod()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
@@ -148,7 +159,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, 9);
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<MissingMethodException>());
         }
 
         [Test]
@@ -158,7 +169,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.GetFieldOrProperty("InexistentProp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<MissingMethodException>());
         }
 
         [Test]
@@ -168,7 +179,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetField, 9);
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<MissingMethodException>());
         }
 
         [Test]
@@ -178,7 +189,7 @@
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.GetFieldOrProperty("m_InexistentField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<MissingMethodException>());
         }
     }
 }
