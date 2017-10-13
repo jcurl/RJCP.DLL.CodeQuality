@@ -51,7 +51,7 @@ namespace NUnit.Framework
         /// </remarks>
         public object InvokeStatic(string name, params object[] args)
         {
-            BindingFlags bindingFlags = BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Static;
+            BindingFlags bindingFlags = BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
             return m_ObjectType.InvokeMember(name, bindingFlags, null, null, args);
         }
     }

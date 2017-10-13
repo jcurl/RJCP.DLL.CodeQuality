@@ -42,8 +42,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessorTest.cs" />
+    <Compile Include="HelperClasses\AccessorClassTest.cs" />
+    <Compile Include="HelperClasses\AccessorGenericClassTest.cs" />
+    <Compile Include="HelperClasses\GenericClassTest.cs" />
     <Compile Include="HelperClasses\InternalClassTest.cs" />
+    <Compile Include="HelperClasses\ClassTest.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
+    <Compile Include="HelperClasses\ObjectGenericClassTest.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

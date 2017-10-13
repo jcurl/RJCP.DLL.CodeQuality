@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessorBase.cs" />
     <Compile Include="Deploy.cs" />
     <Compile Include="DeploymentItemAttribute.cs" />
     <Compile Include="NUnitExtensions.cs" />

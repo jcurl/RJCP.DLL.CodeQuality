@@ -59,6 +59,49 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PrivateObject"/> class. This creates the object of the specified type and wraps it in a generic private object.
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly that contains the type.</param>
+        /// <param name="typeName">Fully qualified name of the type.</param>
+        /// <param name="genericTypes">The generic types for the arguments used in creating the object.</param>
+        /// <param name="args">Arguments to pass to the constructor of the object.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <para>
+        /// <paramref name="assemblyName"/> is <see langword="null"/>.
+        /// </para>
+        /// <para>-or-</para>
+        /// <para>
+        /// <paramref name="typeName"/> is <see langword="null"/>.
+        /// </para>
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// <paramref name="typeName"/> it's not a generic type.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <para>
+        /// One of the <paramref name="genericTypes"/> violates the constraints of <paramref name="typeName"/>.
+        /// </para>
+        /// <para>-or-</para>
+        /// <para>
+        /// <paramref name="typeName"/> was not found.
+        /// </para>
+        /// </exception>
+        /// <remarks>
+        /// An object is created by using the <paramref name="typeName"/> and <paramref name="args"/> of types <paramref name="genericTypes"/>.
+        /// </remarks>
+        public PrivateObject(string assemblyName, string typeName, Type[] genericTypes, params object[] args)
+        {
+            if (assemblyName == null) throw new ArgumentNullException("assemblyName");
+            if (typeName == null) throw new ArgumentNullException("typeName");
+
+            m_ObjectType = Assembly.Load(assemblyName).GetType(typeName);
+            if (m_ObjectType == null) throw new ArgumentException("The specified type name was not found.", "typeName");
+
+            m_ObjectType = m_ObjectType.MakeGenericType(genericTypes);
+            m_Instance = Activator.CreateInstance(m_ObjectType, args);
+        }
+
+        /// <summary>
         /// Gets or sets the wrapped object.
         /// </summary>
         /// <exception cref="ArgumentNullException">
@@ -96,6 +139,30 @@
         public object Invoke(string name, BindingFlags bindingFlags, params object[] args)
         {
             MethodInfo methodInfo = m_ObjectType.GetMethod(name, bindingFlags);
+            if (methodInfo == null) throw new MissingMethodException(m_Instance.ToString(), name);
+
+            return methodInfo.Invoke(m_Instance, args);
+        }
+
+        /// <summary>
+        /// Invoke private methods on a <see cref="PrivateObject" /> object.
+        /// </summary>
+        /// <param name="name">The name of the method to be invoked.</param>
+        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags" /> that specifies how the search for the method is conducted.</param>
+        /// <param name="parameterTypes">The parameter types required by the method that is to be invoked.</param>
+        /// <param name="args">The arguments required by the method that is to be invoked.</param>
+        /// <returns>
+        /// An object that represents the return value of a private member.
+        /// </returns>
+        /// <exception cref="MissingMethodException">The method <paramref name="name" /> doesn't exist.</exception>
+        /// <exception cref="ArgumentException">The method <paramref name="name" /> doesn't exist.</exception>
+        /// <remarks>
+        /// This method is intended to be a simplified version for the existing method:
+        /// https://msdn.microsoft.com/en-us/library/ms243755.aspx.
+        /// </remarks>
+        public object Invoke(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
+        {
+            MethodInfo methodInfo = m_ObjectType.GetMethod(name, bindingFlags, null, parameterTypes, null);
             if (methodInfo == null) throw new MissingMethodException(m_Instance.ToString(), name);
 
             return methodInfo.Invoke(m_Instance, args);

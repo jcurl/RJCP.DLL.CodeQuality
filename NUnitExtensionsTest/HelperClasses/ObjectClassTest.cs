@@ -25,5 +25,15 @@
         {
             m_Value += value;
         }
+
+        public int Method()
+        {
+            return 2;
+        }
+
+        protected int Method(int value)
+        {
+            return 7;
+        }
     }
 }
