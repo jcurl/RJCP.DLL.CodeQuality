@@ -11,6 +11,10 @@
 
         private int Prop { get; set; }
 
+        private ObjectClassTest() { }
+
+        private ObjectClassTest(string name) { }
+
         public ObjectClassTest(int i)
         {
             m_Value = i;

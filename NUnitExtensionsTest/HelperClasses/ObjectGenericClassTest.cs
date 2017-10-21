@@ -11,10 +11,9 @@
         private readonly T m_Item;
         private readonly V m_Element;
 
-        public int Value
-        {
-            get; protected set;
-        }
+        public int Value { get; protected set; }
+
+        private ObjectGenericClassTest(string name) { }
 
         public ObjectGenericClassTest(T item, V element)
         {

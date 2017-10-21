@@ -44,6 +44,13 @@
         }
 
         [Test]
+        public void DefaultPrivateCtor()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest));
+            Assert.NotNull(privateObject.Target);
+        }
+
+        [Test]
         public void InstanceFromType()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
@@ -51,9 +58,23 @@
         }
 
         [Test]
+        public void PrivateCtorFromType()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), "ObjectName");
+            Assert.NotNull(privateObject.Target);
+        }
+
+        [Test]
         public void InstanceFromAssemblyAndTypeName()
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", 7);
+            Assert.NotNull(privateObject.Target);
+        }
+
+        [Test]
+        public void PrivateCtorFromAssemblyAndType()
+        {
+            PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", "ObjectName");
             Assert.NotNull(privateObject.Target);
         }
 
@@ -118,10 +139,10 @@
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
 
-            int result = (int)privateObject.Invoke("Method", bindingFlags: BindingFlags.Public | BindingFlags.Instance, parameterTypes: new Type[0], args: new object[0]);
+            int result = (int)privateObject.Invoke("Method", BindingFlags.Public | BindingFlags.Instance, new Type[0], new object[0]);
             Assert.That(result, Is.EqualTo(2));
 
-            result = (int)privateObject.Invoke("Method", bindingFlags: BindingFlags.NonPublic | BindingFlags.Instance, parameterTypes: new Type[] { typeof(int)}, args: new object[] { 8 });
+            result = (int)privateObject.Invoke("Method", BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, new object[] { 8 });
             Assert.That(result, Is.EqualTo(7));
         }
 
@@ -200,6 +221,15 @@
         }
 
         [Test]
+        public void PrivateCtorFromGenericTypes()
+        {
+            Type genericType = typeof(ObjectGenericClassTest<object, string>);
+            PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", genericType.GetGenericTypeDefinition().FullName, new[] { typeof(int), typeof(string) }, "abc");
+
+            Assert.NotNull(privateObject.Target);
+        }
+
+        [Test]
         public void DifferentTypeAndArgCount()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
@@ -217,7 +247,8 @@
         }
 
         [Test]
-        public void GenericTypesNullAssemblyName() {
+        public void GenericTypesNullAssemblyName()
+        {
             Assert.That(() => {
                 new PrivateObject(null, "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
             }, Throws.TypeOf<ArgumentNullException>());

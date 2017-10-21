@@ -10,6 +10,7 @@
     {
         private Type m_ObjectType;
         private object m_Instance;
+        private readonly BindingFlags m_BindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         /// <summary>
         /// Initialize the new instance of PrivateObject class using the type.
@@ -20,7 +21,7 @@
         {
             if (objectType == null) throw new ArgumentNullException("objectType");
             m_ObjectType = objectType;
-            m_Instance = Activator.CreateInstance(m_ObjectType);
+            m_Instance = Activator.CreateInstance(m_ObjectType, true);
         }
 
         /// <summary>
@@ -34,7 +35,7 @@
             if (objectType == null) throw new ArgumentNullException("objectType");
             if (args == null) throw new ArgumentNullException("args");
             m_ObjectType = objectType;
-            m_Instance = Activator.CreateInstance(m_ObjectType, args);
+            m_Instance = Activator.CreateInstance(m_ObjectType, m_BindingFlags, null, args, null);
         }
 
         /// <summary>
@@ -55,7 +56,7 @@
             if (typeName == null) throw new ArgumentNullException("typeName");
 
             m_ObjectType = Assembly.Load(assemblyName).GetType(typeName);
-            m_Instance = Activator.CreateInstance(m_ObjectType, args);
+            m_Instance = Activator.CreateInstance(m_ObjectType, m_BindingFlags, null, args, null);
         }
 
         /// <summary>
@@ -98,7 +99,7 @@
             if (m_ObjectType == null) throw new ArgumentException("The specified type name was not found.", "typeName");
 
             m_ObjectType = m_ObjectType.MakeGenericType(genericTypes);
-            m_Instance = Activator.CreateInstance(m_ObjectType, args);
+            m_Instance = Activator.CreateInstance(m_ObjectType, m_BindingFlags, null, args, null);
         }
 
         /// <summary>
