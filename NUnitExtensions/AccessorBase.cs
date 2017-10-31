@@ -71,7 +71,7 @@
         /// </remarks>
         protected AccessorBase(string assemblyName, string typeName, Type[] genericTypes, params object[] args)
         {
-            m_PrivateObject = new PrivateObject(assemblyName, typeName, genericTypes, args);
+            m_PrivateObject = new GenericPrivateObject(assemblyName, typeName, genericTypes, args);
         }
 
         /// <summary>

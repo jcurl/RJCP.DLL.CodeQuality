@@ -42,5 +42,10 @@
         {
             return m_List.Count;
         }
+
+        public static string GenericTypeName()
+        {
+            return typeof(T).ToString();
+        }
     }
 }

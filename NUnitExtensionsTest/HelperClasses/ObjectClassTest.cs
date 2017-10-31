@@ -9,7 +9,15 @@
     {
         private int m_Value;
 
+        private object m_Count;
+
+        private string m_Name;
+
         private int Prop { get; set; }
+
+        public int PubProp { get; set; }
+
+        public int PubField;
 
         private ObjectClassTest() { }
 
@@ -18,6 +26,7 @@
         public ObjectClassTest(int i)
         {
             m_Value = i;
+            PubField = i;
         }
 
         private void DoubleProperty()
@@ -28,6 +37,12 @@
         public void AddToProperty(int value)
         {
             m_Value += value;
+        }
+
+        public void AddCount<T>(T value, string name)
+        {
+            m_Count = value;
+            m_Name = name;
         }
 
         public int Method()
