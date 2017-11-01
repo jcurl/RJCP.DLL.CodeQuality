@@ -169,5 +169,20 @@
             ClassTestAccessor accessor = new ClassTestAccessor(5);
             Assert.That(accessor.Capacity, Is.EqualTo(5));
         }
+
+        [Test]
+        public void StaticProperty()
+        {
+            StaticClassTestAccessor.Property = 42;
+            Assert.That(StaticClassTestAccessor.Property, Is.EqualTo(42));
+        }
+
+        [Test]
+        public void StaticMethod()
+        {
+            Assert.That(StaticClassTestAccessor.DoSomething, Is.EqualTo("0"));
+            StaticClassTestAccessor.Property = 42;
+            Assert.That(StaticClassTestAccessor.DoSomething, Is.EqualTo("42"));
+        }
     }
 }

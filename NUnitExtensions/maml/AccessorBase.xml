@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Comments>
+    <AccessorBase>
+        <Remarks id="AccessorBase">
+<para>This guide will help you in creating your own <c>MyTestAccessor</c>
+object to test a nonpublic class <c>MyTest</c>. The principle is to create your
+<c>MyTestAccessor</c> in your test framework class so that it looks as close as
+possible to the class that is being tested <c>MyTest</c>. Features supported for
+testing include:</para>
+<list type="bullet">
+    <item>Instantiable or static class.</item>
+    <item>May have generic type arguments.</item>
+    <item>Methods may or may not be static.</item>
+    <item>Methods may also have generic type arguments.</item>
+</list>
+
+<para><linebreak/><linebreak/><b>** Testing non-public classes **</b></para>
+
+<para>Let's say you have a class called <c>MyTest</c> that is non-public which
+you want to test. It has a number of simple methods and properties:</para>
+<list type="bullet">
+    <item>A property called <c>Property</c> of type <c>int</c></item>
+    <item>A method called <c>DoSomething</c></item>
+</list>
+<para>It might look like:</para>
+<code>
+private class MyTest {
+  public MyTest(int initialValue) {
+    Property = initialValue;
+  }
+
+  public int Property { get; set; }
+  public void DoSomething() {
+    Console.WriteLine("{0}", Property);
+  }
+}
+</code>
+<para>Create your test class to look like:</para>
+<code>
+public class MyTestAccessor : AccessorBase {
+  private const string AssemblyName = "MyAssembly";
+  private const string TypeName = "MyTest";
+
+  public MyTestAccessor(int initialValue)
+    : base(AssemblyName, TypeName, initialValue)
+  { }
+
+  public int Property {
+    get { return (int)GetFieldOrProperty("Property"); }
+    set { SetFieldOrProperty("Property", value); }
+  }
+
+  public void DoSomething() {
+    Invoke("DoSomething");
+  }
+}
+</code>
+<para>Then to test, use the class <c>MyTestAccessor</c> instead of having to
+change <c>MyTest</c> to <c>internal</c> and the
+<c>InternalsVisibleToAttribute</c>.</para>
+
+<para><linebreak/><linebreak/><b>** Testing non-public static classes **</b></para>
+
+<para>The functionality in <c>AccessorBase</c> should support creating testable
+static classes, so that method names are applied to the type, and not to an
+instance prior. This ensures that code is readable and by the usage of the type
+name to test it is obvious when reading the test code that a static method is
+being tested.</para>
+<para>Let's say you have a non-public static class called <c>MyStaticTest</c>,
+for which we want to create a testable class called <c>MyStaticTestAccessor</c>.
+</para>
+<code>
+private static class MyStaticTest {
+  public static int Property { get; set; }
+  public static void DoSomething() {
+    Console.WriteLine("{0}", Property);
+  }
+}
+</code>
+<para>Then the Accessor class for testing would look like</para>
+<code>
+public static class MyStaticTestAccessor {
+  private const string AssemblyName = "MyAssembly";
+  private const string TypeName = "MyTest";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  public static int Property {
+    get { return (int)AccessorBase.GetStaticFieldOrProperty(AccType, "Property"); }
+    set { AccessorBase.SetStaticFieldOrProperty(AccType, "Property", value); }
+  }
+
+  public static void DoSomething {
+    AccessorBase.InvokeStatic(AccType, "DoSomething");
+  }
+}
+</code>
+<para>In this case you will not use the static methods in the
+<c>AccessorBase</c> class to achieve the goal of creating static methods. To
+test the static methods, a <c>PrivateType</c> object must first be instantiated
+with the assembly name and type name. This is used in all subsequent static test
+methods.</para>
+        </Remarks>
+    </AccessorBase>
+</Comments>

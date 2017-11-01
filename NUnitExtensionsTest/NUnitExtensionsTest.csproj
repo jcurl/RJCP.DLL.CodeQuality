@@ -54,6 +54,8 @@
     <Compile Include="HelperClasses\ClassTest.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
     <Compile Include="HelperClasses\ObjectGenericClassTest.cs" />
+    <Compile Include="HelperClasses\StaticClassTest.cs" />
+    <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
     <Compile Include="PrivateObjectAccessor.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeAccessor.cs" />
