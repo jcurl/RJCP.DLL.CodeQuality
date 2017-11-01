@@ -9,7 +9,10 @@
     public class GenericClassTestAccessor : AccessorBase
     {
         public GenericClassTestAccessor(int capacity)
-            : base("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.GenericClassTest`1", new[] { typeof(int) }, new object[] { capacity })
+            : base("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.GenericClassTest`1",
+                  new[] { typeof(int) },      // Constructor signature to use
+                  new object[] { capacity },  // Values to the constructor
+                  new[] { typeof(int) })      // Class type arguments
         {
             BindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
         }

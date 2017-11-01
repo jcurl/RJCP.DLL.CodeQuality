@@ -18,8 +18,10 @@
         /// </summary>
         /// <param name="assemblyName">Name of the assembly that contains the type.</param>
         /// <param name="typeName">Fully qualified name of the type.</param>
-        /// <param name="genericTypes">The generic types for the arguments used in creating the object.</param>
+        /// <param name="parameterTypes">An array of <see cref="Type"/> objects representing the number,
+        /// order, and type of the parameters for constructing the object.</param>
         /// <param name="args">Arguments to pass to the constructor of the object.</param>
+        /// <param name="typeArguments">The generic types for the arguments used in creating the object.</param>
         /// <exception cref="ArgumentNullException">
         /// <para>
         /// <paramref name="assemblyName"/> is <see langword="null"/>.
@@ -36,7 +38,7 @@
         /// <exception cref="InvalidOperationException"><paramref name="typeName"/> it's not a generic type.</exception>
         /// <exception cref="ArgumentException">
         /// <para>
-        /// One of the <paramref name="genericTypes"/> violates the constraints of <paramref name="typeName"/>.
+        /// One of the <paramref name="typeArguments"/> violates the constraints of <paramref name="typeName"/>.
         /// </para>
         /// <para>-or-</para>
         /// <para>
@@ -48,10 +50,10 @@
         /// <exception cref="MissingMethodException">No matching public constructor was found to match the
         /// <paramref name="typeName"/> and <paramref name="args"/>.</exception>
         /// <remarks>
-        /// An object is created by using the <paramref name="typeName"/> and <paramref name="args"/> of types <paramref name="genericTypes"/>.
+        /// An object is created by using the <paramref name="typeName"/> and <paramref name="args"/> of types <paramref name="typeArguments"/>.
         /// </remarks>
-        public GenericPrivateObject(string assemblyName, string typeName, Type[] genericTypes, params object[] args)
-            : base(GetGenericObjectType(assemblyName, typeName, genericTypes), args) { }
+        public GenericPrivateObject(string assemblyName, string typeName, Type[] parameterTypes, object[] args, Type[] typeArguments)
+            : base(GetGenericObjectType(assemblyName, typeName, typeArguments), parameterTypes, args) { }
 
         private static Type GetGenericObjectType(string assemblyName, string typeName, Type[] genericTypes)
         {

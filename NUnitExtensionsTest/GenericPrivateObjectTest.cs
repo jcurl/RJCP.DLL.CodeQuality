@@ -11,8 +11,9 @@
         public void GenericTypes()
         {
             PrivateObject privateObject = new GenericPrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectGenericClassTest`2",
-                new Type[] { typeof(int), typeof(string) },
-                9, "abc");
+                new Type[] { typeof(int), typeof(string) },   // Constructor signature
+                new object[] { 9, "abc" },                    // Values to the constructor
+                new Type[] { typeof(int), typeof(string) });  // Type arguments
 
             int itemValue = (int)privateObject.GetFieldOrProperty("m_Item", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.That(itemValue, Is.EqualTo(9));
@@ -25,7 +26,10 @@
         public void PrivateCtorFromGenericTypes()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
-            PrivateObject privateObject = new GenericPrivateObject("NUnitExtensionsTest", genericType.GetGenericTypeDefinition().FullName, new[] { typeof(int), typeof(string) }, "abc");
+            PrivateObject privateObject = new GenericPrivateObject("NUnitExtensionsTest", genericType.GetGenericTypeDefinition().FullName,
+                new Type[] { typeof(string) },                // Constructor signature
+                new object[] { "abc" },                       // Values to the constructor
+                new[] { typeof(int), typeof(string) });       // Type arguments
 
             Assert.NotNull(privateObject.Target);
         }
@@ -34,7 +38,10 @@
         public void GenericTypesNullAssemblyName()
         {
             Assert.That(() => {
-                new GenericPrivateObject(null, "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
+                new GenericPrivateObject(null, "abc_xyz",
+                    new[] { typeof(object), typeof(string) },
+                    new object[] { 9, "xyz" },
+                    new[] { typeof(object), typeof(string) });
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -42,7 +49,10 @@
         public void GenericTypesNullTypeName()
         {
             Assert.That(() => {
-                new GenericPrivateObject("NUnitExtensionsTest", null, new[] { typeof(object), typeof(string) }, 9, "xyz");
+                new GenericPrivateObject("NUnitExtensionsTest", null,
+                    new[] { typeof(object), typeof(string) },
+                    new object[] { 9, "xyz" },
+                    new[] { typeof(object), typeof(string) });
             }, Throws.TypeOf<ArgumentNullException>());
         }
     }

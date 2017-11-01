@@ -32,6 +32,7 @@
         /// <para>By default, only public methods of your class are available. To also exercise non-public methods
         /// (those that are internal to another assembly, or protected or private), add the flag <see cref="BindingFlags.NonPublic"/>
         /// to this bit mask.</para>
+        /// <para>Please note, that this property naturally can only apply to non-static methods in this class.</para>
         /// </remarks>
         protected BindingFlags BindingFlags
         {
@@ -59,13 +60,35 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AccessorBase"/> class used for providing access
+        /// to members of a non-generic class.
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly that contains the type.</param>
+        /// <param name="typeName">Fully qualified name of the type.</param>
+        /// <param name="parameterTypes">An array of <see cref="Type"/> objects representing the number,
+        /// order, and type of the parameters for constructing the object.</param>
+        /// <param name="args">Arguments to pass to the constructor of the object.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <value>null</value>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><para><paramref name="parameterTypes"/> is multidimensional</para>
+        /// - or -
+        /// <para> constructor cannot be found to match the parameters specified in PrivateObject.</para></exception>
+        protected AccessorBase(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
+        {
+            m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AccessorBase"/> class used for providing access to
         /// members of a generic class.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly that contains the type.</param>
         /// <param name="typeName">Fully qualified name of the type.</param>
-        /// <param name="genericTypes">The generic types for the arguments used in creating the object.</param>
+        /// <param name="parameterTypes">An array of <see cref="Type"/> objects representing the number,
+        /// order, and type of the parameters for constructing the object.</param>
         /// <param name="args">Arguments to pass to the constructor of the object.</param>
+        /// <param name="typeArguments">The generic types for the arguments used in creating the object.</param>
         /// <exception cref="ArgumentNullException">
         /// <para>
         /// <paramref name="assemblyName"/> is <see langword="null"/>.
@@ -80,7 +103,7 @@
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <para>
-        /// One of the <paramref name="genericTypes"/> violates the constraints of <paramref name="typeName"/>.
+        /// One of the <paramref name="typeArguments"/> violates the constraints of <paramref name="typeName"/>.
         /// </para>
         /// <para>-or-</para>
         /// <para>
@@ -89,11 +112,11 @@
         /// </exception>
         /// <remarks>
         /// An instance of <see cref="PrivateObject"/> is created by using the <paramref name="assemblyName"/>, <paramref name="typeName"/>
-        /// and <paramref name="args"/> of types <paramref name="genericTypes"/>.
+        /// and <paramref name="args"/> of types <paramref name="typeArguments"/>.
         /// </remarks>
-        protected AccessorBase(string assemblyName, string typeName, Type[] genericTypes, params object[] args)
+        protected AccessorBase(string assemblyName, string typeName, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            m_PrivateObject = new GenericPrivateObject(assemblyName, typeName, genericTypes, args);
+            m_PrivateObject = new GenericPrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
         }
 
         /// <summary>
