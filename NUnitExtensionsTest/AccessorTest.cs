@@ -9,14 +9,14 @@
         [Test]
         public void InitializeAccessorGeneric()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(accessor.Capacity, Is.EqualTo(5));
         }
 
         [Test]
         public void RaiseEvent()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             int count = 0;
             EventHandler<EventArgs> handler = (s, e) => {
                 count++;
@@ -34,7 +34,7 @@
         [Test]
         public void AddAndRemoveInexistentEvent()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             EventHandler<EventArgs> handler = (s, e) => { };
 
             Assert.That(() => {
@@ -49,7 +49,7 @@
         [Test]
         public void NullEventHandler()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             EventHandler<EventArgs> handler = null;
 
             Assert.That(() => {
@@ -64,7 +64,7 @@
         [Test]
         public void NullEventName()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             EventHandler<EventArgs> handler = (s, e) => { };
 
             Assert.That(() => {
@@ -79,7 +79,7 @@
         [Test]
         public void InvokeMethod()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             accessor.AddItem(5);
 
             Assert.That(accessor.GetCount(), Is.EqualTo(1));
@@ -88,7 +88,7 @@
         [Test]
         public void OverloadedMethod()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
 
             Assert.That(accessor.GetCount(), Is.EqualTo(0));
             accessor.AddItem();
@@ -102,7 +102,7 @@
         [Test]
         public void InexistentMethod()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
 
             Assert.That(() => {
                 accessor.InexistentMethod();
@@ -112,7 +112,7 @@
         [Test]
         public void SetPropertyValue()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             accessor.ThreadsNumber = 30;
 
             Assert.That(accessor.ThreadsNumber, Is.EqualTo(30));
@@ -121,7 +121,7 @@
         [Test]
         public void GetInexistentProperty()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
                 int itemValue = accessor.InexistentProperty;
             }, Throws.TypeOf<MissingMethodException>());
@@ -130,7 +130,7 @@
         [Test]
         public void SetInexistentProperty()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
                 accessor.InexistentProperty = 5;
             }, Throws.TypeOf<MissingMethodException>());
@@ -139,7 +139,7 @@
         [Test]
         public void GetNullProperty()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
                 int element = accessor.Element;
             }, Throws.TypeOf<ArgumentNullException>());
@@ -148,7 +148,7 @@
         [Test]
         public void SetNullProperty()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
                 accessor.Element = 4;
             }, Throws.TypeOf<ArgumentNullException>());
@@ -157,7 +157,7 @@
         [Test]
         public void SetNullPropertyValue()
         {
-            AccessorGenericClassTest accessor = new AccessorGenericClassTest(5);
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
                 accessor.Value = 4;
             }, Throws.TypeOf<ArgumentNullException>());
@@ -166,7 +166,7 @@
         [Test]
         public void InitializeAccessorNonGeneric()
         {
-            AccessorClassTest accessor = new AccessorClassTest(5);
+            ClassTestAccessor accessor = new ClassTestAccessor(5);
             Assert.That(accessor.Capacity, Is.EqualTo(5));
         }
     }

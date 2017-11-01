@@ -46,8 +46,8 @@
     <Compile Include="AccessorTest.cs" />
     <Compile Include="GenericPrivateObjectTest.cs" />
     <Compile Include="GenericPrivateTypeTest.cs" />
-    <Compile Include="HelperClasses\AccessorClassTest.cs" />
-    <Compile Include="HelperClasses\AccessorGenericClassTest.cs" />
+    <Compile Include="HelperClasses\ClassTestAccessor.cs" />
+    <Compile Include="HelperClasses\GenericClassTestAccessor.cs" />
     <Compile Include="HelperClasses\GenericClassTest.cs" />
     <Compile Include="HelperClasses\InternalClassBase.cs" />
     <Compile Include="HelperClasses\InternalClassTest.cs" />

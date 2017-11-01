@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace NUnit.Framework
+﻿namespace NUnit.Framework.HelperClasses
 {
+    using System;
+
     /// <summary>
     /// Used for testing the <see cref="PrivateType"/> class functionality.
     /// </summary>

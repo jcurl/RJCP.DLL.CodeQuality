@@ -6,9 +6,9 @@
     /// <summary>
     /// Used for testing the <see cref="AccessorBase"/> class functionality for a generic object.
     /// </summary>
-    public class AccessorGenericClassTest : AccessorBase
+    public class GenericClassTestAccessor : AccessorBase
     {
-        public AccessorGenericClassTest(int capacity)
+        public GenericClassTestAccessor(int capacity)
             : base("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.GenericClassTest`1", new[] { typeof(int) }, new object[] { capacity })
         {
             BindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;

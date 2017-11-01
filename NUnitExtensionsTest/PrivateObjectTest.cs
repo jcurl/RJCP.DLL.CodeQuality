@@ -6,7 +6,7 @@
 
     [TestFixture(typeof(PrivateObjectAccessor), Category = "NUnitExtensions.PrivateObject")]
     [TestFixture(typeof(PrivateObjectVsAccessor), Category = "VisualStudio.PrivateObject")]
-    public class PrivateObjectTest<T> where T : class, IPrivateObjectAccessor
+    public class PrivateObjectTest<T> where T: class, IPrivateObjectAccessor
     {
         private readonly BindingFlags m_BindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
 
@@ -186,14 +186,14 @@
         [Test]
         public void NullAssemblyName()
         {
-            Assert.That(() => { CreatePrivateObject(null, "NUnit.Framework.InternalClassTest", new object[0]); },
+            Assert.That(() => { CreatePrivateObject(null, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void EmptyAssemblyName()
         {
-            Assert.That(() => { CreatePrivateObject(string.Empty, "NUnit.Framework.InternalClassTest", new object[0]); },
+            Assert.That(() => { CreatePrivateObject(string.Empty, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -221,14 +221,14 @@
         [Test]
         public void InstanceFromAssembly_WithTypeName()
         {
-            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", 7);
+            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", 7);
             Assert.NotNull(privateObject.Target);
         }
 
         [Test]
         public void PrivateCtorFromAssembly_WithType()
         {
-            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", "ObjectName");
+            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", "ObjectName");
             Assert.NotNull(privateObject.Target);
         }
 
@@ -238,7 +238,7 @@
             Type[] parameterTypes = new Type[] { typeof(int) };
             object[] args = new object[] { 7 };
 
-            Assert.NotNull(CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", parameterTypes, args));
+            Assert.NotNull(CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", parameterTypes, args));
         }
 
         [Test]
@@ -248,7 +248,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                CreatePrivateObject(null, "NUnit.Framework.ObjectClassTest", parameterTypes, args);
+                CreatePrivateObject(null, "NUnit.Framework.HelperClasses.ObjectClassTest", parameterTypes, args);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -270,7 +270,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", parameterTypes, args);
+                CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", parameterTypes, args);
             }, Throws.TypeOf<ArgumentException>());
         }
 
@@ -374,7 +374,7 @@
         [Test]
         public void SetTargetNull()
         {
-            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", 7);
+            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", 7);
             Assert.NotNull(privateObject.Target);
             Assert.That(() => { privateObject.Target = null; }, Throws.TypeOf<ArgumentNullException>());
         }
@@ -382,7 +382,7 @@
         [Test]
         public void SetAnotherTarget()
         {
-            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.ObjectClassTest", 7);
+            T privateObject = CreatePrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", 7);
             Assert.NotNull(privateObject.Target);
             ObjectClassTest testInstance = new ObjectClassTest(33);
             privateObject.Target = testInstance;

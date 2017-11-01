@@ -1,4 +1,4 @@
-﻿namespace NUnit.Framework
+﻿namespace NUnit.Framework.HelperClasses
 {
     using System;
 
