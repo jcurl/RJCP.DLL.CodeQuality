@@ -171,6 +171,44 @@
         }
 
         [Test]
+        public void ConstructorWithException()
+        {
+            Assert.That(() => { new ClassExceptionCtorTestAccessor(); },
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionsParamTypes()
+        {
+            Assert.That(() => { new ClassExceptionCtorTestAccessor(42); },
+                Throws.TypeOf<NotSupportedException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionTargetInvocation()
+        {
+            // What happens if the constructor throws itself a TargetInvocationException.
+            // We shouldn't remove it. An failing test case might raise
+            // InvalidOperationException instead, which would be wrong.
+            //
+            // Tests with parameterType != null
+            Assert.That(() => { new ClassExceptionCtorTestAccessor(43); },
+                Throws.TypeOf<System.Reflection.TargetInvocationException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionsParamTypesTargetInvocation()
+        {
+            // What happens if the constructor throws itself a TargetInvocationException.
+            // We shouldn't remove it. An failing test case might raise
+            // InvalidOperationException instead, which would be wrong.
+            //
+            // Tests with parameterType != null
+            Assert.That(() => { new ClassExceptionCtorTestAccessor(false, 43); },
+                Throws.TypeOf<System.Reflection.TargetInvocationException>());
+        }
+
+        [Test]
         public void StaticProperty()
         {
             StaticClassTestAccessor.Property = 42;

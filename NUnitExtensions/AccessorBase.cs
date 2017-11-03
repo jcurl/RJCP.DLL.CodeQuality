@@ -56,7 +56,17 @@
         /// </remarks>
         protected AccessorBase(string assemblyName, string typeName, params object[] args)
         {
-            m_PrivateObject = new PrivateObject(assemblyName, typeName, args);
+            try {
+                m_PrivateObject = new PrivateObject(assemblyName, typeName, args);
+            } catch (TargetInvocationException ex) {
+                // As parameterTypes == null, PrivateObject raises TargetInvocationException through
+                // the Activator.CreateInstance
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -76,7 +86,17 @@
         /// <para> constructor cannot be found to match the parameters specified in PrivateObject.</para></exception>
         protected AccessorBase(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
         {
-            m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args);
+            try {
+                m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args);
+            } catch (TargetInvocationException ex) {
+                // If parameterTypes == null, PrivateObject raises TargetInvocationException through
+                // the Activator.CreateInstance
+                if (parameterTypes != null || ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -116,7 +136,17 @@
         /// </remarks>
         protected AccessorBase(string assemblyName, string typeName, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            m_PrivateObject = new GenericPrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
+            try {
+                m_PrivateObject = new GenericPrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
+            } catch (TargetInvocationException ex) {
+                // If parameterTypes == null, PrivateObject raises TargetInvocationException through
+                // the Activator.CreateInstance
+                if (parameterTypes != null || ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
