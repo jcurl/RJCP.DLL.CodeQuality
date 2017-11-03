@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>RJCP.NUnitExtensions</id>
-        <version>0.2.1</version>
+        <version>0.3.0</version>
         <authors>Jason Curl</authors>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>MSTest replacement methods for NUnit Test Projects.</description>
