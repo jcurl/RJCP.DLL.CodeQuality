@@ -222,5 +222,26 @@
             StaticClassTestAccessor.Property = 42;
             Assert.That(StaticClassTestAccessor.DoSomething, Is.EqualTo("42"));
         }
+
+        [Test]
+        public void DerivedAccessors()
+        {
+            InternalSimpleBase1Accessor b1 = new InternalSimpleBase1Accessor(42);
+            Assert.That(b1.Value, Is.EqualTo(42));
+            Assert.That(b1.DoSomething(), Is.EqualTo("42"));
+
+            InternalSimpleDerived1Accessor d1 = new InternalSimpleDerived1Accessor(42, "Life");
+            Assert.That(d1.Value, Is.EqualTo(42));
+            Assert.That(d1.Description, Is.EqualTo("Life"));
+            Assert.That(d1.DoSomething(), Is.EqualTo("Life: 42"));
+        }
+
+        [Test]
+        public void GenericStackAccessor()
+        {
+            GenericStackAccessor<int> stack = new GenericStackAccessor<int>();
+            stack.Push(1);
+            Assert.That(stack.Pop(), Is.EqualTo(1));
+        }
     }
 }

@@ -49,11 +49,17 @@
     <Compile Include="HelperClasses\ClassExceptionCtorTest.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor.cs" />
     <Compile Include="HelperClasses\ClassTestAccessor.cs" />
+    <Compile Include="HelperClasses\GenericStack.cs" />
     <Compile Include="HelperClasses\GenericClassTestAccessor.cs" />
     <Compile Include="HelperClasses\GenericClassTest.cs" />
+    <Compile Include="HelperClasses\GenericStackAccessor.cs" />
+    <Compile Include="HelperClasses\InternalSimpleBase1.cs" />
     <Compile Include="HelperClasses\InternalClassBase.cs" />
     <Compile Include="HelperClasses\InternalClassTest.cs" />
     <Compile Include="HelperClasses\ClassTest.cs" />
+    <Compile Include="HelperClasses\InternalSimpleBase1Accessor.cs" />
+    <Compile Include="HelperClasses\InternalSimpleDerived1.cs" />
+    <Compile Include="HelperClasses\InternalSimpleDerived1Accessor.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
     <Compile Include="HelperClasses\ObjectGenericClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTest.cs" />

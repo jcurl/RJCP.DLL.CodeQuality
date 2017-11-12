@@ -13,6 +13,35 @@ testing include:</para>
     <item>Methods may or may not be static.</item>
     <item>Methods may also have generic type arguments.</item>
 </list>
+<para>Features not yet implemented or supported:</para>
+<list type="bullet">
+    <item>Return objects from one accessor of type another accessor.</item>
+    <item>Function inputs requiring an accessor.</item>
+    <item>Private types in a Generic type argument definition.</item>
+</list>
+
+<para><linebreak/><linebreak/><b>** Arguments against PrivateObject,
+InternalsVisibleTo and white testing **</b></para>
+
+<para>Using <c>AccessorBase</c> over simply a <c>PrivateObject</c> helps to
+improve type safety in test code and adds IntelliSense support.</para>
+
+<para>Some users also express concern on being able to test private class
+implementations. Declaring code needed by a test case as internal and to use
+<c>InternalsVisibleToAttribute</c> means to soften the initial intention for
+code hiding (components which should have access to the code). When a class or
+member is declared private, it is intended that no other class be able to access
+it, even if it is part of the same assembly.</para>
+
+<para>There are some strong arguments about using Test Driven Design and what it
+means to do unit tests. From one perspective, unit tests should only test
+publicly visible methods, as those methods define a contract through the API.
+Rewriting should be testable via the public API and doesn't require any changes
+to correctly working test cases. The other perspective is the difficulty and
+complexity required in a unit test case to reach full test case coverage when
+only covering the public API, and by testing internal and simplified private
+implementations can significantly improve the simplicity and maintainability of
+the code and test cases.</para>
 
 <para><linebreak/><linebreak/><b>** Testing non-public classes **</b></para>
 
@@ -30,6 +59,7 @@ private class MyTest {
   }
 
   public int Property { get; set; }
+
   public void DoSomething() {
     Console.WriteLine("{0}", Property);
   }
@@ -72,6 +102,7 @@ for which we want to create a testable class called <c>MyStaticTestAccessor</c>.
 <code>
 private static class MyStaticTest {
   public static int Property { get; set; }
+
   public static void DoSomething() {
     Console.WriteLine("{0}", Property);
   }
@@ -99,6 +130,192 @@ public static class MyStaticTestAccessor {
 test the static methods, a <c>PrivateType</c> object must first be instantiated
 with the assembly name and type name. This is used in all subsequent static test
 methods.</para>
+
+<para><linebreak/><linebreak/><b>** Testing Class Hierarchies **</b></para>
+
+<para>Classes are often extended and a test case may need to test the base class
+as well as the derived class as in the example:</para>
+<code>
+internal class MyBase {
+  public int Value { get; set; }
+
+  public MyBase(int value) {
+    Value = value;
+  }
+
+  public virtual void DoSomething() {
+    Console.WriteLine("{0}", Value);
+  }
+}
+
+internal class MyDerived : MyBase {
+  public string Description { get; set; }
+
+  public MyDerived(int value, string description) : base(value) {
+    Description = description;
+  }
+
+  public override void DoSomething() {
+    Console.WriteLine("{0}: {1}", Description, Value);
+  }
+}
+</code>
+<para>The goal is to create two accessor classes, <c>MyBaseAccessor</c> and
+<c>MyDerivedAccessor</c> that share the inheritence and also properly implement
+as accessors to the correct classes <c>MyBase</c> and <c>MyDerived</c>
+respectively.</para>
+<para>To do that, the base class needs to know the type of the derived object,
+so that it can create the Accessor for the derived object and not the base
+object (something that is normally done as part of the language itself).</para>
+<code>
+public class MyBaseAccessor : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "MyBase";
+
+  protected MyBaseAccessor(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
+   : base(assemblyName, typeName, parameterTypes, args) { }
+
+  public MyBaseAccessor(int value)
+   : base(AssemblyName, TypeName, new[] { typeof(int) }, new object[] { value }) { }
+
+  public int Value {
+    get { return (int)GetFieldOrProperty("Value"); }
+    set { SetFieldOrProperty("Value", value); }
+  }
+
+  public virtual void DoSomething() {
+    Invoke("DoSomething");
+  }
+}
+
+public class MyDerivedAccessor : MyBaseAccessor {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "MyDerived";
+
+  protected MyDerivedAccessor(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
+   : base(assemblyName, typeName, parameterTypes, args) { }
+
+  public MyDerivedAccessor(int value, string description)
+   : base(AssemblyName, TypeName, new[] { typeof(int), typeof(string) },
+    new object[] { value, description }) { }
+
+  public string Description {
+    get { return (string)GetFieldOrProperty("Description"); }
+    set { SetFieldOrProperty("Description", value); }
+  }
+
+  public override void DoSomething() {
+    Invoke("DoSomething");
+  }
+}
+</code>
+<para>Each of the classes having an Accessor equivalent requires a respective
+public constructor. For classes that can be inherited, there needs to be a
+protected constructor to pass through construction from the derived class to the
+base class to the <c>AccessorBase</c> class.</para>
+
+<para><linebreak/><linebreak/><b>** Testing Generic Classes **</b></para>
+
+<para>Testing classes that have generic type parameters are much simpler with
+the AccessorBase than with just the PrivateObject, as it abstracts the work
+required for instantiating a generic class given the type as a string.</para>
+<para>A generic class may look like:</para>
+<code>
+internal class GenericClass&lt;T&gt; {
+  public void Push(T item) { ... }
+  public T Pop() { ... };
+}
+</code>
+<para>Creating the generic Accessor instance is similar, except we now provide a
+list of all the type arguments in the constructor</para>
+<code>
+public class GenericClassAccessor&lt;T&gt; : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "GenericClass`1";
+
+  public GenericClassAccessor()
+   : base(AssembyName, TypeName,
+    new Type[] { },         // Constructor signature to use.
+    null,                   // Parameters
+    new[] { typeof(T) })    // Type Arguments
+
+  public void Push(T item) {
+    Invoke("Push", item);
+  }
+
+  public T Pop() {
+    return (T)Invoke("Pop");
+  }
+}
+</code>
+<para>The name of the type uses the backtick (`1) also describing the number of
+type arguments in the type. The default constructor in the Accessor must be
+defined to properly instantiate the class under test.</para>
+
+<para><linebreak/><linebreak/><b>** Event Handlers **</b></para>
+
+<para>Events can be passed to base classes by using the <c>add</c> and
+<c>remove</c> keywords. Let the code to be tested look something like:</para>
+<code>
+internal class MyEventClass {
+  public event EventHandler&lt;EventArgs&gt; MyEvent;
+
+  protected virtual void OnMyEvent(EventArgs args) {
+    EventHandler&lt;EventArgs&gt; handler = MyEvent;
+    if (myEvent != null) handler(this, args);
+  }
+
+  public void RaiseEvent(int value) {
+    if (value == 42) OnMyEvent(new EventArgs());
+  }
+}
+</code>
+<para>To implement an Accessor class allowing the event handler to be
+tested:</para>
+<code>
+public class MyEventHandlerAccessor : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "MyEventClass";
+
+  public MyEventHandlerAccessor() : base(AssemblyName, TypeName) { }
+
+  public event EventHandler&lt;EventArgs&gt; MyEvent {
+    add {
+      AddEventHandler("MyEvent", value);
+    }
+    remove {
+      RemoveEventHandler("MyEvent", value);
+    }
+  }
+
+  public virtual void OnMyEvent(EventArgs args) {
+    Invoke("OnMyEvent", args);
+  }
+
+  public void RaiseEvent(int value) {
+    Invoke("RaiseEvent", value);
+  }
+}
+</code>
+<para>It is not possible to call <c>RaiseEvent</c> in the Accessor class and
+expect that the method <c>OnMyEvent</c> of the Accessor class will be called.
+The Accessor class provides entry points for testing, so when <c>RaiseEvent</c>
+is called, the internal class will call its own protected <c>OnMyEvent</c>
+event. The Accessor class will not be called as reflection is only one-way (this
+would require somehow adding the Accessor <c>OnMyEvent</c> to be hooked into the
+virtual table of the class being tested). It is possible to test by calling the
+<c>OnMyEvent</c> of the Accessor class directly from a test case if so desired.
+For the sake of testing, it should be considered carefully if an explicit test
+of this protected method is required to achieve the unit test case coverage
+desired - normally a public method would make this available. Valid scenarios
+may be to ease testing of error conditions that might not otherwise occur
+normally. Use your code coverage tools to check.</para>
+
+<para><linebreak/><linebreak/><b>** Exceptions **</b></para>
+
+<para>Exceptions raised by the Accessor classes will be the same type as raised
+by code under test. Any instances of the <c>TargetInvocationException</c> will
+be removed.</para>
         </Remarks>
     </AccessorBase>
 </Comments>
