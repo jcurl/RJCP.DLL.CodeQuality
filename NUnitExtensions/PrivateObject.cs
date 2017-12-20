@@ -33,7 +33,7 @@
         /// </remarks>
         public PrivateObject(object obj)
         {
-            if (obj == null) throw new ArgumentNullException("obj");
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
             ConstructFrom(obj);
         }
 
@@ -53,7 +53,7 @@
         /// </remarks>
         public PrivateObject(object obj, string memberToAccess)
         {
-            if (obj == null) throw new ArgumentNullException("obj");
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
             ValidateAccessString(memberToAccess);
 
             PrivateObject privateObject = obj as PrivateObject;
@@ -82,8 +82,8 @@
         /// </remarks>
         public PrivateObject(object obj, PrivateType type)
         {
-            if (obj == null) throw new ArgumentNullException("obj");
-            if (type == null) throw new ArgumentNullException("type");
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             m_Instance = obj;
             m_ObjectType = type.ReferencedType;
@@ -148,8 +148,7 @@
         /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
         /// </remarks>
         public PrivateObject(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
-            : this(GetObjectType(assemblyName, typeName), parameterTypes, args)
-        { }
+            : this(GetObjectType(assemblyName, typeName), parameterTypes, args) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PrivateObject"/> class.
@@ -171,7 +170,7 @@
         /// </remarks>
         public PrivateObject(Type type, Type[] parameterTypes, object[] args)
         {
-            if (type == null) throw new ArgumentNullException("type");
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             object obj;
             if (parameterTypes != null) {
@@ -194,10 +193,53 @@
             ConstructFrom(obj);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PrivateObject"/> class.
+        /// This creates the object of the specified type and wraps it in a generic private object.
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly that contains the type.</param>
+        /// <param name="typeName">Fully qualified name of the type.</param>
+        /// <param name="parameterTypes">An array of <see cref="Type"/> objects representing the number,
+        /// order, and type of the parameters for constructing the object.</param>
+        /// <param name="args">Arguments to pass to the constructor of the object.</param>
+        /// <param name="typeArguments">The generic types for the arguments used in creating the object.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <para>
+        /// <paramref name="assemblyName"/> is <see langword="null"/>.
+        /// </para>
+        /// <para>-or-</para>
+        /// <para>
+        /// <paramref name="typeName"/> is <see langword="null"/>.
+        /// </para>
+        /// <para>-or-</para>
+        /// <para>
+        /// <paramref name="assemblyName"/> and <paramref name="typeName"/> is not found (<see cref="System.Reflection.Assembly.GetType(string)"/>).
+        /// </para>
+        /// </exception>
+        /// <exception cref="InvalidOperationException"><paramref name="typeName"/> it's not a generic type.</exception>
+        /// <exception cref="ArgumentException">
+        /// <para>
+        /// One of the <paramref name="typeArguments"/> violates the constraints of <paramref name="typeName"/>.
+        /// </para>
+        /// <para>-or-</para>
+        /// <para>
+        /// <paramref name="typeName"/> was not found.
+        /// </para>
+        /// </exception>
+        /// <exception cref="System.Reflection.TargetInvocationException">The constructor being called throws an exception.</exception>
+        /// <exception cref="TypeLoadException"><paramref name="typeName"/> is not a valid type.</exception>
+        /// <exception cref="MissingMethodException">No matching public constructor was found to match the
+        /// <paramref name="typeName"/> and <paramref name="args"/>.</exception>
+        /// <remarks>
+        /// An object is created by using the <paramref name="typeName"/> and <paramref name="args"/> of types <paramref name="typeArguments"/>.
+        /// </remarks>
+        public PrivateObject(string assemblyName, string typeName, Type[] parameterTypes, object[] args, Type[] typeArguments)
+            : this(GetGenericObjectType(assemblyName, typeName, typeArguments), parameterTypes, args) { }
+
         // decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
         private void ConstructFrom(object obj)
         {
-            if (obj == null) throw new ArgumentNullException("obj");
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
             m_Instance = obj;
             m_ObjectType = obj.GetType();
             m_MethodCache = new GenericMethodCache(m_ObjectType);
@@ -206,7 +248,7 @@
         // decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
         private static void ValidateAccessString(string access)
         {
-            if (access == null) throw new ArgumentNullException("access");
+            if (access == null) throw new ArgumentNullException(nameof(access));
             if (access.Length == 0)
                 throw new ArgumentException("Invalid access member syntax");
             foreach (string member in access.Split('.')) {
@@ -222,43 +264,31 @@
             }
         }
 
-        /// <summary>
-        /// Gets the type of the object given the type name and the assembly name.
-        /// </summary>
-        /// <param name="assemblyName">Name of the assembly.</param>
-        /// <param name="typeName">Name of the type.</param>
-        /// <returns>The Type found via reflection.</returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// <para>
-        /// <paramref name="assemblyName"/> or <paramref name="typeName"/>
-        /// may not be <see langword="null"/>;
-        /// </para>
-        /// - or -
-        /// <para>
-        /// <paramref name="assemblyName"/> can't be loaded or found;
-        /// </para>
-        /// - or -
-        /// <para>
-        /// <paramref name="typeName"/> can't be loaded or found.
-        /// </para>
-        /// </exception>
-        protected static Type GetObjectType(string assemblyName, string typeName)
+        private static Type GetObjectType(string assemblyName, string typeName)
         {
-            if (assemblyName == null) throw new ArgumentNullException("assemblyName");
-            if (typeName == null) throw new ArgumentNullException("typeName");
+            if (assemblyName == null) throw new ArgumentNullException(nameof(assemblyName));
+            if (typeName == null) throw new ArgumentNullException(nameof(typeName));
 
             Assembly assembly = null;
             try {
                 assembly = Assembly.Load(assemblyName);
             } catch (ArgumentException) {
-                throw new ArgumentNullException("assemblyName");
+                throw new ArgumentNullException(nameof(assemblyName));
             }
 
             try {
                 return assembly.GetType(typeName);
             } catch (ArgumentException) {
-                throw new ArgumentNullException("typeName");
+                throw new ArgumentNullException(nameof(typeName));
             }
+        }
+
+        private static Type GetGenericObjectType(string assemblyName, string typeName, Type[] genericTypes)
+        {
+            Type type = GetObjectType(assemblyName, typeName);
+            if (type == null) throw new ArgumentNullException(nameof(typeName));
+
+            return type.MakeGenericType(genericTypes);
         }
         #endregion
 
@@ -276,7 +306,7 @@
             get { return m_Instance; }
             set
             {
-                if (value == null) throw new ArgumentNullException("value");
+                if (value == null) throw new ArgumentNullException(nameof(value));
                 m_Instance = value;
             }
         }
@@ -440,7 +470,7 @@
         /// </remarks>
         public object Invoke(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null) throw new ArgumentNullException(nameof(name));
             if (parameterTypes == null) {
                 return InvokeHelper(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
@@ -502,7 +532,7 @@
         /// </remarks>
         public void SetFieldOrProperty(string name, BindingFlags bindingFlags, object value)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null) throw new ArgumentNullException(nameof(name));
             InvokeHelper(name, bindingFlags | BindingFlags.SetField | BindingFlags.SetProperty, new object[1] { value });
         }
 
@@ -535,7 +565,7 @@
         /// </remarks>
         public object GetFieldOrProperty(string name, BindingFlags bindingFlags)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null) throw new ArgumentNullException(nameof(name));
             return InvokeHelper(name, bindingFlags | BindingFlags.GetField | BindingFlags.GetProperty, null);
         }
         #endregion

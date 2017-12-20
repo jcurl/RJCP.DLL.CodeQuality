@@ -48,8 +48,6 @@
     <Compile Include="Deploy.cs" />
     <Compile Include="DeploymentItemAttribute.cs" />
     <Compile Include="GenericMethodCache.cs" />
-    <Compile Include="GenericPrivateObject.cs" />
-    <Compile Include="GenericPrivateType.cs" />
     <Compile Include="NUnitExtensions.cs" />
     <Compile Include="PrivateObject.cs" />
     <Compile Include="PrivateType.cs" />

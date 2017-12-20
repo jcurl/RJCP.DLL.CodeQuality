@@ -10,7 +10,7 @@
         [Test]
         public void GenericTypes()
         {
-            PrivateObject privateObject = new GenericPrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectGenericClassTest`2",
+            PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectGenericClassTest`2",
                 new Type[] { typeof(int), typeof(string) },   // Constructor signature
                 new object[] { 9, "abc" },                    // Values to the constructor
                 new Type[] { typeof(int), typeof(string) });  // Type arguments
@@ -26,7 +26,7 @@
         public void PrivateCtorFromGenericTypes()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
-            PrivateObject privateObject = new GenericPrivateObject("NUnitExtensionsTest", genericType.GetGenericTypeDefinition().FullName,
+            PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", genericType.GetGenericTypeDefinition().FullName,
                 new Type[] { typeof(string) },                // Constructor signature
                 new object[] { "abc" },                       // Values to the constructor
                 new[] { typeof(int), typeof(string) });       // Type arguments
@@ -38,7 +38,7 @@
         public void GenericTypesNullAssemblyName()
         {
             Assert.That(() => {
-                new GenericPrivateObject(null, "abc_xyz",
+                new PrivateObject(null, "abc_xyz",
                     new[] { typeof(object), typeof(string) },
                     new object[] { 9, "xyz" },
                     new[] { typeof(object), typeof(string) });
@@ -49,7 +49,7 @@
         public void GenericTypesNullTypeName()
         {
             Assert.That(() => {
-                new GenericPrivateObject("NUnitExtensionsTest", null,
+                new PrivateObject("NUnitExtensionsTest", null,
                     new[] { typeof(object), typeof(string) },
                     new object[] { 9, "xyz" },
                     new[] { typeof(object), typeof(string) });

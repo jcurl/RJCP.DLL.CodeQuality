@@ -137,7 +137,7 @@
         protected AccessorBase(string assemblyName, string typeName, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
             try {
-                m_PrivateObject = new GenericPrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
+                m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
             } catch (TargetInvocationException ex) {
                 // If parameterTypes == null, PrivateObject raises TargetInvocationException through
                 // the Activator.CreateInstance

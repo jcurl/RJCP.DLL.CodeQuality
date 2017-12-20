@@ -28,7 +28,7 @@ namespace NUnit.Framework
         /// </remarks>
         public PrivateType(Type type)
         {
-            if (type == null) throw new ArgumentNullException("type");
+            if (type == null) throw new ArgumentNullException(nameof(type));
             m_ObjectType = type;
         }
 
@@ -61,24 +61,61 @@ namespace NUnit.Framework
         /// </remarks>
         public PrivateType(string assemblyName, string typeName)
         {
-            m_ObjectType = GetObjectType(assemblyName, typeName);
+            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException(nameof(assemblyName));
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+
+            m_ObjectType = Assembly.Load(assemblyName).GetType(typeName, true);
         }
 
         /// <summary>
-        /// Gets the type of the object given the assembly name and type name.
+        /// Initializes a new instance of the <see cref="PrivateType"/> class providing type arguments for a generic type.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <param name="typeName">Name of the type.</param>
-        /// <returns>The type object.</returns>
+        /// <param name="typeArguments">The generic argument types.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <see langword="null"/> or empty.
+        /// - or -
+        /// <para><paramref name=" typeName"/> not found.</para>
+        /// - or -
+        /// <para>The number of elements in <paramref name="typeArguments"/> is not the same as
+        /// the number of type parameters in the current generic type definition.</para>
+        /// - or -
+        /// <para>Any element of <paramref name="typeArguments"/> does not satisfy the constraints
+        /// specified for the corresponding type parameter of the current generic type.</para>
+        /// - or -
+        /// <para><paramref name="typeArguments"/> contains an element that is a pointer type,
+        /// a by-ref type, or void.</para>
         /// </exception>
-        protected static Type GetObjectType(string assemblyName, string typeName)
+        /// <exception cref="TypeLoadException">The type cannot be found.</exception>
+        /// <exception cref="System.IO.FileNotFoundException"><paramref name="typeName"/> requires a dependent
+        /// assembly that could not be found.</exception>
+        /// <exception cref="System.IO.FileLoadException"><para><paramref name="typeName"/> requires a dependent
+        /// assembly that was found, but could not be loaded.</para>
+        /// - or -
+        /// <para>The current assembly was loaded into the reflection-only context, and name requires a dependent
+        /// assembly that was not preloaded.</para>
+        /// </exception>
+        /// <exception cref="BadImageFormatException"><para><paramref name="typeName"/> requires a dependent
+        /// assembly, but the file is not a valid assembly.</para>
+        /// - or -
+        /// <para><paramref name="typeName"/> requires a dependent assembly which was compiled for a version
+        /// of the runtime later than the currently loaded version.</para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">The invoked method is not supported in the base class.
+        /// Derived classes must provide an implementation.</exception>
+        /// <remarks>
+        /// This constructor is used to obtain a well defined type from a generic type.
+        /// </remarks>
+        public PrivateType(string assemblyName, string typeName, Type[] typeArguments)
         {
-            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("assemblyName");
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("typeName");
+            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException(nameof(assemblyName));
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
 
-            return Assembly.Load(assemblyName).GetType(typeName, true);
+            Type type = Assembly.Load(assemblyName).GetType(typeName, true);
+            if (type == null) throw new ArgumentNullException(nameof(typeName));
+
+            m_ObjectType = type.MakeGenericType(typeArguments);
         }
 
         /// <summary>
@@ -89,7 +126,7 @@ namespace NUnit.Framework
 
         private object InvokeHelperStatic(string name, BindingFlags bindingFlags, object[] args)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null) throw new ArgumentNullException(nameof(name));
 
             try {
                 return m_ObjectType.InvokeMember(name, bindingFlags | MemberDefaultBinding, null, null, args, CultureInfo.InvariantCulture);
@@ -233,7 +270,7 @@ namespace NUnit.Framework
         /// </remarks>
         public object InvokeStatic(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null) throw new ArgumentNullException(nameof(name));
 
             if (parameterTypes == null) {
                 return InvokeHelperStatic(name, bindingFlags | BindingFlags.InvokeMethod, args);
