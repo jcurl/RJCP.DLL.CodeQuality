@@ -2,8 +2,10 @@
 {
     using System;
     using System.Reflection;
+#if MSTEST
     using VsPrivateObject = Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject;
     using VsPrivateType = Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType;
+#endif
 
     // This file allows to compare test results against a Microsoft implementation and our
     // own implementation, to ensure that all test cases written ensure the same behavior
@@ -11,6 +13,9 @@
     //
     // when extending the functionality of NUnit.Framework.PrivateObject, ensure to add
     // the extension to the IPrivateObjectAccessor and update the classes under test.
+    //
+    // To test the MS implementation, ensure you have VS2012 test tools installed, and that
+    // you test in debug mode (that defines MSTEST).
 
     public interface IPrivateObjectAccessor
     {
@@ -122,6 +127,7 @@
         }
     }
 
+#if MSTEST
     public class PrivateObjectVsAccessor : IPrivateObjectAccessor
     {
         private readonly VsPrivateObject m_PrivateObject;
@@ -212,4 +218,5 @@
             return m_PrivateObject.Invoke(name, parameterTypes, args, typeArguments);
         }
     }
+#endif
 }

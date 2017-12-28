@@ -5,21 +5,27 @@
     using HelperClasses;
 
     [TestFixture(typeof(PrivateTypeAccessor), Category = "NUnitExtensions.PrivateType")]
+#if MSTEST
     [TestFixture(typeof(PrivateTypeVsAccessor), Category = "VisualStudio.PrivateType")]
+#endif
     public class PrivateTypeTest<T> where T : class, IPrivateTypeAccessor
     {
         #region Dynamic Creation of Correct PrivateObject
         public static T CreatePrivateType(Type type)
         {
             if (typeof(T) == typeof(PrivateTypeAccessor)) return new PrivateTypeAccessor(type) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateTypeVsAccessor)) return new PrivateTypeVsAccessor(type) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateType(string assemblyName, string typeName)
         {
             if (typeof(T) == typeof(PrivateTypeAccessor)) return new PrivateTypeAccessor(assemblyName, typeName) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateTypeVsAccessor)) return new PrivateTypeVsAccessor(assemblyName, typeName) as T;
+#endif
             return null;
         }
         #endregion

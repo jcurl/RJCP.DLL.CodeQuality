@@ -2,7 +2,9 @@
 {
     using System;
     using System.Reflection;
+#if MSTEST
     using VsPrivateType = Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType;
+#endif
 
     // This file allows to compare test results against a Microsoft implementation and our
     // own implementation, to ensure that all test cases written ensure the same behavior
@@ -91,6 +93,7 @@
         }
     }
 
+#if MSTEST
     public class PrivateTypeVsAccessor : IPrivateTypeAccessor
     {
         private readonly VsPrivateType m_PrivateType;
@@ -155,4 +158,5 @@
             m_PrivateType.SetStaticFieldOrProperty(name, bindingFlags, value);
         }
     }
+#endif
 }

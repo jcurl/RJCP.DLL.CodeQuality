@@ -5,7 +5,9 @@
     using HelperClasses;
 
     [TestFixture(typeof(PrivateObjectAccessor), Category = "NUnitExtensions.PrivateObject")]
+#if MSTEST
     [TestFixture(typeof(PrivateObjectVsAccessor), Category = "VisualStudio.PrivateObject")]
+#endif
     public class PrivateObjectTest<T> where T: class, IPrivateObjectAccessor
     {
         private readonly BindingFlags m_BindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -14,49 +16,63 @@
         public static T CreatePrivateObject(object obj)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(obj) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(obj) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateObject(object obj, string memberToAccess)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(obj, memberToAccess) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(obj, memberToAccess) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateObject(Type objectType, params object[] args)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(objectType, args) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(objectType, args) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateObject(object obj, Type type)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(obj, new PrivateType(type)) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(obj, new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType(type)) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateObject(string assemblyName, string typeName, params object[] args)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(assemblyName, typeName, args) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(assemblyName, typeName, args) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateObject(Type type, Type[] parameterTypes, object[] args)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(type, parameterTypes, args) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(type, parameterTypes, args) as T;
+#endif
             return null;
         }
 
         public static T CreatePrivateObject(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
         {
             if (typeof(T) == typeof(PrivateObjectAccessor)) return new PrivateObjectAccessor(assemblyName, typeName, parameterTypes, args) as T;
+#if MSTEST
             if (typeof(T) == typeof(PrivateObjectVsAccessor)) return new PrivateObjectVsAccessor(assemblyName, typeName, parameterTypes, args) as T;
+#endif
             return null;
         }
         #endregion
@@ -152,15 +168,9 @@
             object obj = null;
             Type type = typeof(ObjectClassTest);
 
-            if (typeof(T) == typeof(PrivateObjectAccessor)) {
-                Assert.That(() => {
-                    CreatePrivateObject(obj, type);
-                }, Throws.TypeOf<ArgumentNullException>());
-            }
-
-            if (typeof(T) == typeof(PrivateObjectVsAccessor)) {
-                Assert.NotNull(CreatePrivateObject(obj, type));
-            }
+            Assert.That(() => {
+                CreatePrivateObject(obj, type);
+            }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
