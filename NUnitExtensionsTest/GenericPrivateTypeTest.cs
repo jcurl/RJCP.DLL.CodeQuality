@@ -3,7 +3,7 @@
     using System;
     using HelperClasses;
 
-    [TestFixture(Category = "NUnitExtensions.GenericPrivateType")]
+    [TestFixture(Category = "NUnitExtensions.PrivateType.Generic")]
     public class GenericPrivateTypeTest
     {
         [TestCase(typeof(GenericClassTest<int>), "System.Int32")]

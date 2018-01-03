@@ -60,10 +60,15 @@
     <Compile Include="HelperClasses\InternalSimpleBase1Accessor.cs" />
     <Compile Include="HelperClasses\InternalSimpleDerived1.cs" />
     <Compile Include="HelperClasses\InternalSimpleDerived1Accessor.cs" />
+    <Compile Include="HelperClasses\NestedStaticGTypes.cs" />
+    <Compile Include="HelperClasses\NestedStaticGTypesAccessor.cs" />
+    <Compile Include="HelperClasses\NestedStaticTypes.cs" />
+    <Compile Include="HelperClasses\NestedStaticTypesAccessor.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
     <Compile Include="HelperClasses\ObjectGenericClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
+    <Compile Include="NestedPrivateTypeTest.cs" />
     <Compile Include="PrivateObjectAccessor.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeAccessor.cs" />

@@ -4,7 +4,7 @@
     using System.Reflection;
     using HelperClasses;
 
-    [TestFixture(Category = "NUnitExtensions.GenericPrivateObject")]
+    [TestFixture(Category = "NUnitExtensions.PrivateObject.Generic")]
     public class GenericPrivateObjectTest
     {
         [Test]

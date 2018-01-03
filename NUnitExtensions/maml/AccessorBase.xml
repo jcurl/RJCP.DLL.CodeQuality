@@ -12,6 +12,7 @@ testing include:</para>
     <item>May have generic type arguments.</item>
     <item>Methods may or may not be static.</item>
     <item>Methods may also have generic type arguments.</item>
+    <item>Nested types, static or instantiable.</item>
 </list>
 <para>Features not yet implemented or supported:</para>
 <list type="bullet">
@@ -20,11 +21,11 @@ testing include:</para>
     <item>Private types in a Generic type argument definition.</item>
 </list>
 
-<para><linebreak/><linebreak/><b>** Arguments against PrivateObject,
+<para><b>** Arguments against PrivateObject,
 InternalsVisibleTo and white testing **</b></para>
 
-<para>Using <c>AccessorBase</c> over simply a <c>PrivateObject</c> helps to
-improve type safety in test code and adds IntelliSense support.</para>
+<para>Using <c>AccessorBase</c> over simply a <see cref="PrivateObject"/> helps
+to improve type safety in test code and adds IntelliSense support.</para>
 
 <para>Some users also express concern on being able to test private class
 implementations. Declaring code needed by a test case as internal and to use
@@ -43,7 +44,7 @@ only covering the public API, and by testing internal and simplified private
 implementations can significantly improve the simplicity and maintainability of
 the code and test cases.</para>
 
-<para><linebreak/><linebreak/><b>** Testing non-public classes **</b></para>
+<para><b>** Testing non-public classes **</b></para>
 
 <para>Let's say you have a class called <c>MyTest</c> that is non-public which
 you want to test. It has a number of simple methods and properties:</para>
@@ -69,19 +70,18 @@ private class MyTest {
 <code>
 public class MyTestAccessor : AccessorBase {
   private const string AssemblyName = "MyAssembly";
-  private const string TypeName = "MyTest";
+  private const string TypeName = "Namespace.MyTest";
 
   public MyTestAccessor(int initialValue)
-    : base(AssemblyName, TypeName, initialValue)
-  { }
+    : base(AssemblyName, TypeName, initialValue) { }
 
   public int Property {
-    get { return (int)GetFieldOrProperty("Property"); }
-    set { SetFieldOrProperty("Property", value); }
+    get { return (int)GetFieldOrProperty(nameof(Property)); }
+    set { SetFieldOrProperty(nameof(Property), value); }
   }
 
   public void DoSomething() {
-    Invoke("DoSomething");
+    Invoke(nameof(DoSomething));
   }
 }
 </code>
@@ -89,7 +89,7 @@ public class MyTestAccessor : AccessorBase {
 change <c>MyTest</c> to <c>internal</c> and the
 <c>InternalsVisibleToAttribute</c>.</para>
 
-<para><linebreak/><linebreak/><b>** Testing non-public static classes **</b></para>
+<para><b>** Testing non-public static classes **</b></para>
 
 <para>The functionality in <c>AccessorBase</c> should support creating testable
 static classes, so that method names are applied to the type, and not to an
@@ -112,26 +112,26 @@ private static class MyStaticTest {
 <code>
 public static class MyStaticTestAccessor {
   private const string AssemblyName = "MyAssembly";
-  private const string TypeName = "MyTest";
+  private const string TypeName = "Namespace.MyTest";
   private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 
   public static int Property {
-    get { return (int)AccessorBase.GetStaticFieldOrProperty(AccType, "Property"); }
-    set { AccessorBase.SetStaticFieldOrProperty(AccType, "Property", value); }
+    get { return (int)AccessorBase.GetStaticFieldOrProperty(AccType, nameof(Property)); }
+    set { AccessorBase.SetStaticFieldOrProperty(AccType, nameof(Property), value); }
   }
 
   public static void DoSomething {
-    AccessorBase.InvokeStatic(AccType, "DoSomething");
+    AccessorBase.InvokeStatic(AccType, nameof(DoSomething));
   }
 }
 </code>
 <para>In this case you will not use the static methods in the
 <c>AccessorBase</c> class to achieve the goal of creating static methods. To
-test the static methods, a <c>PrivateType</c> object must first be instantiated
-with the assembly name and type name. This is used in all subsequent static test
-methods.</para>
+test the static methods, a <see cref="PrivateType"/> object must first be
+instantiated with the assembly name and type name. This is used in all
+subsequent static test methods.</para>
 
-<para><linebreak/><linebreak/><b>** Testing Class Hierarchies **</b></para>
+<para><b>** Testing Class Hierarchies **</b></para>
 
 <para>Classes are often extended and a test case may need to test the base class
 as well as the derived class as in the example:</para>
@@ -170,7 +170,7 @@ object (something that is normally done as part of the language itself).</para>
 <code>
 public class MyBaseAccessor : AccessorBase {
   private const string AssemblyName = "Assembly";
-  private const string TypeName = "MyBase";
+  private const string TypeName = "Namespace.MyBase";
 
   protected MyBaseAccessor(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
    : base(assemblyName, typeName, parameterTypes, args) { }
@@ -179,12 +179,12 @@ public class MyBaseAccessor : AccessorBase {
    : base(AssemblyName, TypeName, new[] { typeof(int) }, new object[] { value }) { }
 
   public int Value {
-    get { return (int)GetFieldOrProperty("Value"); }
-    set { SetFieldOrProperty("Value", value); }
+    get { return (int)GetFieldOrProperty(nameof(Value)); }
+    set { SetFieldOrProperty(nameof(Value), value); }
   }
 
   public virtual void DoSomething() {
-    Invoke("DoSomething");
+    Invoke(nameof(DoSomething));
   }
 }
 
@@ -200,12 +200,12 @@ public class MyDerivedAccessor : MyBaseAccessor {
     new object[] { value, description }) { }
 
   public string Description {
-    get { return (string)GetFieldOrProperty("Description"); }
-    set { SetFieldOrProperty("Description", value); }
+    get { return (string)GetFieldOrProperty(nameof(Description)); }
+    set { SetFieldOrProperty(nameof(Description), value); }
   }
 
   public override void DoSomething() {
-    Invoke("DoSomething");
+    Invoke(nameof(DoSomething));
   }
 }
 </code>
@@ -214,11 +214,12 @@ public constructor. For classes that can be inherited, there needs to be a
 protected constructor to pass through construction from the derived class to the
 base class to the <c>AccessorBase</c> class.</para>
 
-<para><linebreak/><linebreak/><b>** Testing Generic Classes **</b></para>
+<para><b>** Testing Generic Classes **</b></para>
 
 <para>Testing classes that have generic type parameters are much simpler with
-the AccessorBase than with just the PrivateObject, as it abstracts the work
-required for instantiating a generic class given the type as a string.</para>
+the AccessorBase than with just the <see cref="PrivateObject"/>, as it abstracts
+the work required for instantiating a generic class given the type as a
+string.</para>
 <para>A generic class may look like:</para>
 <code>
 internal class GenericClass&lt;T&gt; {
@@ -231,7 +232,7 @@ list of all the type arguments in the constructor</para>
 <code>
 public class GenericClassAccessor&lt;T&gt; : AccessorBase {
   private const string AssemblyName = "Assembly";
-  private const string TypeName = "GenericClass`1";
+  private const string TypeName = "Namespace.GenericClass`1";
 
   public GenericClassAccessor()
    : base(AssembyName, TypeName,
@@ -240,11 +241,11 @@ public class GenericClassAccessor&lt;T&gt; : AccessorBase {
     new[] { typeof(T) })    // Type Arguments
 
   public void Push(T item) {
-    Invoke("Push", item);
+    Invoke(nameof(Push), item);
   }
 
   public T Pop() {
-    return (T)Invoke("Pop");
+    return (T)Invoke(nameof(Pop));
   }
 }
 </code>
@@ -252,7 +253,267 @@ public class GenericClassAccessor&lt;T&gt; : AccessorBase {
 type arguments in the type. The default constructor in the Accessor must be
 defined to properly instantiate the class under test.</para>
 
-<para><linebreak/><linebreak/><b>** Event Handlers **</b></para>
+<para><b>** Testing Nested Types **</b></para>
+<para>Nested types occur commonly within the .NET framework. The following
+examples show how to test static methods in nested classes (whether those
+classes themselves are static or not).</para>
+
+<para><b>Example 1: Simple Nested Type</b></para>
+<para>The simplest kind of nested type is not using generics. Let's have the
+following code:</para>
+<code>
+internal static class NestedStaticTypes {
+  internal static class NestedStaticType {
+    public static int NestedMethod() {
+      return 42;
+    }
+  }
+}
+</code>
+<para>The equivalent nested classes for the two types mentioned would be written
+as:</para>
+<code>
+public static class NestedStaticTypesAccessor {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedStaticTypes";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  public static class NestedStaticTypeAccessor {
+    private static readonly PrivateType AccType =
+      NestedStaticTypesAccessor.AccType.GetNestedType("NestedStaticType");
+
+    public static int NestedMethod() {
+      return (int)AccessorBase.InvokeStatic(AccType, nameof(NestedMethod));
+    }
+  }
+}
+</code>
+<para>The top level class is defined with a <see cref="PrivateType"/> object.
+The nested classes reference the top level class <see cref="PrivateType"/> and
+request a new private type for the nested class with the function
+<c>GetNestedType</c>. One can repeat the pattern to have further nested
+classes.</para>
+
+<para><b>Example 2: Top Level Generic Type with Nested Class</b></para>
+<para>There are various combinations of how generics can be used. This example
+and the following cover a how to on converting those classes to Accessor type
+classes.</para>
+<code>
+internal static class NestedStaticGTypes&lt;T&gt; {
+  internal static class NestedStaticGType {
+    public static string Name() {
+      return typeof(T).ToString();
+    }
+  }
+}
+</code>
+<para>The Accessor classes would be written as:</para>
+<code>
+public static class NestedStaticGTypesAccessor&lt;T&gt; {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedStaticGTypes`1";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+
+  public static class NestedStaticGTypeAccessor {
+    private static readonly PrivateType AccType =
+      NestedStaticGTypesAccessor&lt;T&gt;.AccType.GetNestedType("NestedStaticGType", new Type[] { typeof(T) });
+
+    public static string Name() {
+      return (string)AccessorBase.InvokeStatic(AccType, nameof(Name));
+    }
+  }
+}
+</code>
+<para>One should note how the nested class also needs to be instantiated with
+the parameter type for the parent class.</para>
+
+<para><b>Example 3: Generic Nested Class</b></para>
+<code>
+internal static class NestedStaticGTypes {
+  internal static class NestedStaticGType&lt;T&gt; {
+    public static string Name() {
+      return typeof(T).ToString();
+    }
+  }
+}
+</code>
+<para>The Accessor classes would be written as:</para>
+<code>
+public static class NestedStaticGTypesAccessor {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedStaticGTypes";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  public static class NestedStaticGTypeAccessor&lt;T&gt; {
+    private static readonly PrivateType AccType =
+      NestedStaticGTypesAccessor.AccType.GetNestedType("NestedStaticGType`1", new Type[] { typeof(T) });
+
+    public static string Name() {
+      return (string)AccessorBase.InvokeStatic(AccType, nameof(Name));
+    }
+  }
+}
+</code>
+
+<para><b>Example 4: Generic Method in Nested Class</b></para>
+<para>This example is not really specific on showing how to access a generic
+method, the same example as for the non-generic classes apply, except now
+<see cref="AccessorBase.InvokeStatic(PrivateType, string, Type[], Object[], Type[])"/>
+allows parameter types for generics.</para>
+<code>
+internal static class NestedStaticGTypes {
+  internal static class NestedStaticGType {
+    public static string Name&lt;T&gt;() {
+      return typeof(T).ToString();
+    }
+  }
+}
+</code>
+<para>The accessor code is therefore:</para>
+<code>
+internal static class NestedStaticGTypesAccessor {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedStaticGTypes";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  internal static class NestedStaticGTypeAccessor {
+    private static readonly PrivateType AccType =
+      NestedStaticGTypesAccessor.AccType.GetNestedType("NestedStaticGType");
+
+    public static string Name&lt;T&gt;() {
+      return (string)AccessorBase.InvokeStatic(AccType, nameof(Name), new Type[] { }, new object[] { }, new Type[] { typeof(T) } );
+    }
+  }
+}
+</code>
+<para>The parameters <c>parameterTypes</c> and <c>arguments</c> must be provided
+and may not be <see langword="null"/>.</para>
+
+<para><b>Example 5: Nested Classes all with Generic Types</b></para>
+<para>The most general example for types that are generic are provided:</para>
+<code>
+internal class NestedStaticGTypes&lt;T&gt; {
+  internal class NestedStaticGType&lt;U&gt; {
+    public static string Name&lt;V&gt;() {
+      return String.Format("{0}+{1}+{2}",
+        typeof(T), typeof(U), typeof(V));
+    }
+  }
+}
+</code>
+<para>The Accessor classes would be written as thus:</para>
+<code>
+internal class NestedStaticGTypesAccessor&lt;T&gt; {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedStaticGTypes`1";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+
+  internal class NestedStaticGTypeAccessor&lt;U&gt; {
+    private static readonly PrivateType AccType =
+      NestedStaticGTypesAccessor&lt;T&gt;.AccType.GetNestedType("NestedStaticGType`1", new Type[] { typeof(T), typeof(U) });
+
+    public static string Name&lt;V&gt;() {
+      return (string)AccessorBase.InvokeStatic(AccType, nameof(Name),
+        new Type[] { }, new object[] { }, new Type[] { typeof(V) });
+    }
+  }
+}
+</code>
+<para>Interesting in this example is that the nested type shows it has one
+parameter type with the backtick notation of <c>NestedStaticGType`1</c>, but it
+itself requires two generic type arguments.</para>
+
+<para><b>** Testing Instantiations (objects) of Nested Types **</b></para>
+<para>The next logical step from Nested Types is to be able to instantiate
+objects of nested types and test the methods of those instances.</para>
+
+<para><b>Example 1: Nested Types</b></para>
+<para>The simplest case to test for are non-generic classes</para>
+<code>
+internal class NestedTypes {
+  public int MethodA() { return 42; }
+
+  internal class NestedType {
+    public int MethodB() { return 64; }
+  }
+}
+</code>
+<para>In the case above, both classes have a default constructor. The Accessor
+classes would therefore be:</para>
+<code>
+public class NestedTypesAccessor : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedTypes";
+  private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  public NestedTypesAccessor() : base(AccType) { }
+
+  public int MethodA() {
+    return (int)Invoke(nameof(MethodA));
+  }
+
+  public class NestedTypeAccessor : AccessorBase {
+    private static readonly PrivateType AccType =
+      NestedTypesAccessor.AccType.GetNestedType("NestedType");
+
+    public NestedTypeAccessor() : base(AccType) { }
+
+    public int MethodB() {
+      return (int)Invoke(nameof(MethodB));
+    }
+  }
+}
+</code>
+<para>In this example, we see a more universal pattern for <see cref="PrivateType"/>
+and <see cref="PrivateObject"/> forming, where a class is beginning to support
+static and non-static methods, with or without nested classes.</para>
+
+<para><b>Example 2: Nested Types with Generics</b></para>
+<para>The next example covers the case that the parent and nested classes uses
+generics.</para>
+<code>
+internal class NestedGTypes&lt;T&gt; {
+  private T m_Value;
+  public NestedGTypes(T initialValue) { m_Value = initialValue; }
+  public string Value() { return m_Value.ToString(); }
+
+  internal class NestedGType&lt;U&gt; {
+    private U m_Value;
+    public NestedGType(U initialValue) { m_Value = initialValue; }
+    public string ValueNested() { return m_Value.ToString(); }
+  }
+}
+</code>
+<para>The Accessor code now creates the <see cref="PrivateType"/> defining the
+generics and uses that to instantiate the base <c>AccessorBase</c> class to
+create instances of the specific generic types. You'll note in the example code,
+we don't need to specify the generics details to the <c>AccessorBase</c> as this
+is encapsulated within the <see cref="PrivateType"/>.</para>
+<code>
+public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.NestedGTypes`1";
+  private static readonly PrivateType AccType =
+    new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+
+  public NestedGTypesAccessor(T initialValue)
+    : base(AccType, new Type[] { typeof(T) }, new object[] { initialValue }) { }
+  public string Value() { return (string)Invoke(nameof(Value)); }
+
+  public class NestedGTypeAccessor&lt;U&gt; : AccessorBase {
+    private static readonly PrivateType AccType =
+      NestedGTypesAccessor&lt;T&gt;.AccType.GetNestedType("NestedGType`1", new Type[] { typeof(T), typeof(U) });
+
+    public NestedGTypeAccessor(U initialValue)
+      : base(AccType, new Type[] { typeof(U) }, new object[] { initialValue }) { }
+    public string ValueNested() {
+      return (string)Invoke(nameof(ValueNested));
+    }
+  }
+}
+</code>
+
+<para><b>** Event Handlers **</b></para>
 
 <para>Events can be passed to base classes by using the <c>add</c> and
 <c>remove</c> keywords. Let the code to be tested look something like:</para>
@@ -311,7 +572,7 @@ desired - normally a public method would make this available. Valid scenarios
 may be to ease testing of error conditions that might not otherwise occur
 normally. Use your code coverage tools to check.</para>
 
-<para><linebreak/><linebreak/><b>** Exceptions **</b></para>
+<para><b>** Exceptions **</b></para>
 
 <para>Exceptions raised by the Accessor classes will be the same type as raised
 by code under test. Any instances of the <c>TargetInvocationException</c> will

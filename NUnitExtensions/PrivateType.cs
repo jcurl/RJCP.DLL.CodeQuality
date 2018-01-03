@@ -124,6 +124,59 @@ namespace NUnit.Framework
         /// <value>The referenced type.</value>
         public Type ReferencedType { get { return m_ObjectType; } }
 
+        /// <summary>
+        /// Instantiates a new <see cref="PrivateType"/> from the nested type relative to this PrivateType.
+        /// </summary>
+        /// <param name="typeName">Name of the nested type.</param>
+        /// <returns>A new <see cref="PrivateType"/> instance representing the nested type.</returns>
+        /// <exception cref="ArgumentException">
+        /// <para><paramref name="typeName"/> may not be <see langword="null"/> or empty.</para>
+        /// or
+        /// <para><paramref name=" typeName"/> not found.</para>
+        /// </exception>
+        public PrivateType GetNestedType(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+
+            Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding);
+            if (nestedType == null) throw new ArgumentException("Type not found", nameof(typeName));
+            return new PrivateType(nestedType);
+        }
+
+        /// <summary>
+        /// Instantiates a new <see cref="PrivateType"/> from the nested type relative to this PrivateType.
+        /// </summary>
+        /// <param name="typeName">Name of the nested type.</param>
+        /// <param name="typeArguments">The type arguments for creating the generic type.</param>
+        /// <returns>A new <see cref="PrivateType"/> instance representing the nested type.</returns>
+        /// <exception cref="ArgumentException">
+        /// <para><paramref name="typeName"/> may not be <see langword="null"/> or empty.</para>
+        /// or
+        /// <para><paramref name=" typeName"/> not found.</para>
+        /// or
+        /// <para>The number of elements in <paramref name="typeArguments"/> is not the same as
+        /// the number of type parameters in the current generic type definition.</para>
+        /// or
+        /// <para>Any element of <paramref name="typeArguments"/> does not satisfy the constraints
+        /// specified for the corresponding type parameter of the current generic type.</para>
+        /// or
+        /// <para><paramref name="typeArguments"/> contains an element that is a pointer type,
+        /// a by-ref type, or void.</para>
+        /// </exception>
+        /// <exception cref="ArgumentNullException"><paramref name="typeArguments"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">The type does not represent a generic type definition.</exception>
+        /// <exception cref="NotSupportedException">The invoked method is not supported in the base class.
+        /// Derived classes must provide an implementation.</exception>
+        public PrivateType GetNestedType(string typeName, Type[] typeArguments)
+        {
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+
+            Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding);
+            if (nestedType == null) throw new ArgumentException("Type not found", nameof(typeName));
+            Type genericType = nestedType.MakeGenericType(typeArguments);
+            return new PrivateType(genericType);
+        }
+
         private object InvokeHelperStatic(string name, BindingFlags bindingFlags, object[] args)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
@@ -164,7 +217,7 @@ namespace NUnit.Framework
         /// <param name="parameterTypes"><para>An array of Type objects that represents the number,
         /// order, and type of the parameters for the method.</para>
         /// - or -
-        /// <para>An empty array of the type Type, that is, Type[] types = new Type[0] to get a
+        /// <para>An empty array of the type <see cref="Type"/>, that is, <c>Type[] types = new Type[0]</c> to get a
         /// method that takes no parameters.</para></param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
@@ -187,7 +240,7 @@ namespace NUnit.Framework
         /// <param name="parameterTypes"><para>An array of Type objects that represents the number,
         /// order, and type of the parameters for the method.</para>
         /// - or -
-        /// <para>An empty array of the type Type, that is, Type[] types = new Type[0] to get a
+        /// <para>An empty array of the type <see cref="Type"/>, that is, <c>Type[] types = new Type[0]</c> to get a
         /// method that takes no parameters.</para></param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <param name="typeArguments">An array of type arguments to use when invoking a generic method.</param>
@@ -231,7 +284,7 @@ namespace NUnit.Framework
         /// <param name="parameterTypes"><para>An array of Type objects that represents the number,
         /// order, and type of the parameters for the method.</para>
         /// - or -
-        /// <para>An empty array of the type Type, that is, Type[] types = new Type[0] to get a
+        /// <para>An empty array of the type <see cref="Type"/>, that is, Type[] types = new Type[0] to get a
         /// method that takes no parameters.</para></param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
@@ -255,7 +308,7 @@ namespace NUnit.Framework
         /// <param name="parameterTypes"><para>An array of Type objects that represents the number,
         /// order, and type of the parameters for the method.</para>
         /// - or -
-        /// <para>An empty array of the type Type, that is, Type[] types = new Type[0] to get a
+        /// <para>An empty array of the type <see cref="Type"/>, that is, Type[] types = new Type[0] to get a
         /// method that takes no parameters.</para></param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <param name="typeArguments">An array of type arguments to use when invoking a generic method.</param>
