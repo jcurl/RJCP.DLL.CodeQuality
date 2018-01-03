@@ -66,6 +66,8 @@
     <Compile Include="HelperClasses\NestedStaticTypesAccessor.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
     <Compile Include="HelperClasses\ObjectGenericClassTest.cs" />
+    <Compile Include="HelperClasses\RelatedClassTest.cs" />
+    <Compile Include="HelperClasses\RelatedClassTestAccessor.cs" />
     <Compile Include="HelperClasses\StaticClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
     <Compile Include="NestedPrivateTypeTest.cs" />

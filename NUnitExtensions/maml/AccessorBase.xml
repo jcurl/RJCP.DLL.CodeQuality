@@ -13,16 +13,15 @@ testing include:</para>
     <item>Methods may or may not be static.</item>
     <item>Methods may also have generic type arguments.</item>
     <item>Nested types, static or instantiable.</item>
+    <item>Return objects from one accessor of type another accessor.</item>
 </list>
 <para>Features not yet implemented or supported:</para>
 <list type="bullet">
-    <item>Return objects from one accessor of type another accessor.</item>
     <item>Function inputs requiring an accessor.</item>
     <item>Private types in a Generic type argument definition.</item>
 </list>
 
-<para><b>** Arguments against PrivateObject,
-InternalsVisibleTo and white testing **</b></para>
+<para><b>** Arguments against PrivateObject, InternalsVisibleTo and white testing **</b></para>
 
 <para>Using <c>AccessorBase</c> over simply a <see cref="PrivateObject"/> helps
 to improve type safety in test code and adds IntelliSense support.</para>
@@ -512,6 +511,66 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   }
 }
 </code>
+
+<para><b>** Private Instances in Return Values **</b></para>
+
+<para>The factory pattern often results in one class creating instances of other
+classes. The <c>AccessorBase</c> can be used to test private instances of the
+factory pattern. Take the simplest factory pattern:</para>
+<code>
+internal class RelatedClassTest {
+  public RelatedClassTest(int initialValue) { Value = initialValue; }
+  public int Value { get; private set; }
+}
+
+internal class RelatedClassTestFactory {
+  public RelatedClassTestFactory() { }
+  public RelatedClassTest Create() {
+    return new RelatedClassTest(42);
+  }
+}
+</code>
+<para>The simplest case here is that the factory object creates a specific instance having
+a value of 42. The Accessor versions of the two classes would be:</para>
+<code>
+public class RelatedClassTestAccessor : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.RelatedClassTest";
+
+  public RelatedClassTestAccessor(PrivateObject obj) : base(obj) { }
+
+  public RelatedClassTestAccessor(int initialValue)
+    : base(AssemblyName, TypeName, new Type[] { typeof(int) }, new object[] { initialValue }) { }
+
+  public int Value {
+    get {
+      return (int)GetFieldOrProperty(nameof(Value));
+    }
+  }
+}
+
+public class RelatedClassTestFactoryAccessor: AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.RelatedClassTestFactory";
+
+  public RelatedClassTestFactoryAccessor()
+    : base(AssemblyName, TypeName) { }
+
+  public RelatedClassTestAccessor Create() {
+    object obj = Invoke(nameof(Create));
+    return obj == null ? null : new RelatedClassTestAccessor(new PrivateObject(obj));
+  }
+}
+</code>
+<para>The <c>RelatedClassTestAccessor</c> requires a constructor that takes a
+<see cref="PrivateObject"/> instance that can be used to provide a way to access
+the methods of the object. It is not expected that a class have a constructor
+taking a type of <see cref="PrivateObject"/>.</para>
+<para>The <c>RelatedClassTestFactoryAccessor</c> returns an object type, which
+is then used to wrap around the equivalent object accessor class
+<c>RelatedClassTestAccessor</c>. If the return value is <see langword="null"/>,
+then <see langword="null"/> is also returned by the accessor, else the wrapped
+object.</para>
 
 <para><b>** Event Handlers **</b></para>
 

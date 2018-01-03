@@ -243,5 +243,13 @@
             stack.Push(1);
             Assert.That(stack.Pop(), Is.EqualTo(1));
         }
+
+        [Test]
+        public void PrivateReturnObject()
+        {
+            RelatedClassTestFactoryAccessor factory = new RelatedClassTestFactoryAccessor();
+            RelatedClassTestAccessor item = factory.Create();
+            Assert.That(item.Value, Is.EqualTo(42));
+        }
     }
 }
