@@ -307,6 +307,7 @@
             {
                 if (value == null) throw new ArgumentNullException(nameof(value));
                 m_Instance = value;
+                m_ObjectType = value.GetType();
             }
         }
 
