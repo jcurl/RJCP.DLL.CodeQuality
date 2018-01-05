@@ -82,7 +82,6 @@
         /// </remarks>
         public PrivateObject(object obj, PrivateType type)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
             if (type == null) throw new ArgumentNullException(nameof(type));
 
             m_Instance = obj;
