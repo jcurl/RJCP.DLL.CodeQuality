@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// </summary>
     /// <remarks>
     /// Portions of this code is Copyright Microsoft, and shouldn't be deployed to the public,
-    /// decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
+    /// decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
     /// </remarks>
     public class PrivateType
     {
@@ -180,16 +180,7 @@ namespace NUnit.Framework
         private object InvokeHelperStatic(string name, BindingFlags bindingFlags, object[] args)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
-
-            try {
-                return m_ObjectType.InvokeMember(name, bindingFlags | MemberDefaultBinding, null, null, args, CultureInfo.InvariantCulture);
-            } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
-                    throw;
-                } else {
-                    throw ex.InnerException;
-                }
-            }
+            return m_ObjectType.InvokeMember(name, bindingFlags | MemberDefaultBinding, null, null, args, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -200,10 +191,11 @@ namespace NUnit.Framework
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">There is no method <paramref name="name"/> for this object.</exception>
+        /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244026.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object InvokeStatic(string name, params object[] args)
         {
@@ -223,10 +215,11 @@ namespace NUnit.Framework
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244010.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object InvokeStatic(string name, Type[] parameterTypes, object[] args)
         {
@@ -247,10 +240,11 @@ namespace NUnit.Framework
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/bb546306.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object InvokeStatic(string name, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
@@ -266,10 +260,11 @@ namespace NUnit.Framework
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244042.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object InvokeStatic(string name, BindingFlags bindingFlags, params object[] args)
         {
@@ -290,10 +285,11 @@ namespace NUnit.Framework
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244012.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object InvokeStatic(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
         {
@@ -315,38 +311,30 @@ namespace NUnit.Framework
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is a CultureInvariant version
         /// as described by
         /// https://msdn.microsoft.com/en-us/library/bb546274.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object InvokeStatic(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-
             if (parameterTypes == null) {
                 return InvokeHelperStatic(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
 
+            if (name == null) throw new ArgumentNullException(nameof(name));
             MethodInfo method = m_ObjectType.GetMethod(name, bindingFlags | MemberDefaultBinding, null, parameterTypes, null);
             if (method == null) {
                 string msg = string.Format("Private accessor member {0} not found", name);
                 throw new ArgumentException(msg);
             }
 
-            try {
-                if (method.IsGenericMethodDefinition) {
-                    return method.MakeGenericMethod(typeArguments).Invoke(null, bindingFlags, null, args, CultureInfo.InvariantCulture);
-                }
-                return method.Invoke(null, bindingFlags, null, args, CultureInfo.InvariantCulture);
-            } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
-                    throw;
-                } else {
-                    throw ex.InnerException;
-                }
+            if (method.IsGenericMethodDefinition) {
+                return method.MakeGenericMethod(typeArguments).Invoke(null, bindingFlags, null, args, CultureInfo.InvariantCulture);
             }
+            return method.Invoke(null, bindingFlags, null, args, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -356,10 +344,11 @@ namespace NUnit.Framework
         /// <returns>The value set for the <paramref name="name"/> field or property.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244057.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object GetStaticFieldOrProperty(string name)
         {
@@ -376,10 +365,11 @@ namespace NUnit.Framework
         /// <returns>The value set for the <paramref name="name"/> field or property.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244124.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object GetStaticFieldOrProperty(string name, BindingFlags bindingFlags)
         {
@@ -393,10 +383,11 @@ namespace NUnit.Framework
         /// <param name="value">The value to set to the static field or property.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms244118.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public void SetStaticFieldOrProperty(string name, object value)
         {
@@ -413,10 +404,11 @@ namespace NUnit.Framework
         /// <param name="value">The value to set to the static field or property.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
         /// https://msdn.microsoft.com/en-us/library/ms243923.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public void SetStaticFieldOrProperty(string name, BindingFlags bindingFlags, object value)
         {

@@ -163,17 +163,6 @@
         }
 
         [Test]
-        public void PrivateObject_PrivateType_NullObject()
-        {
-            object obj = null;
-            Type type = typeof(ObjectClassTest);
-
-            Assert.That(() => {
-                CreatePrivateObject(obj, type);
-            }, Throws.TypeOf<ArgumentNullException>());
-        }
-
-        [Test]
         public void PrivateObject_PrivateType_NullType()
         {
             object obj = new object();
@@ -585,6 +574,25 @@
             Assert.That(() => {
                 CreatePrivateObject("NUnitExtensionsTest", "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
             }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void ObjectWithNullType()
+        {
+            object obj = new object();
+            Assert.That(() => {
+                CreatePrivateObject(obj, (Type)null);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void NullObjectWithType()
+        {
+            object obj = null;
+            Type t = typeof(int);
+            Assert.That(() => {
+                CreatePrivateObject(obj, t);
+            }, Throws.Nothing);
         }
     }
 }

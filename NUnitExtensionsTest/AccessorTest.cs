@@ -209,6 +209,96 @@
         }
 
         [Test]
+        public void ConstructorWithException2()
+        {
+            Assert.That(() => { new ClassExceptionCtorTestAccessor2(); },
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionsParamTypes2()
+        {
+            Assert.That(() => { new ClassExceptionCtorTestAccessor2(42); },
+                Throws.TypeOf<NotSupportedException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionTargetInvocation2()
+        {
+            // What happens if the constructor throws itself a TargetInvocationException.
+            // We shouldn't remove it. An failing test case might raise
+            // InvalidOperationException instead, which would be wrong.
+            //
+            // Tests with parameterType != null
+            Assert.That(() => { new ClassExceptionCtorTestAccessor2(43); },
+                Throws.TypeOf<System.Reflection.TargetInvocationException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionGeneric()
+        {
+            Assert.That(() => { new ClassExceptionCtorTestAccessor<object>(); },
+                Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionGenericParamTypes()
+        {
+            Assert.That(() => { new ClassExceptionCtorTestAccessor<string>("foo", 42); },
+                Throws.TypeOf<NotSupportedException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionGenericTargetInvocation()
+        {
+            // What happens if the constructor throws itself a TargetInvocationException.
+            // We shouldn't remove it. An failing test case might raise
+            // InvalidOperationException instead, which would be wrong.
+            //
+            // Tests with parameterType != null
+            Assert.That(() => { new ClassExceptionCtorTestAccessor<string>("foo", 43); },
+                Throws.TypeOf<System.Reflection.TargetInvocationException>());
+        }
+
+        [Test]
+        public void ConstructorWithExceptionsParamTypesTargetInvocation2()
+        {
+            // What happens if the constructor throws itself a TargetInvocationException.
+            // We shouldn't remove it. An failing test case might raise
+            // InvalidOperationException instead, which would be wrong.
+            //
+            // Tests with parameterType != null
+            Assert.That(() => { new ClassExceptionCtorTestAccessor2(false, 43); },
+                Throws.TypeOf<System.Reflection.TargetInvocationException>());
+        }
+
+        [Test]
+        public void PropertyGetWithException()
+        {
+            ClassExceptionCtorTestAccessor c = new ClassExceptionCtorTestAccessor(0);
+            Assert.That(() => { string x = c.Property; }, Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void PropertySetWithException()
+        {
+            ClassExceptionCtorTestAccessor c = new ClassExceptionCtorTestAccessor(0);
+            Assert.That(() => { c.Property = "foo"; }, Throws.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void StaticPropertyGetWithException()
+        {
+            Assert.That(() => { int x = ClassExceptionCtorTestAccessor2.Property2; }, Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void StaticPropertySetWithException()
+        {
+            Assert.That(() => { ClassExceptionCtorTestAccessor2.Property2 = 42; }, Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
         public void StaticProperty()
         {
             StaticClassTestAccessor.Property = 42;
@@ -250,6 +340,15 @@
             RelatedClassTestFactoryAccessor factory = new RelatedClassTestFactoryAccessor();
             RelatedClassTestAccessor item = factory.Create();
             Assert.That(item.Value, Is.EqualTo(42));
+        }
+
+        [Test]
+        public void PrivateReturnObjectNullPrivateObject()
+        {
+            RelatedClassTestFactoryAccessor factory = new RelatedClassTestFactoryAccessor();
+
+            // What happens if an Accessor gives a null PrivateObject
+            Assert.That(() => { factory.Create_PrivateObjectNull(); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

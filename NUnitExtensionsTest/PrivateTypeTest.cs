@@ -97,8 +97,11 @@
         [Test]
         public void ThrowExWhenInvoke()
         {
+            // Microsoft.VisualStudio.TestTools.UnitTesting v10.1.0.0 will fail (VS2015)
+            // Microsoft.VisualStudio.TestTools.UnitTesting v14.0.0.0 will pass (VS2017)
             T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
-            Assert.That(() => { privType.InvokeStatic("ThrowEx", null); }, Throws.TypeOf<InvalidOperationException>());
+            Assert.That(() => { privType.InvokeStatic("ThrowEx", null); },
+                Throws.TypeOf<TargetInvocationException>().With.InnerException.TypeOf<InvalidOperationException>());
         }
         #endregion
 

@@ -10,7 +10,7 @@
     /// </summary>
     /// <remarks>
     /// Portions of this code is Copyright Microsoft, and shouldn't be deployed to the public,
-    /// decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
+    /// decompiled from v14.0.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
     /// </remarks>
     public class PrivateObject
     {
@@ -29,7 +29,7 @@
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243350.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public PrivateObject(object obj)
         {
@@ -46,10 +46,11 @@
         /// <exception cref="ArgumentNullException"><paramref name="obj"/> may not be <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="memberToAccess"/> contains a zero length member,
         /// or is an invalid format.</exception>
+        /// <exception cref="TargetInvocationException">The <paramref name="memberToAccess"/> raised an exception in that property or field.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243385.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public PrivateObject(object obj, string memberToAccess)
         {
@@ -76,7 +77,7 @@
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243390.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// <para>This method will raise an exception if <paramref name="obj"/> is <see langword="null"/>, which is not done
         /// in the MS implementation.</para>
         /// </remarks>
@@ -103,7 +104,7 @@
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243316.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public PrivateObject(Type type, params object[] args)
             : this(type, null, args) { }
@@ -118,10 +119,11 @@
         /// <exception cref="ArgumentNullException">
         /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <value>null</value>.
         /// </exception>
+        /// <exception cref="TargetInvocationException">The constructor being called throws an exception.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243386.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public PrivateObject(string assemblyName, string typeName, params object[] args)
             : this(GetObjectType(assemblyName, typeName), null, args) { }
@@ -141,10 +143,11 @@
         /// <exception cref="ArgumentException"><para><paramref name="parameterTypes"/> is multidimensional</para>
         /// - or -
         /// <para> constructor cannot be found to match the parameters specified in PrivateObject.</para></exception>
+        /// <exception cref="TargetInvocationException">The constructor being called throws an exception.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243375.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public PrivateObject(string assemblyName, string typeName, Type[] parameterTypes, object[] args)
             : this(GetObjectType(assemblyName, typeName), parameterTypes, args) { }
@@ -165,7 +168,7 @@
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243297.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public PrivateObject(Type type, Type[] parameterTypes, object[] args)
         {
@@ -177,15 +180,7 @@
                 if (constructor == null) {
                     throw new ArgumentException("Constructor not found");
                 }
-                try {
-                    obj = constructor.Invoke(args);
-                } catch (TargetInvocationException ex) {
-                    if (ex.InnerException == null) {
-                        throw;
-                    } else {
-                        throw ex.InnerException;
-                    }
-                }
+                obj = constructor.Invoke(args);
             } else {
                 obj = Activator.CreateInstance(type, DefaultBindingFlags | BindingFlags.CreateInstance, null, args, null);
             }
@@ -235,7 +230,7 @@
         public PrivateObject(string assemblyName, string typeName, Type[] parameterTypes, object[] args, Type[] typeArguments)
             : this(GetGenericObjectType(assemblyName, typeName, typeArguments), parameterTypes, args) { }
 
-        // decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
+        // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private void ConstructFrom(object obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -244,7 +239,7 @@
             m_MethodCache = new GenericMethodCache(m_ObjectType);
         }
 
-        // decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
+        // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private static void ValidateAccessString(string access)
         {
             if (access == null) throw new ArgumentNullException(nameof(access));
@@ -320,18 +315,10 @@
             get { return m_ObjectType; }
         }
 
-        // decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
+        // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private object InvokeHelper(string name, BindingFlags bindingFlags, object[] args)
         {
-            try {
-                return m_ObjectType.InvokeMember(name, bindingFlags, (Binder)null, m_Instance, args, CultureInfo.InvariantCulture);
-            } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
-                    throw;
-                } else {
-                    throw ex.InnerException;
-                }
-            }
+            return m_ObjectType.InvokeMember(name, bindingFlags, (Binder)null, m_Instance, args, CultureInfo.InvariantCulture);
         }
 
         #region Invoke
@@ -343,10 +330,11 @@
         /// <returns>An object that represents the return value of a private member.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243741.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object Invoke(string name, params object[] args)
         {
@@ -366,10 +354,11 @@
         /// <returns>An object that represents the return value of the invoked method.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243743.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object Invoke(string name, Type[] parameterTypes, object[] args)
         {
@@ -393,10 +382,11 @@
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/bb546556.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object Invoke(string name, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
@@ -412,10 +402,11 @@
         /// <returns>An object that represents the return value of a private member.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243710.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object Invoke(string name, BindingFlags bindingFlags, params object[] args)
         {
@@ -434,10 +425,11 @@
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243755.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object Invoke(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
         {
@@ -462,11 +454,12 @@
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is a culture invariant form of the MS implementation
         /// https://msdn.microsoft.com/en-us/library/bb546207.aspx. It wasn't in
         /// the original implementation by Microsoft.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object Invoke(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
@@ -486,18 +479,10 @@
                 throw new ArgumentException(msg);
             }
 
-            try {
-                if (methodInfo.IsGenericMethodDefinition) {
-                    return methodInfo.MakeGenericMethod(typeArguments).Invoke(m_Instance, bindingFlags, null, args, CultureInfo.InvariantCulture);
-                }
-                return methodInfo.Invoke(m_Instance, bindingFlags, null, args, CultureInfo.InvariantCulture);
-            } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
-                    throw;
-                } else {
-                    throw ex.InnerException;
-                }
+            if (methodInfo.IsGenericMethodDefinition) {
+                return methodInfo.MakeGenericMethod(typeArguments).Invoke(m_Instance, bindingFlags, null, args, CultureInfo.InvariantCulture);
             }
+            return methodInfo.Invoke(m_Instance, bindingFlags, null, args, CultureInfo.InvariantCulture);
         }
         #endregion
 
@@ -508,10 +493,11 @@
         /// <param name="name">The name of the private field or property to set.</param>
         /// <param name="value">The value to set.</param>
         /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms244054.aspx
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public void SetFieldOrProperty(string name, object value)
         {
@@ -525,10 +511,11 @@
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="System.Reflection.BindingFlags"/> that specifies how the search for the field or property is conducted.</param>
         /// <param name="value">The value to set.</param>
         /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243964.aspx
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public void SetFieldOrProperty(string name, BindingFlags bindingFlags, object value)
         {
@@ -541,10 +528,12 @@
         /// </summary>
         /// <param name="name">The name of the private field or property to get.</param>
         /// <returns>The value set for the name field or property.</returns>
+        /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243729.aspx.
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object GetFieldOrProperty(string name)
         {
@@ -558,10 +547,11 @@
         /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="System.Reflection.BindingFlags"/> that specifies how the search for the field or property is conducted. The type of lookup need not be specified.</param>
         /// <returns>The value set for the name field or property.</returns>
         /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243787.aspx
-        /// <para>It has been decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.</para>
+        /// <para>It has been decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.</para>
         /// </remarks>
         public object GetFieldOrProperty(string name, BindingFlags bindingFlags)
         {

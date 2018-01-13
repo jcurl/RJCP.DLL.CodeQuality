@@ -34,5 +34,11 @@
             object obj = Invoke(nameof(Create));
             return obj == null ? null : new RelatedClassTestAccessor(new PrivateObject(obj));
         }
+
+        public RelatedClassTestAccessor Create_PrivateObjectNull()
+        {
+            PrivateObject nullPrvObj = null;
+            return new RelatedClassTestAccessor(nullPrvObj);
+        }
     }
 }

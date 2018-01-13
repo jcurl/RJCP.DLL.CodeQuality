@@ -63,8 +63,6 @@
             try {
                 m_PrivateObject = new PrivateObject(type.ReferencedType, args);
             } catch (TargetInvocationException ex) {
-                // As parameterTypes == null, PrivateObject raises TargetInvocationException through
-                // the Activator.CreateInstance
                 if (ex.InnerException == null) {
                     throw;
                 } else {
@@ -90,9 +88,7 @@
             try {
                 m_PrivateObject = new PrivateObject(type.ReferencedType, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                // If parameterTypes == null, PrivateObject raises TargetInvocationException through
-                // the Activator.CreateInstance
-                if (parameterTypes != null || ex.InnerException == null) {
+                if (ex.InnerException == null) {
                     throw;
                 } else {
                     throw ex.InnerException;
@@ -119,8 +115,6 @@
             try {
                 m_PrivateObject = new PrivateObject(assemblyName, typeName, args);
             } catch (TargetInvocationException ex) {
-                // As parameterTypes == null, PrivateObject raises TargetInvocationException through
-                // the Activator.CreateInstance
                 if (ex.InnerException == null) {
                     throw;
                 } else {
@@ -149,9 +143,7 @@
             try {
                 m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                // If parameterTypes == null, PrivateObject raises TargetInvocationException through
-                // the Activator.CreateInstance
-                if (parameterTypes != null || ex.InnerException == null) {
+                if (ex.InnerException == null) {
                     throw;
                 } else {
                     throw ex.InnerException;
@@ -199,9 +191,7 @@
             try {
                 m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
             } catch (TargetInvocationException ex) {
-                // If parameterTypes == null, PrivateObject raises TargetInvocationException through
-                // the Activator.CreateInstance
-                if (parameterTypes != null || ex.InnerException == null) {
+                if (ex.InnerException == null) {
                     throw;
                 } else {
                     throw ex.InnerException;
@@ -225,8 +215,15 @@
         protected object GetFieldOrProperty(string propertyName)
         {
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-
-            return m_PrivateObject.GetFieldOrProperty(propertyName, BindingFlags);
+            try {
+                return m_PrivateObject.GetFieldOrProperty(propertyName, BindingFlags);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -241,7 +238,15 @@
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
             if (value == null) throw new ArgumentNullException(nameof(value));
 
-            m_PrivateObject.SetFieldOrProperty(propertyName, BindingFlags, value);
+            try {
+                m_PrivateObject.SetFieldOrProperty(propertyName, BindingFlags, value);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -256,7 +261,15 @@
         {
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
 
-            return m_PrivateObject.Invoke(methodName, BindingFlags, args);
+            try {
+                return m_PrivateObject.Invoke(methodName, BindingFlags, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -272,7 +285,15 @@
         {
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
 
-            return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args);
+            try {
+                return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -289,7 +310,15 @@
         {
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
 
-            return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args, typeArguments);
+            try {
+                return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args, typeArguments);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -312,7 +341,15 @@
             if (eventInfo == null) throw new MissingMemberException(objectType.ToString(), eventName);
 
             Delegate delegateEventHandler = Delegate.CreateDelegate(eventInfo.EventHandlerType, handler.Target, handler.Method);
-            eventInfo.AddEventHandler(m_PrivateObject.Target, delegateEventHandler);
+            try {
+                eventInfo.AddEventHandler(m_PrivateObject.Target, delegateEventHandler);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -335,7 +372,15 @@
             if (eventInfo == null) throw new MissingMemberException(objectType.ToString(), eventName);
 
             Delegate delegateEventHandler = Delegate.CreateDelegate(eventInfo.EventHandlerType, handler.Target, handler.Method);
-            eventInfo.RemoveEventHandler(m_PrivateObject.Target, delegateEventHandler);
+            try {
+                eventInfo.RemoveEventHandler(m_PrivateObject.Target, delegateEventHandler);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -351,7 +396,15 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
-            return type.InvokeStatic(methodName, args);
+            try {
+                return type.InvokeStatic(methodName, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -372,7 +425,15 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
-            return type.InvokeStatic(methodName, parameterTypes, args);
+            try {
+                return type.InvokeStatic(methodName, parameterTypes, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -394,7 +455,15 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (methodName == null) throw new ArgumentNullException(nameof(methodName));
-            return type.InvokeStatic(methodName, parameterTypes, args, typeArguments);
+            try {
+                return type.InvokeStatic(methodName, parameterTypes, args, typeArguments);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -409,7 +478,15 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (name == null) throw new ArgumentNullException(nameof(name));
-            return type.GetStaticFieldOrProperty(name);
+            try {
+                return type.GetStaticFieldOrProperty(name);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
 
         /// <summary>
@@ -424,7 +501,15 @@
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (name == null) throw new ArgumentNullException(nameof(name));
-            type.SetStaticFieldOrProperty(name, value);
+            try {
+                type.SetStaticFieldOrProperty(name, value);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
         }
     }
 }
