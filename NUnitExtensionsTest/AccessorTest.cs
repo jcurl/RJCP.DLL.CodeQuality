@@ -251,5 +251,17 @@
             RelatedClassTestAccessor item = factory.Create();
             Assert.That(item.Value, Is.EqualTo(42));
         }
+
+        [Test]
+        public void PrivateObjectInSignature()
+        {
+            RelatedItemClassAccessor item = new RelatedItemClassAccessor("test");
+            Assert.That(item.Value, Is.EqualTo("test"));
+
+            RelatedCollectionClassAccessor collection = new RelatedCollectionClassAccessor();
+            collection.Add(item);
+            Assert.That(collection.IsInCollection("test"), Is.True);
+            Assert.That(collection.IsInCollection("foo"), Is.False);
+        }
     }
 }

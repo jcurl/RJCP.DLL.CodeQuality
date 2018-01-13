@@ -210,6 +210,12 @@
         }
 
         /// <summary>
+        /// Gets the underlying object maintained by the accessor base.
+        /// </summary>
+        /// <value>The target object wrapped by <see cref="AccessorBase"/>.</value>
+        public object PrivateTargetObject { get { return m_PrivateObject.Target; } }
+
+        /// <summary>
         /// Gets a value of a wrapped field or property identified by name.
         /// </summary>
         /// <param name="propertyName">Name of the field or property.</param>

@@ -14,10 +14,10 @@ testing include:</para>
     <item>Methods may also have generic type arguments.</item>
     <item>Nested types, static or instantiable.</item>
     <item>Return objects from one accessor of type another accessor.</item>
+    <item>Function signatures having private types as inputs.</item>
 </list>
 <para>Features not yet implemented or supported:</para>
 <list type="bullet">
-    <item>Function inputs requiring an accessor.</item>
     <item>Private types in a Generic type argument definition.</item>
 </list>
 
@@ -571,6 +571,79 @@ is then used to wrap around the equivalent object accessor class
 <c>RelatedClassTestAccessor</c>. If the return value is <see langword="null"/>,
 then <see langword="null"/> is also returned by the accessor, else the wrapped
 object.</para>
+
+<para><b>** Private Instances in Signatures **</b></para>
+
+<para>A slightly more complex case is if private types are used as part of
+signatures for other private types. Such situations might occur with private
+collections of private objects.</para>
+<code>
+internal class RelatedItemClass {
+  public RelatedItemClass(string value) { Value = value; }
+  public string Value { get; private set; }
+}
+
+internal class RelatedCollectionClass {
+  private HashSet&lt;string&gt; m_Set = new HashSet&lt;string&gt;();
+
+  public void Add(RelatedItemClass item) {
+    if (m_Set.Contains(item.Value)) {
+      throw new ArgumentException("Item already in collection", nameof(item));
+    }
+    m_Set.Add(item.Value);
+  }
+
+  public bool IsInCollection(string value) { return m_Set.Contains(value); }
+}
+</code>
+<para>In this example, the <c>RelatedItemClass</c> is a private type and is used
+with the private collection type <c>RelatedCollectionClass</c> for maintaining
+if an object has already been added to a collection or not. The equivalent Accessor
+classes would look like:</para>
+<code>
+public class RelatedItemClassAccessor : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.RelatedItemClass";
+  public static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  public RelatedItemClassAccessor(string value)
+    : base(AccType, new Type[] { typeof(string) }, new object[] { value }) { }
+
+  public string Value {
+    get {
+      return (string)GetFieldOrProperty(nameof(Value));
+    }
+  }
+}
+
+public class RelatedCollectionClassAccessor : AccessorBase {
+  private const string AssemblyName = "Assembly";
+  private const string TypeName = "Namespace.RelatedCollectionClass";
+  public static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+  public RelatedCollectionClassAccessor() : base(AccType) { }
+
+  public void Add(RelatedItemClassAccessor item) {
+    Invoke(nameof(Add),
+      new Type[] { RelatedItemClassAccessor.AccType.ReferencedType },
+      new object[] { item.PrivateTargetObject });
+  }
+
+  public bool IsInCollection(string value) {
+    return (bool)Invoke(nameof(IsInCollection), value);
+  }
+}
+</code>
+<para>The <c>RelatedItemClassAccessor</c> has to provide a reference to the
+actual private type so that <c>RelatedCollectionClassAccessor.Add</c> can call
+the private type method with the correct type (not the accessor type). When
+invoking, it retrieves the actual referenced type and the actual underlying
+object via <c>PrivateTargetObject</c>.</para>
+<para>As the <c>AccessorBase</c> must maintain a reference to the underlying
+object, but expose this for cases such as <c>Invoke</c> when it's needed, that a
+class that is under test may not have a property with the name
+<c>PrivateTargetObject</c>. The name of the property is such to reduce the likelihood
+of a name conflict for the class being tested.</para>
 
 <para><b>** Event Handlers **</b></para>
 
