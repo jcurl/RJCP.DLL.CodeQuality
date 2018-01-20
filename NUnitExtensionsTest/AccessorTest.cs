@@ -32,6 +32,62 @@
         }
 
         [Test]
+        public void RaisePublicEvent()
+        {
+            EventClassAccessor accessor = new EventClassAccessor();
+
+            int count = 0;
+            EventHandler<MyPublicEventArgs> handler = (s, e) => {
+                count += e.Value;
+            };
+
+            accessor.MyPublicEvent += handler;
+            accessor.DoWork(45);
+            Assert.That(count, Is.EqualTo(45));
+            accessor.DoWork(10);
+            Assert.That(count, Is.EqualTo(55));
+
+            accessor.MyPublicEvent -= handler;
+            accessor.DoWork(10);
+            Assert.That(count, Is.EqualTo(55));
+        }
+
+        [Test]
+        public void RaisePublicEvent2()
+        {
+            EventClassAccessor accessor = new EventClassAccessor();
+
+            int count1 = 0;
+            EventHandler<MyPublicEventArgs> handler1 = (s, e) => {
+                count1 += e.Value;
+            };
+            int count2 = 0;
+            EventHandler<MyPublicEventArgs> handler2 = (s, e) => {
+                count2 += e.Value;
+            };
+
+            accessor.MyPublicEvent += handler1;
+            accessor.DoWork(45);
+            Assert.That(count1, Is.EqualTo(45));
+            Assert.That(count2, Is.EqualTo(0));
+
+            accessor.MyPublicEvent += handler2;
+            accessor.DoWork(10);
+            Assert.That(count1, Is.EqualTo(55));
+            Assert.That(count2, Is.EqualTo(10));
+
+            accessor.MyPublicEvent -= handler1;
+            accessor.DoWork(10);
+            Assert.That(count1, Is.EqualTo(55));
+            Assert.That(count2, Is.EqualTo(20));
+
+            accessor.MyPublicEvent -= handler2;
+            accessor.DoWork(10);
+            Assert.That(count1, Is.EqualTo(55));
+            Assert.That(count2, Is.EqualTo(20));
+        }
+
+        [Test]
         public void AddAndRemoveInexistentEvent()
         {
             GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);

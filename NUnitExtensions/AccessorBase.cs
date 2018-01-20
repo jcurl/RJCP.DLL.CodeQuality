@@ -331,7 +331,7 @@
         /// <remarks>
         /// Adding an event handler does not use the bit mask of <see cref="System.Reflection.BindingFlags"/>.
         /// </remarks>
-        protected void AddEventHandler(string eventName, EventHandler<EventArgs> handler)
+        protected void AddEventHandler(string eventName, Delegate handler)
         {
             if (handler == null) throw new ArgumentNullException(nameof(handler));
             if (eventName == null) throw new ArgumentNullException(nameof(eventName));
@@ -362,7 +362,7 @@
         /// <remarks>
         /// Removing an event handler does not use the bit mask of <see cref="System.Reflection.BindingFlags"/>.
         /// </remarks>
-        protected void RemoveEventHandler(string eventName, EventHandler<EventArgs> handler)
+        protected void RemoveEventHandler(string eventName, Delegate handler)
         {
             if (handler == null) throw new ArgumentNullException(nameof(handler));
             if (eventName == null) throw new ArgumentNullException(nameof(handler));

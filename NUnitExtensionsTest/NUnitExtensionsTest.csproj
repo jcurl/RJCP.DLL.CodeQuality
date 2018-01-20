@@ -50,6 +50,8 @@
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor2.cs" />
     <Compile Include="HelperClasses\ClassTestAccessor.cs" />
+    <Compile Include="HelperClasses\EventClass.cs" />
+    <Compile Include="HelperClasses\EventClassAccessor.cs" />
     <Compile Include="HelperClasses\GenericStack.cs" />
     <Compile Include="HelperClasses\GenericClassTestAccessor.cs" />
     <Compile Include="HelperClasses\GenericClassTest.cs" />
