@@ -88,6 +88,62 @@
         }
 
         [Test]
+        public void RaisePrivateEvent()
+        {
+            EventClassAccessor accessor = new EventClassAccessor();
+
+            int count = 0;
+            EventHandler<MyPrivateEventArgsAccessor> handler = (s, e) => {
+                count += e.Value;
+            };
+
+            accessor.MyPrivateEvent += handler;
+            accessor.DoWork(45);
+            Assert.That(count, Is.EqualTo(45));
+            accessor.DoWork(10);
+            Assert.That(count, Is.EqualTo(55));
+
+            accessor.MyPrivateEvent -= handler;
+            accessor.DoWork(10);
+            Assert.That(count, Is.EqualTo(55));
+        }
+
+        [Test]
+        public void RaisePrivateEvent2()
+        {
+            EventClassAccessor accessor = new EventClassAccessor();
+
+            int count1 = 0;
+            EventHandler<MyPrivateEventArgsAccessor> handler1 = (s, e) => {
+                count1 += e.Value;
+            };
+            int count2 = 0;
+            EventHandler<MyPrivateEventArgsAccessor> handler2 = (s, e) => {
+                count2 += e.Value;
+            };
+
+            accessor.MyPrivateEvent += handler1;
+            accessor.DoWork(45);
+            Assert.That(count1, Is.EqualTo(45));
+            Assert.That(count2, Is.EqualTo(0));
+
+            accessor.MyPrivateEvent += handler2;
+            accessor.DoWork(10);
+            Assert.That(count1, Is.EqualTo(55));
+            Assert.That(count2, Is.EqualTo(10));
+
+            accessor.MyPrivateEvent -= handler1;
+            accessor.DoWork(10);
+            Assert.That(count1, Is.EqualTo(55));
+            Assert.That(count2, Is.EqualTo(20));
+
+            accessor.MyPrivateEvent -= handler2;
+            accessor.DoWork(10);
+            Assert.That(count1, Is.EqualTo(55));
+            Assert.That(count2, Is.EqualTo(20));
+        }
+
+        [Test]
         public void AddAndRemoveInexistentEvent()
         {
             GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);

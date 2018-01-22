@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessorBase.cs" />
+    <Compile Include="DelegateTarget.cs" />
+    <Compile Include="DelegateTargets.cs" />
     <Compile Include="Deploy.cs" />
     <Compile Include="DeploymentItemAttribute.cs" />
     <Compile Include="GenericMethodCache.cs" />

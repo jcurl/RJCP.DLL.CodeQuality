@@ -384,6 +384,66 @@
         }
 
         /// <summary>
+        /// A delegate that can be used as a template for trampolines normal <see cref="EventHandler"/>s.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> arguments.</param>
+        public delegate void AccessorEventHandler(object sender, object args);
+
+        private DelegateTargets m_EventTargets = new DelegateTargets();
+
+        /// <summary>
+        /// Adds the event handler to the event specified by name.
+        /// </summary>
+        /// <param name="eventName">The name of the event.</param>
+        /// <param name="userSource">The user provided handler (used for look ups only).</param>
+        /// <param name="handler">The handler to be registered to the event.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="eventName"/>, <paramref name="handler"/>, <paramref name="userSource"/>
+        /// may not be <see langword="null"/>.</exception>
+        /// <exception cref="MissingMemberException">The given <paramref name="eventName"/> doesn't exist.</exception>
+        /// <exception cref="ArgumentException">The delegate <paramref name="handler"/> may not have a non-void return type.</exception>
+        /// <remarks>
+        /// This variant allows to register a <paramref name="handler"/> and remember it via a
+        /// reference to the <paramref name="userSource"/>. This is critical when removing the handler later.
+        /// This method is extremely useful for situations where the handler being registered is dynamically
+        /// created.
+        /// <para>Adding an event handler does not use the bit mask of <see cref="System.Reflection.BindingFlags"/>.</para>
+        /// </remarks>
+        protected void AddIndirectEventHandler(string eventName, Delegate userSource, Delegate handler)
+        {
+            if (userSource == null) throw new ArgumentNullException(nameof(userSource));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            if (handler.Method.ReturnType != typeof(void)) throw new ArgumentException("handler has non-void return type", nameof(handler));
+            AddEventHandler(eventName, handler);
+
+            // Remember the handler, so we can remove it later
+            m_EventTargets.AddTarget(eventName, userSource, handler);
+        }
+
+        /// <summary>
+        /// Removes the indirect event handler from the event specified by name.
+        /// </summary>
+        /// <param name="eventName">The name of the event.</param>
+        /// <param name="userSource">The user provided handler.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="eventName"/> or <paramref name="userSource"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="MissingMemberException">The given <paramref name="eventName"/> doesn't exist.</exception>
+        /// <remarks>
+        /// This variant is to be used in conjunction with <see cref="AddIndirectEventHandler(string, Delegate, Delegate)"/>.
+        /// Provide the handler <paramref name="userSource"/> from the user, and the handler that was actually registered
+        /// is removed.
+        /// <para>Removing an event handler does not use the bit mask of <see cref="System.Reflection.BindingFlags"/>.</para>
+        /// </remarks>
+        protected void RemoveIndirectEventHandler(string eventName, Delegate userSource)
+        {
+            if (userSource == null) throw new ArgumentNullException(nameof(userSource));
+            if (eventName == null) throw new ArgumentNullException(nameof(eventName));
+
+            // Look up the dynamic handler we registered internally and unregister it
+            Delegate handler = m_EventTargets.RemoveTarget(eventName, userSource);
+            RemoveEventHandler(eventName, handler);
+        }
+
+        /// <summary>
         /// Invokes the static method of the class given by the <see cref="PrivateType"/>.
         /// </summary>
         /// <param name="type">The type to execute the static method for.</param>
