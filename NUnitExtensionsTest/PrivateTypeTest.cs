@@ -97,15 +97,23 @@
         [Test]
         public void ThrowExWhenInvoke()
         {
-            // Microsoft.VisualStudio.TestTools.UnitTesting v10.1.0.0 will fail (VS2015)
-            // Microsoft.VisualStudio.TestTools.UnitTesting v14.0.0.0 will pass (VS2017)
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
-            Assert.That(() => { privType.InvokeStatic("ThrowEx", null); },
-                Throws.TypeOf<TargetInvocationException>().With.InnerException.TypeOf<InvalidOperationException>());
+            try {
+                // Microsoft.VisualStudio.TestTools.UnitTesting v10.1.0.0 will fail (VS2015)
+                // Microsoft.VisualStudio.TestTools.UnitTesting v14.0.0.0 will pass (VS2017)
+                T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+                Assert.That(() => { privType.InvokeStatic("ThrowEx", null); },
+                    Throws.TypeOf<TargetInvocationException>().With.InnerException.TypeOf<InvalidOperationException>());
+            } catch (AssertionException) {
+#if MSTEST && VS2012
+                Assert.Ignore("Known test case failure for MSTest");
+#else
+                throw;
+#endif
+            }
         }
-        #endregion
+#endregion
 
-        #region Internal Class Tests
+#region Internal Class Tests
         [Test]
         public void InvokeStaticOnTypeFromAssembly()
         {
@@ -230,9 +238,9 @@
 
             Assert.That(result, Is.EqualTo("123"));
         }
-        #endregion
+#endregion
 
-        #region Public Class Tests
+#region Public Class Tests
         [Test]
         public void ReferencedType_PublicType()
         {
@@ -296,6 +304,6 @@
 
             Assert.That(result, Is.EqualTo(111));
         }
-        #endregion
+#endregion
     }
 }
