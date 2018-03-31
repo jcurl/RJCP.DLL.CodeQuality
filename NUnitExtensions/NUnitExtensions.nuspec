@@ -13,7 +13,6 @@
         <file src="..\distribute\lib\net40\RJCP.NUnitExtensions.pdb" target="lib\net40\RJCP.NUnitExtensions.pdb" />
         <file src="..\distribute\lib\net40\RJCP.NUnitExtensions.XML" target="lib\net40\RJCP.NUnitExtensions.XML" />
         <file src="NUnitExtensions.csproj" target="src\NUnitExtensions.csproj" />
-        <file src="Properties\*.cs" target="src\Properties" />
-        <file src="*.cs" target="src" />
+        <file src="**.cs" target="src" />
     </files>
 </package>
