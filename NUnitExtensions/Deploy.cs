@@ -57,7 +57,7 @@
         /// </remarks>
         public static void ItemsWithAttribute(object testClass)
         {
-            if (testClass == null) throw new ArgumentNullException("testClass");
+            if (testClass == null) throw new ArgumentNullException(nameof(testClass));
             ItemsWithAttribute(testClass.GetType());
         }
 
@@ -93,13 +93,13 @@
         public static void ItemsWithAttribute(Type testClass)
         {
             bool exceptionFound = false;
-            if (testClass == null) throw new ArgumentNullException("testClass");
+            if (testClass == null) throw new ArgumentNullException(nameof(testClass));
             foreach (MethodInfo method in testClass.GetMethods(BindingFlags.Public | BindingFlags.Instance)) {
                 exceptionFound |= DeployMember(method);
             }
 
             if (exceptionFound) {
-                throw new ArgumentException("Error deploying test artifacts");
+                throw new ArgumentException("Error deploying test artifacts", nameof(testClass));
             }
         }
 
@@ -182,7 +182,7 @@
         /// </remarks>
         public static void Item(string path)
         {
-            if (path == null) throw new ArgumentNullException("path");
+            if (path == null) throw new ArgumentNullException(nameof(path));
             Item(path, null);
         }
 
@@ -222,7 +222,7 @@
         /// </remarks>
         public static void Item(string path, string outputDirectory)
         {
-            if (path == null) throw new ArgumentNullException("path");
+            if (path == null) throw new ArgumentNullException(nameof(path));
             string itemPath = GetFullPath(path, Environment.CurrentDirectory);
 
             // Get the target-path where to copy the deployment item to
@@ -257,7 +257,7 @@
                 return;
             }
 
-            throw new ArgumentException("Given path doesn't exist", "path");
+            throw new ArgumentException("Given path doesn't exist", nameof(path));
         }
 
         private static string[] GetFiles(string path)
@@ -356,6 +356,7 @@
         /// <exception cref="DirectoryNotFoundException">The specified <paramref name="fileName" /> path is invalid (for example, it
         /// is on an unmapped drive).</exception>
         /// <exception cref="NotSupportedException">The <paramref name="fileName" /> has unsupported or invalid characters.</exception>
+        /// <exception cref="PlatformNotSupportedException">The platform is not Unix or WinNT. Use File.Delete instead.</exception>
         /// <remarks>
         /// Specify a file name with any relative or absolute path information for the path parameter.
         /// Wildcard characters cannot be included. Relative path information is interpreted as relative to
@@ -367,6 +368,25 @@
                 throw new UnauthorizedAccessException("Can't delete the file, it is a directory");
             if (!File.Exists(fileName)) return;
 
+            if (Platform.IsWinNT()) {
+                DeleteFileWindows(fileName);
+            } else if (Platform.IsUnix()) {
+                DeleteFileUnix(fileName);
+            } else {
+                throw new PlatformNotSupportedException();
+            }
+       }
+
+       private static void DeleteFileUnix(string fileName)
+       {
+           File.Delete(fileName);
+           if (!File.Exists(fileName)) return;
+           string message = string.Format("File '{0}' couldn't be deleted", fileName);
+           throw new IOException(message);
+       }
+
+       private static void DeleteFileWindows(string fileName)
+       {
             string watchFile = Path.GetFileName(fileName);
             string watchPath = Path.GetDirectoryName(fileName);
             if (string.IsNullOrEmpty(watchPath)) watchPath = Environment.CurrentDirectory;
@@ -481,6 +501,7 @@
         /// <exception cref="DirectoryNotFoundException">The specified <paramref name="path" /> path is invalid (for example, it
         /// is on an unmapped drive).</exception>
         /// <exception cref="NotSupportedException">The <paramref name="path" /> has unsupported or invalid characters.</exception>
+        /// <exception cref="PlatformNotSupportedException">The platform is not Unix or WinNT.</exception>
         /// <remarks>
         /// The directory is scanned and each file is individually deleted and waited upon until the file is deleted
         /// before continuing.
@@ -513,11 +534,22 @@
 
         private static void DeleteEmptyDirectory(string path)
         {
+            if (Platform.IsWinNT()) {
+                DeleteEmptyDirectoryWindows(path);
+            } else if (Platform.IsUnix()) {
+                DeleteEmptyDirectoryUnix(path);
+            } else {
+                throw new PlatformNotSupportedException();
+            }
+        }
+
+        private static void DeleteEmptyDirectoryWindows(string path)
+        {
             int tickCount = Environment.TickCount;
             string watchDir = Path.GetFileName(path);
             string watchPath = Path.GetDirectoryName(path);
             if (string.IsNullOrEmpty(watchPath))
-                throw new ArgumentException("Invalid directory path");
+                throw new ArgumentException("Invalid directory path", nameof(path));
             using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath))
             using (ManualResetEvent deleteEvent = new ManualResetEvent(false)) {
                 watcher.EnableRaisingEvents = true;
@@ -536,6 +568,14 @@
                 string message = string.Format("Directory '{0}' couldn't be deleted", path);
                 throw new IOException(message);
             }
+        }
+
+        private static void DeleteEmptyDirectoryUnix(string path)
+        {
+            Directory.Delete(path);
+            if (!Directory.Exists(path)) return;
+            string message = string.Format("Directory '{0}' couldn't be deleted", path);
+            throw new IOException(message);
         }
     }
 }
