@@ -375,25 +375,25 @@
             } else {
                 throw new PlatformNotSupportedException();
             }
-       }
+        }
 
-       private static void DeleteFileUnix(string fileName)
-       {
-           File.Delete(fileName);
-           if (!File.Exists(fileName)) return;
-           string message = string.Format("File '{0}' couldn't be deleted", fileName);
-           throw new IOException(message);
-       }
+        private static void DeleteFileUnix(string fileName)
+        {
+            File.Delete(fileName);
+            if (!File.Exists(fileName)) return;
+            string message = string.Format("File '{0}' couldn't be deleted", fileName);
+            throw new IOException(message);
+        }
 
-       private static void DeleteFileWindows(string fileName)
-       {
+        private static void DeleteFileWindows(string fileName)
+        {
             string watchFile = Path.GetFileName(fileName);
             string watchPath = Path.GetDirectoryName(fileName);
             if (string.IsNullOrEmpty(watchPath)) watchPath = Environment.CurrentDirectory;
 
             int tickCount = Environment.TickCount;
-            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath))
-            using (ManualResetEvent deleteEvent = new ManualResetEvent(false)) {
+            using (ManualResetEvent deleteEvent = new ManualResetEvent(false))
+            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath)) {
                 watcher.EnableRaisingEvents = true;
                 watcher.Filter = watchFile;
                 watcher.NotifyFilter = NotifyFilters.FileName;
@@ -550,8 +550,8 @@
             string watchPath = Path.GetDirectoryName(path);
             if (string.IsNullOrEmpty(watchPath))
                 throw new ArgumentException("Invalid directory path", nameof(path));
-            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath))
-            using (ManualResetEvent deleteEvent = new ManualResetEvent(false)) {
+            using (ManualResetEvent deleteEvent = new ManualResetEvent(false))
+            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath)) {
                 watcher.EnableRaisingEvents = true;
                 watcher.Filter = watchDir;
                 watcher.NotifyFilter = NotifyFilters.DirectoryName;
