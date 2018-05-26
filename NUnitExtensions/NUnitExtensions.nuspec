@@ -9,9 +9,9 @@
         <language>en-US</language>
     </metadata>
     <files>
-        <file src="..\distribute\lib\net40\RJCP.NUnitExtensions.dll" target="lib\net40\RJCP.NUnitExtensions.dll" />
-        <file src="..\distribute\lib\net40\RJCP.NUnitExtensions.pdb" target="lib\net40\RJCP.NUnitExtensions.pdb" />
-        <file src="..\distribute\lib\net40\RJCP.NUnitExtensions.XML" target="lib\net40\RJCP.NUnitExtensions.XML" />
+        <file src="..\distribute\RJCP.NUnitExtensions\lib\net40\RJCP.NUnitExtensions.dll" target="lib\net40\RJCP.NUnitExtensions.dll" />
+        <file src="..\distribute\RJCP.NUnitExtensions\lib\net40\RJCP.NUnitExtensions.pdb" target="lib\net40\RJCP.NUnitExtensions.pdb" />
+        <file src="..\distribute\RJCP.NUnitExtensions\lib\net40\RJCP.NUnitExtensions.XML" target="lib\net40\RJCP.NUnitExtensions.XML" />
         <file src="NUnitExtensions.csproj" target="src\NUnitExtensions.csproj" />
         <file src="**.cs" target="src" />
     </files>
