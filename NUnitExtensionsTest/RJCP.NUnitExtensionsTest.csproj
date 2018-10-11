@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessorTest.cs" />
+    <Compile Include="Config\IniFileTest.cs" />
+    <Compile Include="Config\IniSectionTest.cs" />
     <Compile Include="GenericPrivateObjectTest.cs" />
     <Compile Include="GenericPrivateTypeTest.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTest.cs" />
@@ -88,6 +90,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Config\TestEmptySection.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Config\Test.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Config\TestDuplicate.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NUnitExtensions\RJCP.NUnitExtensions.csproj">

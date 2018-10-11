@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessorBase.cs" />
+    <Compile Include="Config\IniFile.cs" />
+    <Compile Include="Config\IniKeyPair.cs" />
+    <Compile Include="Config\IniSection.cs" />
     <Compile Include="DelegateTarget.cs" />
     <Compile Include="DelegateTargets.cs" />
     <Compile Include="Deploy.cs" />
