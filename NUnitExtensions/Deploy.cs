@@ -254,29 +254,32 @@
 
         private static void DeleteFileWindows(string fileName)
         {
-            string watchFile = Path.GetFileName(fileName);
-            string watchPath = Path.GetDirectoryName(fileName);
-            if (string.IsNullOrEmpty(watchPath)) watchPath = Environment.CurrentDirectory;
-
+            int elapsed;
             int tickCount = Environment.TickCount;
-            using (ManualResetEvent deleteEvent = new ManualResetEvent(false))
-            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath)) {
-                watcher.EnableRaisingEvents = true;
-                watcher.Filter = watchFile;
-                watcher.NotifyFilter = NotifyFilters.FileName;
-                watcher.Deleted += (s, e) => { deleteEvent.Set(); };
-                watcher.Error += (s, e) => { deleteEvent.Set(); };
-                int elapsed = unchecked(Environment.TickCount - tickCount);
-                while (elapsed < DeleteMaxTime) {
+            int deletePollIntervalExp = 5;
+            Exception lastException;
+            do {
+                lastException = null;
+                try {
                     File.Delete(fileName);
-                    deleteEvent.WaitOne(DeleteWaitInterval);
-                    if (!File.Exists(fileName)) return;
-                    Thread.Sleep(DeletePollInterval);
-                    elapsed = unchecked(Environment.TickCount - tickCount);
+                } catch (UnauthorizedAccessException ex) {
+                    // Occurs on Windows if the file is opened by a process.
+                    lastException = ex;
+                } catch (IOException ex) {
+                    // Occurs on Windows if the file is opened by a process.
+                    lastException = ex;
                 }
-                string message = string.Format("File '{0}' couldn't be deleted", fileName);
-                throw new IOException(message);
-            }
+                if (!File.Exists(fileName)) return;
+                Thread.Sleep(deletePollIntervalExp);
+                if (deletePollIntervalExp < DeletePollInterval) {
+                    deletePollIntervalExp = Math.Min(deletePollIntervalExp * 2, DeletePollInterval);
+                }
+                elapsed = unchecked(Environment.TickCount - tickCount);
+            } while (elapsed < DeleteMaxTime);
+
+            if (lastException != null) throw lastException;
+            string message = string.Format("File '{0}' couldn't be deleted", fileName);
+            throw new IOException(message);
         }
 
         private static void CopyFile(string source, string destination)
@@ -412,29 +415,33 @@
 
         private static void DeleteEmptyDirectoryWindows(string path)
         {
+            int elapsed;
             int tickCount = Environment.TickCount;
-            string watchDir = Path.GetFileName(path);
-            string watchPath = Path.GetDirectoryName(path);
-            if (string.IsNullOrEmpty(watchPath))
-                throw new ArgumentException("Invalid directory path", nameof(path));
-            using (ManualResetEvent deleteEvent = new ManualResetEvent(false))
-            using (FileSystemWatcher watcher = new FileSystemWatcher(watchPath)) {
-                watcher.EnableRaisingEvents = true;
-                watcher.Filter = watchDir;
-                watcher.NotifyFilter = NotifyFilters.DirectoryName;
-                watcher.Deleted += (s, e) => { deleteEvent.Set(); };
-                watcher.Error += (s, e) => { deleteEvent.Set(); };
-                int elapsed = unchecked(Environment.TickCount - tickCount);
-                Directory.Delete(path);
-                while (elapsed < DeleteMaxTime) {
-                    deleteEvent.WaitOne(DeleteWaitInterval);
-                    if (!Directory.Exists(path)) return;
-                    Thread.Sleep(DeletePollInterval);
-                    elapsed = unchecked(Environment.TickCount - tickCount);
+            int deletePollIntervalExp = 5;
+            Exception lastException;
+            do {
+                lastException = null;
+                try {
+                    Directory.Delete(path);
+                } catch (UnauthorizedAccessException ex) {
+                    // Occurs on Windows if a file in the directory is open.
+                    lastException = ex;
+                } catch (IOException ex) {
+                    // Occurs on Windows if a file in the directory is open (or on Windows XP someone is enumerating the
+                    // directory).
+                    lastException = ex;
                 }
-                string message = string.Format("Directory '{0}' couldn't be deleted", path);
-                throw new IOException(message);
-            }
+                if (!Directory.Exists(path)) return;
+                Thread.Sleep(deletePollIntervalExp);
+                if (deletePollIntervalExp < DeletePollInterval) {
+                    deletePollIntervalExp = Math.Min(deletePollIntervalExp * 2, DeletePollInterval);
+                }
+                elapsed = unchecked(Environment.TickCount - tickCount);
+            } while (elapsed < DeleteMaxTime);
+
+            if (lastException != null) throw lastException;
+            string message = string.Format("Directory '{0}' couldn't be deleted", path);
+            throw new IOException(message);
         }
 
         private static void DeleteEmptyDirectoryUnix(string path)
