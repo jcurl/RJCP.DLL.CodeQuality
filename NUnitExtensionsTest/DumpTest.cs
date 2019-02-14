@@ -7,13 +7,9 @@
     [TestFixture(Category = "NUnitExtensions.Dump")]
     public class DumpTest
     {
-        [Test]
-        [Platform(Include ="Win32NT")]
-        public void MiniDump_Windows()
+        private static void CheckFile(string fileName)
         {
-            string fullPath = Path.Combine(Environment.CurrentDirectory, "Minidump.dmp");
-
-            Assert.That(Dump.MiniDump("Minidump.dmp"), Is.True);
+            string fullPath = Path.Combine(Environment.CurrentDirectory, fileName);
 
             int pollCounter = 0;
             while (pollCounter < 5) {
@@ -21,73 +17,59 @@
                 Thread.Sleep(100);
                 pollCounter++;
             }
-            Assert.Fail("No minidump 'Minidump.dmp' was created");
+            Assert.Fail("No minidump '{0}' was created", fileName);
+        }
+
+        [Platform(Include = "Win32NT")]
+        [TestCase(DumpType.MiniDump, "minidump.dmp", TestName = "MiniDump_Windows_MiniDump")]
+        [TestCase(DumpType.FullHeap, "fulldump.dmp", TestName = "MiniDump_Windows_FullDump")]
+        public void MiniDump_Windows(DumpType dumpType, string fileName)
+        {
+            Assert.That(Dump.MiniDump(fileName, dumpType), Is.True);
+            CheckFile(fileName);
         }
 
         [Test]
         [Platform(Include = "Win32NT")]
-        public void MiniDumpFull_Windows()
+        public void MiniDump_Windows_DefaultDump()
         {
-            string fullPath = Path.Combine(Environment.CurrentDirectory, "Minidumpfull.dmp");
-
-            Assert.That(Dump.MiniDump("Minidumpfull.dmp", DumpType.FullHeap), Is.True);
-
-            int pollCounter = 0;
-            while (pollCounter < 5) {
-                if (File.Exists(fullPath)) return;
-                Thread.Sleep(100);
-                pollCounter++;
-            }
-            Assert.Fail("No minidump 'Minidumpfull.dmp' was created");
+            const string fileName = "defaultdump.dmp";
+            Assert.That(Dump.MiniDump(fileName), Is.True);
+            CheckFile(fileName);
         }
-        [Test]
-        [Platform(Include = "Win32NT")]
-        public void MiniDumpException_Windows()
-        {
-            string fullPath = Path.Combine(Environment.CurrentDirectory, "MinidumpException.dmp");
 
+        [Platform(Include = "Win32NT")]
+        [TestCase(DumpType.MiniDump, "minidumpexception.dmp", TestName = "MiniDumpException_Windows_MiniDump")]
+        [TestCase(DumpType.FullHeap, "fulldumpexception.dmp", TestName = "MiniDump_WindowsException_FullDump")]
+        public void MiniDumpException_Windows(DumpType dumpType, string fileName)
+        {
             Exception exception = null;
             bool result;
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
                 exception = ex;
-                result = Dump.MiniDump("MinidumpException.dmp");
+                result = Dump.MiniDump(fileName, dumpType);
             }
             Assert.That(result, Is.True);
-
-            int pollCounter = 0;
-            while (pollCounter < 5) {
-                if (File.Exists(fullPath)) return;
-                Thread.Sleep(100);
-                pollCounter++;
-            }
-            Assert.Fail("No minidump 'MinidumpException.dmp' was created");
+            CheckFile(fileName);
         }
 
         [Test]
         [Platform(Include = "Win32NT")]
-        public void MiniDumpFullException_Windows()
+        public void MiniDumpException_Windows_DefaultDump()
         {
-            string fullPath = Path.Combine(Environment.CurrentDirectory, "MinidumpfullException.dmp");
-
+            const string fileName = "defaultdumpexception.dmp";
             Exception exception = null;
             bool result;
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
                 exception = ex;
-                result = Dump.MiniDump("MinidumpfullException.dmp", DumpType.FullHeap);
+                result = Dump.MiniDump(fileName);
             }
             Assert.That(result, Is.True);
-
-            int pollCounter = 0;
-            while (pollCounter < 5) {
-                if (File.Exists(fullPath)) return;
-                Thread.Sleep(100);
-                pollCounter++;
-            }
-            Assert.Fail("No minidump 'MinidumpfullException.dmp' was created");
+            CheckFile(fileName);
         }
 
         [Test]

@@ -27,15 +27,16 @@ namespace NUnit.Framework.Native
             MiniDumpWithFullMemoryInfo = 0x00000800,
             MiniDumpWithThreadInfo = 0x00001000,
             MiniDumpWithCodeSegs = 0x00002000,
-            MiniDumpWithoutManagedState = 0x00004000,
+            MiniDumpWithoutAuxiliaryState = 0x00004000,
+            MiniDumpWithFullAuxiliaryState = 0x00008000
         };
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct MINIDUMP_EXCEPTION_INFORMATION
         {
             public uint ThreadId;
             public IntPtr ExceptionPointers;
-            public int ClientPointers;
+            public bool ClientPointers;
         }
     }
 }

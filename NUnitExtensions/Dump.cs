@@ -97,16 +97,24 @@
             using (FileStream fsToDump = OpenFile(path)) {
                 NativeMethods.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
                     new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION();
-                miniDumpInfo.ClientPointers = 0;
+                miniDumpInfo.ClientPointers = false;
                 miniDumpInfo.ExceptionPointers = Marshal.GetExceptionPointers();
                 miniDumpInfo.ThreadId = SafeNativeMethods.GetCurrentThreadId();
-                return UnsafeNativeMethods.MiniDumpWriteDump(
+
+                IntPtr mem = Marshal.AllocHGlobal(Marshal.SizeOf(miniDumpInfo));
+                Marshal.StructureToPtr(miniDumpInfo, mem, false);
+
+                bool result = UnsafeNativeMethods.MiniDumpWriteDump(
                     SafeNativeMethods.GetCurrentProcess(),
                     SafeNativeMethods.GetCurrentProcessId(),
                     fsToDump.SafeFileHandle,
                     dbgDumpType,
-                    ref miniDumpInfo,
-                    IntPtr.Zero, IntPtr.Zero);
+                    miniDumpInfo.ClientPointers ? mem : IntPtr.Zero,
+                    IntPtr.Zero,
+                    IntPtr.Zero);
+
+                Marshal.FreeHGlobal(mem);
+                return result;
             }
         }
     }

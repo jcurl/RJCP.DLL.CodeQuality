@@ -14,7 +14,7 @@
             uint ProcessId,
             SafeFileHandle hFile,
             NativeMethods.MINIDUMP_TYPE DumpType,
-            ref NativeMethods.MINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+            IntPtr ExceptionParam,
             IntPtr UserStreamParam,
             IntPtr CallackParam);
     }
