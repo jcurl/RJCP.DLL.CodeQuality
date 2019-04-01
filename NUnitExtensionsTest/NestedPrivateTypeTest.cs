@@ -1,6 +1,7 @@
 ﻿namespace NUnit.Framework
 {
     using System;
+    using System.Globalization;
     using HelperClasses;
 
     [TestFixture(Category = "NUnitExtensions.PrivateType.Nested")]
@@ -67,8 +68,9 @@
             var parent = new NestedGTypes1<int>(42);
             Assert.That(parent.Value, Is.EqualTo("42"));
 
-            var nested = new NestedGTypes1<int>.NestedGType<double>(3.14);
-            Assert.That(nested.ValueNested, Is.EqualTo("3.14"));
+            double doubleValue = 3.14;
+            var nested = new NestedGTypes1<int>.NestedGType<double>(doubleValue);
+            Assert.That(nested.ValueNested, Is.EqualTo(doubleValue.ToString(CultureInfo.CurrentCulture)));
         }
     }
 }
