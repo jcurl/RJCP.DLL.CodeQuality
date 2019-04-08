@@ -1,28 +1,156 @@
 ﻿namespace NUnit.Framework
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Reflection;
     using System.Threading;
 
     /// <summary>
     /// Methods for the deployment of test resources which NUnit doesn't do automatically.
     /// </summary>
     /// <remarks>
-    /// These methods are used to control when files should be deployed along side a test case,
-    /// as NUnit doesn't have any mechanism to do this, unlike the Microsoft Test Framework.
-    /// <para>You can specifically request deployment with <seealso cref="Deploy.Item(string, string)"/>
-    /// within your test case.</para>
+    /// These methods are used to control when files should be deployed along side a test case, as NUnit doesn't have any
+    /// mechanism to do this.
+    /// <para>
+    /// You can specifically request deployment with <seealso cref="Deploy.Item(string, string)"/> within your test case.
+    /// </para>
+    /// <para>
+    /// When deploying, files are copied relative from the <see cref="Deploy.TestDirectory"/> to the
+    /// <see cref="Deploy.WorkDirectory"/>. These are based on NUnit's <c>TestContext.CurrentContext.TestDirectory</c>
+    /// and <c>TestContext.CurrentContext.WorkDirectory</c> respectively, and so may be configurable by the user
+    /// executing the test runner.
+    /// </para>
+    /// <para>
+    /// Under Visual Studio, the <see cref="Deploy.TestDirectory"/> and the <see cref="Deploy.WorkDirectory"/> are
+    /// usually the same value (for both NUnit 2.6.4 and NUnit 3.11.0). When running using a console runner, the
+    /// <see cref="Deploy.TestDirectory"/> is the path where the test assembly is, where
+    /// <see cref="Deploy.WorkDirectory"/> is the current directory where the runner is executed and so in this case
+    /// differ.
+    /// </para>
+    /// <para>
+    /// One must be careful to not rely on the current directory when running tests. Under NUnit 2.6.4, the current
+    /// directory is set to <see cref="Deploy.TestDirectory"/>. Under NUnit 3.11.0, it is changed and is the current
+    /// directory when the test runner was executed. This may break test cases when migrating from NUnit 2.6 to NUnit
+    /// 3.x.
+    /// </para>
+    /// <para>
+    /// A possibility is therefore provided by this class to allow the user to provide a work directory different to the
+    /// test directory. A user can specify an application configuration to provide a path for
+    /// <see cref="Deploy.WorkDirectory"/> which is different to <c>TestContext.CurrentContext.WorkDirectory</c>,
+    /// especially useful when running unit tests within the Visual Studio environment.
+    /// </para>
+    /// <para>The following code snippet shows how to append the directory <c>work</c> to the work directory.</para>
+    /// <code language="xml">
+    /// <![CDATA[
+    /// <configSections>
+    ///   <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
+    /// </configSections>
+    ///
+    /// <NUnitExtensions>
+    ///   <deploy workDir="work" force="false"/>
+    /// </NUnitExtensions>
+    /// ]]>
+    /// </code>
+    /// <para>
+    /// The extension given by the <c>&lt;deploy&gt;</c> tag is only used if NUnit's <c>TestContext.CurrentContext</c>
+    /// properties <c>TestDirectory</c> and <c>WorkDirectory</c> have the same value, or if the property
+    /// <c>force="true"</c> is provided in the tag.
+    /// </para>
+    /// <para>
+    /// As a general guideline, any files in the path given by <see cref="Deploy.TestDirectory"/> should not be modified.
+    /// You should first <see cref="Deploy.Item(string)"/> which will copy to the <see cref="Deploy.WorkDirectory"/>.
+    /// Only deploy if you intend to modify or create files based on the input during testing. If files don't need to be
+    /// created, don't deploy and just reference the file direct with <see cref="Deploy.TestDirectory"/>.
+    /// </para>
+    /// <para>
+    /// When creating files, create the path based on <see cref="Deploy.WorkDirectory"/>. You can create directories with
+    /// <see cref="Deploy.CreateDirectory(string)"/>. You can delete files and directories with the
+    /// <see cref="Deploy.DeleteDirectory(string)"/> and <see cref="Deploy.DeleteFile(string)"/>. If the paths given to
+    /// the APIs are relative, it will be relative to <see cref="Deploy.WorkDirectory"/>.
+    /// </para>
+    /// <para>
+    /// There is a workaround mode for NUnit 2 users to use the current directory for the working directory, even if the
+    /// runner has a working directory specified. This option should not be used for new projects, as it will not work
+    /// when using NUnit 3 (the current directory is usually read-only and points to the Visual Studio installation for
+    /// NUnit 3).
+    /// </para>
+    /// <code language="xml">
+    /// <![CDATA[
+    /// <configSections>
+    ///   <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
+    /// </configSections>
+    ///
+    /// <NUnitExtensions>
+    ///   <deploy useCwd="true"/>
+    /// </NUnitExtensions>
+    /// ]]>
+    /// </code>
     /// </remarks>
     public static class Deploy
     {
         private const int DeleteMaxTime = 5000;
         private const int DeletePollInterval = 100;
-        private const int DeleteWaitInterval = 250;
         private const int CopyWaitInterval = 250;
         private const int CopyWaitAttempts = 4;
+
+        private readonly static object s_TestContextLock = new object();
+        private static TestContextAccessor s_TestContextAccessor;
+
+        private static TestContextAccessor TestContext
+        {
+            get
+            {
+                if (s_TestContextAccessor == null) {
+                    lock (s_TestContextLock) {
+                        if (s_TestContextAccessor == null) {
+                            s_TestContextAccessor = TestContextAccessor.GetTestContext();
+                        }
+                    }
+                }
+                return s_TestContextAccessor;
+            }
+        }
+
+        /// <summary>
+        /// Gets the NUnit test directory.
+        /// </summary>
+        /// <value>The NUnit test directory.</value>
+        /// <remarks>
+        /// This property obtains the NUnit test directory, without directly referencing the NUnit framework. Instead, it
+        /// uses reflection to determine the version of NUnit through the <c>[Test]</c> or <c>[TestCase]</c> attribute of
+        /// the calling method. Thus it retrieves the <c>NUnit.Framework.TestContext.CurrentContext.TestDirectory</c>
+        /// which is always compatible with the current version of NUnit. If there is a problem retrieving the directory,
+        /// then <see cref="string.Empty"/> is returned.
+        /// <para>This property is obtained via reflection on the first usage, and remains cached thereafter.</para>
+        /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
+        public static string TestDirectory
+        {
+            get { return TestContext.TestDirectory ?? string.Empty; }
+        }
+
+        /// <summary>
+        /// Gets the NUnit work directory.
+        /// </summary>
+        /// <value>The NUnit work directory.</value>
+        /// <remarks>
+        /// This property obtains the NUnit work directory, without directly referencing the NUnit framework. Instead, it
+        /// uses reflection to determine the version of NUnit through the <c>[Test]</c> or <c>[TestCase]</c> attribute of
+        /// the calling method. Thus it retrieves the <c>NUnit.Framework.TestContext.CurrentContext.WorkDirectory</c>
+        /// which is always compatible with the current version of NUnit. If there is a problem retrieving the directory,
+        /// then <see cref="string.Empty"/> is returned.
+        /// <para>This property is obtained via reflection on the first usage, and remains cached thereafter.</para>
+        /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
+        public static string WorkDirectory
+        {
+            get { return TestContext.WorkDirectory ?? string.Empty; }
+        }
 
         /// <summary>
         /// In line test case method for deployment of a test resource.
@@ -40,13 +168,17 @@
         /// <exception cref="ArgumentNullException"><paramref name="path"/> may not be <see langword="null"/>.</exception>
         /// <remarks>
         /// This method can deploy files within your test case at a time of your choosing.
-        /// <para>This method will work for nUnit shadow copy enabled or disabled, as it relies on the test case
-        /// assembly <see cref="System.Reflection.Assembly.CodeBase"/> property.</para>
+        /// <para>Files are copied from the <paramref name="path"/> relative to the <see cref="TestDirectory"/>,
+        /// to the <see cref="WorkDirectory"/>.</para>
         /// <para>If you have two different files that are being deployed to the same location with the same name, the
         /// results are undefined. Don't do it. Your test cases may pass or fail depending on the position of the moon,
         /// or if your cat just sneezed a few minutes ago. The same applies if your deploying two different directories
         /// to the same location that have different content but where filenames overlap.</para>
         /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
         public static void Item(string path)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));
@@ -71,8 +203,8 @@
         /// <exception cref="ArgumentNullException"><paramref name="path"/> may not be <see langword="null"/>.</exception>
         /// <remarks>
         /// This method can deploy files within your test case at a time of your choosing.
-        /// <para>This method will work for nUnit shadow copy enabled or disabled, as it relies on the test case
-        /// assembly <see cref="System.Reflection.Assembly.CodeBase"/> property.</para>
+        /// <para>Files are copied from the <paramref name="path"/> relative to the <see cref="TestDirectory"/>,
+        /// to the <paramref name="outputDirectory"/> relative to <see cref="WorkDirectory"/>.</para>
         /// <para>When files and folders are copied to the output directory, they are <i>merged</i> with the content
         /// of the folder that may already exist.</para>
         /// <para>When using this method, ensure that two test cases don't clobber each other. This might occur
@@ -87,18 +219,18 @@
         /// or if your cat just sneezed a few minutes ago. The same applies if your deploying two different directories
         /// to the same location that have different content but where filenames overlap.</para>
         /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
         public static void Item(string path, string outputDirectory)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));
-            string itemPath = GetFullPath(path, Environment.CurrentDirectory);
+            string itemPath = GetFullPath(path, TestDirectory);
 
             // Get the target-path where to copy the deployment item to
-            string assemblyFileUri = Assembly.GetExecutingAssembly().CodeBase;
-            Uri u = new Uri(assemblyFileUri);
-            string assemblyFile = u.LocalPath;
-            string assemblyPath = Path.GetDirectoryName(assemblyFile);
-            string normalizedOutputDir = outputDirectory == null ? string.Empty : outputDirectory;
-            string fullOutputDirectory = GetFullPath(normalizedOutputDir, assemblyPath);
+            string normalizedOutputDir = outputDirectory ?? string.Empty;
+            string fullOutputDirectory = GetFullPath(normalizedOutputDir, WorkDirectory);
 
             if (Directory.Exists(itemPath)) {
                 // If the 'path' is a directory, the root path is the directory name.
@@ -180,17 +312,23 @@
         /// <para>In case of an access violation or unauthorized access, the operation is retried up to four times
         /// with a 250ms delay between each attempt.</para>
         /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
         public static void CreateDirectory(string directory)
         {
-            if (Directory.Exists(directory)) return;
+            string fullPath = GetFullPath(directory, WorkDirectory);
+
+            if (Directory.Exists(fullPath)) return;
 
             bool created = false;
             int attempts = CopyWaitAttempts;
 
-            DeleteFile(directory);
+            DeleteFile(fullPath);
             do {
                 try {
-                    Directory.CreateDirectory(directory);
+                    Directory.CreateDirectory(fullPath);
                     created = true;
                 } catch (AccessViolationException) {
                     if (attempts == 0) throw;
@@ -209,7 +347,7 @@
         }
 
         /// <summary>
-        /// Deletes the file.
+        /// Deletes a file.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <exception cref="UnauthorizedAccessException">The caller doesn't have the required permissions; or
@@ -226,19 +364,25 @@
         /// <exception cref="PlatformNotSupportedException">The platform is not Unix or WinNT. Use File.Delete instead.</exception>
         /// <remarks>
         /// Specify a file name with any relative or absolute path information for the path parameter.
-        /// Wildcard characters cannot be included. Relative path information is interpreted as relative to
-        /// the current working directory. To obtain the current working directory, see <see cref="Directory.GetCurrentDirectory"/> .
+        /// Wild card characters cannot be included. Relative path information is interpreted as relative to
+        /// the test working directory. To obtain the current working directory, see <see cref="WorkDirectory"/> .
         /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
         public static void DeleteFile(string fileName)
         {
-            if (Directory.Exists(fileName))
+            string fullPath = GetFullPath(fileName, WorkDirectory);
+
+            if (Directory.Exists(fullPath))
                 throw new UnauthorizedAccessException("Can't delete the file, it is a directory");
-            if (!File.Exists(fileName)) return;
+            if (!File.Exists(fullPath)) return;
 
             if (Platform.IsWinNT()) {
-                DeleteFileWindows(fileName);
+                DeleteFileWindows(fullPath);
             } else if (Platform.IsUnix()) {
-                DeleteFileUnix(fileName);
+                DeleteFileUnix(fullPath);
             } else {
                 throw new PlatformNotSupportedException();
             }
@@ -311,8 +455,6 @@
                 } catch (UnauthorizedAccessException) {
                     // On windows occurs if the file is already open.
                     if (attempts == 0) throw;
-                } catch (DirectoryNotFoundException) {
-                    throw;
                 }
 
                 if (!copyFinished) {
@@ -376,16 +518,20 @@
         /// The directory is scanned and each file is individually deleted and waited upon until the file is deleted
         /// before continuing.
         /// </remarks>
+        /// <exception cref="System.Configuration.ConfigurationErrorsException">
+        /// There is a configuration error in the applications configuration file. Check the description provided in the
+        /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
+        /// </exception>
         public static void DeleteDirectory(string path)
         {
-            if (File.Exists(path))
-                throw new UnauthorizedAccessException("Can't delete the directory, it is a file");
-            if (!Directory.Exists(path)) return;
-            if (!Path.IsPathRooted(path))
-                path = Path.Combine(Environment.CurrentDirectory, path);
+            string fullPath = GetFullPath(path, WorkDirectory);
 
-            DeleteSubDirectory(path);
-            DeleteEmptyDirectory(path);
+            if (File.Exists(fullPath))
+                throw new UnauthorizedAccessException("Can't delete the directory, it is a file");
+            if (!Directory.Exists(fullPath)) return;
+
+            DeleteSubDirectory(fullPath);
+            DeleteEmptyDirectory(fullPath);
         }
 
         private static void DeleteSubDirectory(string path)

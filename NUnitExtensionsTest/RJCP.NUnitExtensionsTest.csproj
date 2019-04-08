@@ -86,6 +86,7 @@
     <Compile Include="DeployBackPathTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Resources\Config\TestEmptySection.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

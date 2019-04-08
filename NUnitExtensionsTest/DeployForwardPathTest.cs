@@ -131,5 +131,27 @@
 
             Assert.That(!Directory.Exists("folder4"));
         }
+
+        [Test]
+        public void DeployTestItem()
+        {
+            string workDirectory = TestContext.CurrentContext.WorkDirectory;
+            string testDirectory = TestContext.CurrentContext.TestDirectory;
+
+            Assert.That(Deploy.TestDirectory, Is.EqualTo(testDirectory));
+
+            // The App.config contains
+            //   <deploy useCwd="true"/>
+            Assert.That(Deploy.WorkDirectory, Is.EqualTo(Environment.CurrentDirectory));
+
+            // If the App.config contains
+            //   <deploy workDir="work" force="false"/>
+            // then it should have 'work' on the end, unless the runner was started with /work=xxx
+
+            Console.WriteLine("NUnit Work Directory: {0}", workDirectory);
+            Console.WriteLine("NUnit Test Directory: {0}", testDirectory);
+            Console.WriteLine("NUnitExtensions Work Directory: {0}", Deploy.WorkDirectory);
+            Console.WriteLine("NUnitExtensions Test Directory: {0}", Deploy.TestDirectory);
+        }
     }
 }
