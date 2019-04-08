@@ -2,17 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>RJCP.NUnitExtensions</id>
-        <version>0.3.1</version>
+        <version>0.4.0</version>
         <authors>Jason Curl</authors>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>MSTest replacement methods for NUnit Test Projects.</description>
+        <description>Common functions to augment testing with NUnit Test Framework.</description>
         <language>en-US</language>
     </metadata>
     <files>
-        <file src="..\distribute\RJCP.NUnitExtensions\lib\net40\RJCP.NUnitExtensions.dll" target="lib\net40\RJCP.NUnitExtensions.dll" />
-        <file src="..\distribute\RJCP.NUnitExtensions\lib\net40\RJCP.NUnitExtensions.pdb" target="lib\net40\RJCP.NUnitExtensions.pdb" />
-        <file src="..\distribute\RJCP.NUnitExtensions\lib\net40\RJCP.NUnitExtensions.XML" target="lib\net40\RJCP.NUnitExtensions.XML" />
-        <file src="NUnitExtensions.csproj" target="src\NUnitExtensions.csproj" />
+        <file src="bin\build\net40\RJCP.NUnitExtensions.dll" target="lib\net40\RJCP.NUnitExtensions.dll" />
+        <file src="bin\build\net40\RJCP.NUnitExtensions.pdb" target="lib\net40\RJCP.NUnitExtensions.pdb" />
+        <file src="bin\build\net40\RJCP.NUnitExtensions.XML" target="lib\net40\RJCP.NUnitExtensions.XML" />
+        <file src="RJCP.NUnitExtensions.csproj" target="src\NUnitExtensions.csproj" />
         <file src="**.cs" target="src" />
+        <file src="maml\AccessorBase.xml" target="src\maml\AccessorBase.xml" />
     </files>
 </package>
