@@ -22,7 +22,21 @@
 
         private static Type FindTestAttribute(MethodBase method)
         {
-            object[] attrs = method.GetCustomAttributes(false);
+            object[] attrs;
+
+            // Get the Test Fixture
+            MemberInfo declaringType = method.DeclaringType;
+            attrs = declaringType.GetCustomAttributes(true);
+            foreach (object attr in attrs) {
+                Type attrType = attr.GetType();
+                string attrTypeName = attrType.ToString();
+                if (attrTypeName.Equals("NUnit.Framework.TestFixtureAttribute")) {
+                    return attrType;
+                }
+            }
+
+            // Get the Method attributes
+            attrs = method.GetCustomAttributes(false);
             foreach (object attr in attrs) {
                 Type attrType = attr.GetType();
                 string attrTypeName = attrType.ToString();
