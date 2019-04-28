@@ -10,9 +10,7 @@
         [Test]
         public void LoadValidIniFile()
         {
-            Deploy.Item("Resources/Config");
-
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             IniFile iniFile = new IniFile(path);
             Assert.That(iniFile.Count, Is.EqualTo(7));
 
@@ -64,44 +62,35 @@
         [Test]
         public void GetKeyExisting()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "section3", "key1", "default"), Is.EqualTo("Value1"));
         }
 
         [Test]
         public void GetKeyMissingExistingSection()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "section3", "keyfoo", "bar"), Is.EqualTo("bar"));
         }
 
         [Test]
         public void GetKeyMissingSection()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "sectionfoo", "key", "bar"), Is.EqualTo("bar"));
         }
 
         [Test]
         public void GetKeyMissingFile()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "TestFooMissing.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestFooMissing.ini");
             Assert.That(IniFile.GetKey(path, "section", "key", "foobar"), Is.EqualTo("foobar"));
         }
 
         [Test]
         public void GetSection()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             IniSection section = IniFile.GetSection(path, "section");
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Count, Is.EqualTo(1));
@@ -111,9 +100,7 @@
         [Test]
         public void GetMissingSection()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             IniSection section = IniFile.GetSection(path, "sectionmissing");
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Count, Is.EqualTo(0));
@@ -122,7 +109,7 @@
         [Test]
         public void GetSectionMissingFile()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "TestFooMissing.ini");
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestFooMissing.ini");
             IniSection section = IniFile.GetSection(path, "section");
             Assert.That(section, Is.Not.Null);
             Assert.That(section.Count, Is.EqualTo(0));
@@ -131,9 +118,7 @@
         [Test]
         public void DuplicateSection()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "TestDuplicate.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestDuplicate.ini");
             IniFile iniFile = new IniFile(path);
             Assert.That(iniFile.Count, Is.EqualTo(2));
 
@@ -148,9 +133,7 @@
         [Test]
         public void DuplicateKeys()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "TestDuplicate.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestDuplicate.ini");
             IniFile iniFile = new IniFile(path);
             Assert.That(iniFile.Count, Is.EqualTo(2));
 
@@ -164,135 +147,105 @@
         [Test]
         public void GetKeyInt()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "int", 42), Is.EqualTo(1234));
         }
 
         [Test]
         public void GetKeyIntNeg()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "intneg", 42), Is.EqualTo(-1234));
         }
 
         [Test]
         public void GetKeyIntRange()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "intrange", 42), Is.EqualTo(42));
         }
 
         [Test]
         public void GetKeyIntBad()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "intbad", 42), Is.EqualTo(42));
         }
 
         [Test]
         public void GetKeyIntMissingKey()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "intmissing", 42), Is.EqualTo(42));
         }
 
         [Test]
         public void GetKeyLong()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "long", 42), Is.EqualTo(1234));
         }
 
         [Test]
         public void GetKeyLongNeg()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "longneg", 42), Is.EqualTo(-1234));
         }
 
         [Test]
         public void GetKeyLongRange()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "longrange", 42), Is.EqualTo(42));
         }
 
         [Test]
         public void GetKeyLongBad()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "longbad", 42), Is.EqualTo(42));
         }
 
         [Test]
         public void GetKeyLongMissingKey()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "longmissing", 42), Is.EqualTo(42));
         }
 
         [Test]
         public void GetKeyBoolTrue()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "bool", false), Is.EqualTo(true));
         }
 
         [Test]
         public void GetKeyBoolFalse()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "bool2", true), Is.EqualTo(false));
         }
 
         [Test]
         public void GetKeyBoolDefault()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "boolbad", true), Is.EqualTo(true));
         }
 
         [Test]
         public void GetKeyBoolMissing()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "Test.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             Assert.That(IniFile.GetKey(path, "SectionType", "boolmissing", true), Is.EqualTo(true));
         }
 
         [Test]
         public void EmptySection()
         {
-            Deploy.Item("Resources/Config");
-            string path = Path.Combine(Environment.CurrentDirectory, "Config", "TestEmptySection.ini");
-
+            string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestEmptySection.ini");
             IniFile iniFile = new IniFile(path);
             Assert.That(iniFile.Count, Is.EqualTo(3));
 

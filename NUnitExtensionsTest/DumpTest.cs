@@ -25,17 +25,22 @@
         [TestCase(DumpType.FullHeap, "fulldump.dmp", TestName = "MiniDump_Windows_FullDump")]
         public void MiniDump_Windows(DumpType dumpType, string fileName)
         {
-            Assert.That(Dump.MiniDump(fileName, dumpType), Is.True);
-            CheckFile(fileName);
+            Deploy.CreateDirectory("Dumps");
+            string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", fileName);
+
+            Assert.That(Dump.MiniDump(dumpName, dumpType), Is.True);
+            CheckFile(dumpName);
         }
 
         [Test]
         [Platform(Include = "Win32NT")]
         public void MiniDump_Windows_DefaultDump()
         {
-            const string fileName = "defaultdump.dmp";
-            Assert.That(Dump.MiniDump(fileName), Is.True);
-            CheckFile(fileName);
+            Deploy.CreateDirectory("Dumps");
+            string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", "defaultdump.dmp");
+
+            Assert.That(Dump.MiniDump(dumpName), Is.True);
+            CheckFile(dumpName);
         }
 
         [Platform(Include = "Win32NT")]
@@ -43,33 +48,38 @@
         [TestCase(DumpType.FullHeap, "fulldumpexception.dmp", TestName = "MiniDump_WindowsException_FullDump")]
         public void MiniDumpException_Windows(DumpType dumpType, string fileName)
         {
+            Deploy.CreateDirectory("Dumps");
+            string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", fileName);
+
             Exception exception = null;
             bool result;
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
                 exception = ex;
-                result = Dump.MiniDump(fileName, dumpType);
+                result = Dump.MiniDump(dumpName, dumpType);
             }
             Assert.That(result, Is.True);
-            CheckFile(fileName);
+            CheckFile(dumpName);
         }
 
         [Test]
         [Platform(Include = "Win32NT")]
         public void MiniDumpException_Windows_DefaultDump()
         {
-            const string fileName = "defaultdumpexception.dmp";
+            Deploy.CreateDirectory("Dumps");
+            string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", "defaultdumpexception.dmp");
+
             Exception exception = null;
             bool result;
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
                 exception = ex;
-                result = Dump.MiniDump(fileName);
+                result = Dump.MiniDump(dumpName);
             }
             Assert.That(result, Is.True);
-            CheckFile(fileName);
+            CheckFile(dumpName);
         }
 
         [Test]
