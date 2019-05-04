@@ -51,9 +51,9 @@ to modify and write (including writing new files based on the inputs).
 ### 2.1 Deploying Files for Reading Only
 
 When you want to test a function that only reads a file, there is no need to
-copy it a second time. Just read it in place. Assuming that a file might be
-called `TestResources/test.txt`, and that file is copied during the project
-build, your test code might look like:
+deploy it and copy it a second time. Just read it in place. Assuming that a file
+might be called `TestResources/test.txt`, and that file is copied during the
+project build, your test code might look like:
 
 ```csharp
 private readonly string FilePath = Path.Combine(Deploy.TestDirectory, "TestResources", "test.txt");
@@ -72,9 +72,9 @@ modify it, or might create new files relative to the path of the original file
 (e.g. metadata files might be created, or configuration files related to the
 input file might be created or log files might be created).
 
-Test cases should not modify the `Deploy.TestDirectory`. Files should be copied
-from the `Deploy.TestDirectory` to the `Deploy.WorkDirectory` first before they
-are modified.
+Test cases should not modify the contents with in the `Deploy.TestDirectory`
+directory. Files should be copied from the `Deploy.TestDirectory` to the
+`Deploy.WorkDirectory` first before they are modified.
 
 Assuming that a file might be called `TestResources/test.txt` which needs to be
 opened, modified, and written back, a following test case might look like:
@@ -110,8 +110,8 @@ public void MyWriteTest()
 
 ### 2.4 The Current Directory
 
-Do not make the assumption of the position of the current directory, as it
-changes depending on the test context.
+Do not assume any current value for the current directory, as it changes
+depending on the test context.
 
 In NUnit 2.x, the current directory is the same as the
 `TestContext.CurrentContext.CurrentDirectory`. In NUnit 3.x it is no longer set
@@ -360,13 +360,13 @@ File: `app.config`
 #### 2.6.1 Creating a New Directory
 
 You can create a new directory relative to `Deploy.WorkDirectory` with the
-method `Deploy.CreateDirectory`. This will create a directory for you.
+method `Deploy.CreateDirectory()`. This will create a directory for you.
 
 #### 2.6.2 Deleting a Directory
 
 A test case might need to ensure that a directory doesn't exist. You can remove
 a directory relative to `Deploy.WorkDirectory` with the method
-`Deploy.DeleteDirectory`. This method does additional work to ensure that the
+`Deploy.DeleteDirectory()`. This method does additional work to ensure that the
 directory is deleted by checking for its non-existence after deletion. On
 Windows, directories may not be deleted immediately if it there is a file open
 inside (such as a temporary option by a Virus Scanner or a Shell Extension), and
@@ -375,9 +375,9 @@ so a retries are performed.
 #### 2.6.3 Deleting a File
 
 It may be necessary to remove a file in a test case. You can remove a file
-relative to the `Deploy.WorkDirectory` with the method `Deploy.DeleteFile`. This
-method does additional work to ensure that the file is deleted by checking for
-its non-existence after deletion. On Windows, files may not be deleted
+relative to the `Deploy.WorkDirectory` with the method `Deploy.DeleteFile()`.
+This method does additional work to ensure that the file is deleted by checking
+for its non-existence after deletion. On Windows, files may not be deleted
 immediately if it there is that file is open (such as a temporary option by a
 Virus Scanner or a Shell Extension), and so retries are performed.
 
@@ -400,7 +400,7 @@ When it calculates what the `Deploy.TestDirectory` or the
 method with one of these two attributes. Every test case executed by NUnit must
 have one of these attributes. The assembly to which this attribute belongs tells
 `NUnitExtensions` which version of NUnit the user is using, and can then get the
-class from the `TestContext.CurrentContext` propery.
+class from the `TestContext.CurrentContext` property.
 
 This necessarily means, that deployment using the `Deploy` class should be done
 from any code that is not directly called from the NUnit test runner.
@@ -434,12 +434,12 @@ fail.
 
 In version v0.3.0 of `NUnitExtensions`, the `Deploy` class assumed relative
 paths are from the current directory. This is no longer the case from v0.4.0 and
-later, source paths in `Deploy.Item` are relative to `Deploy.TestDirectory`, and
-destination paths are relative to `Deploy.WorkDirectory`.
+later, source paths in `Deploy.Item()` are relative to `Deploy.TestDirectory`,
+and destination paths are relative to `Deploy.WorkDirectory`.
 
 #### 2.8.3 Deploy.Item
 
-Do a search in your code for `Deploy.Item` and evaluate the logic that it
+Do a search in your code for `Deploy.Item()` and evaluate the logic that it
 doesn't depend on the current directory.
 
 If your code only reads files for testing, create a path
