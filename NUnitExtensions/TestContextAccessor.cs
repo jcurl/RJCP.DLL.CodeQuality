@@ -50,14 +50,14 @@
 
         private readonly string m_TestDirectory;
         private readonly string m_WorkDirectory;
+        private readonly Assembly m_NUnitAssembly;
 
         private TestContextAccessor(Assembly nUnitAssembly)
         {
             if (nUnitAssembly == null) throw new ArgumentNullException(nameof(nUnitAssembly));
-            PrivateType testContextType = new PrivateType(nUnitAssembly.GetType("NUnit.Framework.TestContext"));
+            m_NUnitAssembly = nUnitAssembly;
 
-            object currentContextx = AccessorBase.GetStaticFieldOrProperty(testContextType, "CurrentContext");
-            PrivateObject currentContext = new PrivateObject(currentContextx);
+            PrivateObject currentContext = GetCurrentContext(nUnitAssembly);
             m_TestDirectory = (string)currentContext.GetFieldOrProperty("TestDirectory");
             m_WorkDirectory = (string)currentContext.GetFieldOrProperty("WorkDirectory");
 
@@ -83,8 +83,32 @@
             }
         }
 
+        private PrivateObject GetCurrentContext(Assembly nUnitAssembly)
+        {
+            PrivateType testContextType = new PrivateType(nUnitAssembly.GetType("NUnit.Framework.TestContext"));
+            object currentContext = AccessorBase.GetStaticFieldOrProperty(testContextType, "CurrentContext");
+            return new PrivateObject(currentContext);
+        }
+
+        private TestAccessor Test
+        {
+            get
+            {
+                // The value changes on every test, so we need to get the name on every call.
+                PrivateObject currentContext = GetCurrentContext(m_NUnitAssembly);
+                object testProperty = currentContext.GetFieldOrProperty("Test");
+                if (testProperty == null) return null;
+
+                return new TestAccessor(testProperty);
+            }
+        }
+
         public string TestDirectory { get { return m_TestDirectory; } }
 
         public string WorkDirectory { get { return m_WorkDirectory; } }
+
+        public string TestName { get { return Test.Name; } }
+
+        public string TestFullName { get { return Test.FullName; } }
     }
 }

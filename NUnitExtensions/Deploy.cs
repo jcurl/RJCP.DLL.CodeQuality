@@ -153,6 +153,24 @@
         }
 
         /// <summary>
+        /// Gets the name of the test that is currently executing.
+        /// </summary>
+        /// <value>The name of the test.</value>
+        public static string TestName
+        {
+            get { return TestContext.TestName ?? string.Empty; }
+        }
+
+        /// <summary>
+        /// Gets the full name of the test.
+        /// </summary>
+        /// <value>The full name of the test.</value>
+        public static string TestFullName
+        {
+            get { return TestContext.TestFullName ?? string.Empty; }
+        }
+
+        /// <summary>
         /// In line test case method for deployment of a test resource.
         /// </summary>
         /// <param name="path">The relative or absolute path to the file or directory to deploy.
@@ -239,6 +257,46 @@
 
             CreateDirectory(fullOutputDirectory);
             CopyFiles(itemPath, fullOutputDirectory);
+        }
+
+        /// <summary>
+        /// Creates a new directory based on the current test name and changes to that directory.
+        /// </summary>
+        /// <returns>An object that should be disposed to return back to the original state.</returns>
+        public static ScratchPad ScratchPad()
+        {
+            return new ScratchPad();
+        }
+
+        /// <summary>
+        /// Creates a new directory based on the current test name.
+        /// </summary>
+        /// <param name="options">Configure the options for the <see cref="Framework.ScratchPad()"/>.</param>
+        /// <returns>An object that should be disposed to return back to the original state.</returns>
+        public static ScratchPad ScratchPad(ScratchOptions options)
+        {
+            return new ScratchPad(options);
+        }
+
+        /// <summary>
+        /// Creates a new directory based on the name and changes to that directory.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>An object that should be disposed to return back to the original state.</returns>
+        public static ScratchPad ScratchPad(string name)
+        {
+            return new ScratchPad(name);
+        }
+
+        /// <summary>
+        /// Creates a new directory based on the current test name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="options">Configure the options for the <see cref="Framework.ScratchPad()"/>.</param>
+        /// <returns>An object that should be disposed to return back to the original state.</returns>
+        public static ScratchPad ScratchPad(string name, ScratchOptions options)
+        {
+            return new ScratchPad(name, options);
         }
 
         private static void CopyFiles(string path, string outputDirectory)
