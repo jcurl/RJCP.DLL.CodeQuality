@@ -4,88 +4,66 @@
     using System.Reflection;
     using HelperClasses;
 
-    [TestFixture(typeof(PrivateTypeAccessor), Category = "NUnitExtensions.PrivateType")]
-#if MSTEST
-    [TestFixture(typeof(PrivateTypeVsAccessor), Category = "VisualStudio.PrivateType")]
-#endif
-    public class PrivateTypeTest<T> where T : class, IPrivateTypeAccessor
+    [TestFixture(Category = "NUnitExtensions.PrivateType")]
+
+    public class PrivateTypeTest
     {
-        #region Dynamic Creation of Correct PrivateObject
-        public static T CreatePrivateType(Type type)
-        {
-            if (typeof(T) == typeof(PrivateTypeAccessor)) return new PrivateTypeAccessor(type) as T;
-#if MSTEST
-            if (typeof(T) == typeof(PrivateTypeVsAccessor)) return new PrivateTypeVsAccessor(type) as T;
-#endif
-            return null;
-        }
-
-        public static T CreatePrivateType(string assemblyName, string typeName)
-        {
-            if (typeof(T) == typeof(PrivateTypeAccessor)) return new PrivateTypeAccessor(assemblyName, typeName) as T;
-#if MSTEST
-            if (typeof(T) == typeof(PrivateTypeVsAccessor)) return new PrivateTypeVsAccessor(assemblyName, typeName) as T;
-#endif
-            return null;
-        }
-        #endregion
-
         #region Validation Tests
         [Test]
         public void NullAssemblyName()
         {
-            Assert.That(() => { CreatePrivateType(null, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { new PrivateType(null, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void EmptyAssemblyName()
         {
-            Assert.That(() => { CreatePrivateType(string.Empty, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { new PrivateType(string.Empty, "NUnit.Framework.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void NullClassName()
         {
-            Assert.That(() => { CreatePrivateType("NUnitExtensionsTest", null); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { new PrivateType("NUnitExtensionsTest", null); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void EmptyClassName()
         {
-            Assert.That(() => { CreatePrivateType("NUnitExtensionsTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { new PrivateType("NUnitExtensionsTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void NullType()
         {
-            Assert.That(() => { CreatePrivateType(null); }, Throws.TypeOf<ArgumentNullException>());
+            Assert.That(() => { new PrivateType(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void InvokeNullMethodName()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             Assert.That(() => { privType.InvokeStatic(null, 5); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void GetNullPropertyOrField()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             Assert.That(() => { privType.GetStaticFieldOrProperty(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void SetNullPropertyOrField()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             Assert.That(() => { privType.SetStaticFieldOrProperty(null, 123); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void InvokeInexistentMethod()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             Assert.That(() => {
                 privType.InvokeStatic("IDoNotExist",
                 BindingFlags.NonPublic | BindingFlags.Static,
@@ -100,24 +78,22 @@
             try {
                 // Microsoft.VisualStudio.TestTools.UnitTesting v10.1.0.0 will fail (VS2015)
                 // Microsoft.VisualStudio.TestTools.UnitTesting v14.0.0.0 will pass (VS2017)
-                T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+                PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
                 Assert.That(() => { privType.InvokeStatic("ThrowEx", null); },
                     Throws.TypeOf<TargetInvocationException>().With.InnerException.TypeOf<InvalidOperationException>());
             } catch (AssertionException) {
-#if MSTEST && VS2012
-                Assert.Ignore("Known test case failure for MSTest");
-#else
+
                 throw;
-#endif
+
             }
         }
-#endregion
+        #endregion
 
-#region Internal Class Tests
+        #region Internal Class Tests
         [Test]
         public void InvokeStaticOnTypeFromAssembly()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             int result = (int)privType.InvokeStatic("TestStaticMethod", null);
 
             Assert.That(result, Is.EqualTo(1));
@@ -126,7 +102,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly_WithArg()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             int result = (int)privType.InvokeStatic("TestIncArg", 5);
 
             Assert.That(result, Is.EqualTo(6));
@@ -135,7 +111,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly_WithArgAndType()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             float result = (float)privType.InvokeStatic("TestIncArg", new Type[1] { typeof(float) }, new object[1] { 5.1f });
 
             Assert.That(result, Is.EqualTo(6.1f));
@@ -144,7 +120,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly_GenericMethod()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             string result = (string)privType.InvokeStatic("GetDescription",
                 new Type[1] { typeof(int) },
                 new object[1] { 100 },
@@ -156,7 +132,7 @@
         [Test]
         public void GetField_TypeFromAssembly()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             string result = (string)privType.GetStaticFieldOrProperty("s_MyStatic");
 
             Assert.That(result, Is.EqualTo("static"));
@@ -165,7 +141,7 @@
         [Test]
         public void GetProperty_TypeFromAssembly()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             int result = (int)privType.GetStaticFieldOrProperty("MyStaticProperty");
 
             Assert.That(result, Is.EqualTo(111));
@@ -174,7 +150,7 @@
         [Test]
         public void GetProperty_BindingFlags_TypeFromAssembly()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             int result = (int)privType.GetStaticFieldOrProperty("MyBaseStaticProp", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty);
 
             Assert.That(result, Is.EqualTo(99));
@@ -183,7 +159,7 @@
         [Test]
         public void SetField_TypeFromAssembly()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             string result = (string)privType.GetStaticFieldOrProperty("s_MyStatic");
             Assert.That(result, Is.EqualTo("static"));
 
@@ -202,7 +178,7 @@
             BindingFlags getPropflags = BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty;
             BindingFlags setPropflags = BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.SetProperty;
 
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             int result = (int)privType.GetStaticFieldOrProperty("MyBaseStaticProp", getPropflags);
             Assert.That(result, Is.EqualTo(99));
 
@@ -219,7 +195,7 @@
         [Test]
         public void InvokeStatic_BaseTypeFromAssembly()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             int result = (int)privType.InvokeStatic("MyBaseStaticMethod",
                 BindingFlags.NonPublic | BindingFlags.Static,
                 null);
@@ -230,7 +206,7 @@
         [Test]
         public void InvokeStatic_BaseTypeFromAssembly_ParamType()
         {
-            T privType = CreatePrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.InternalClassTest");
             string result = (string)privType.InvokeStatic("MyBaseStaticIntMethod",
                 BindingFlags.NonPublic | BindingFlags.Static,
                 new Type[1] { typeof(int) },
@@ -238,20 +214,20 @@
 
             Assert.That(result, Is.EqualTo("123"));
         }
-#endregion
+        #endregion
 
-#region Public Class Tests
+        #region Public Class Tests
         [Test]
         public void ReferencedType_PublicType()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             Assert.That(privType.ReferencedType, Is.EqualTo(typeof(PublicClassTest)));
         }
 
         [Test]
         public void InvokeStaticFromPublicType()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             int result = (int)privType.InvokeStatic("TestPrivateStaticMethod", null);
 
             Assert.That(result, Is.EqualTo(5));
@@ -260,25 +236,25 @@
         [Test]
         public void InvokeStaticFromPublicType_WithArg()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             int result = (int)privType.InvokeStatic("TestIncArg", 7);
 
             Assert.That(result, Is.EqualTo(8));
-    }
+        }
 
         [Test]
         public void InvokeStaticFromPublicType_WithArgAndType()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             float result = (float)privType.InvokeStatic("TestIncArg", new Type[1] { typeof(float) }, new object[1] { 8.1f });
 
             Assert.That(result, Is.EqualTo(9.1f));
-}
+        }
 
         [Test]
         public void InvokeStaticFromPublicType_GenericMethod()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             string result = (string)privType.InvokeStatic("GetDescription",
                 new Type[1] { typeof(int) },
                 new object[1] { 100 },
@@ -290,7 +266,7 @@
         [Test]
         public void GetField_FromPublicType()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             string result = (string)privType.GetStaticFieldOrProperty("s_MyStatic");
 
             Assert.That(result, Is.EqualTo("static"));
@@ -299,11 +275,11 @@
         [Test]
         public void GetProperty_FromPublicType()
         {
-            T privType = CreatePrivateType(typeof(PublicClassTest));
+            PrivateType privType = new PrivateType(typeof(PublicClassTest));
             int result = (int)privType.GetStaticFieldOrProperty("MyStaticProperty");
 
             Assert.That(result, Is.EqualTo(111));
         }
-#endregion
+        #endregion
     }
 }

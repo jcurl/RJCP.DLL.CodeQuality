@@ -30,7 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(Configuration)' == 'Debug' AND $(DefineConstants.Contains('VS2012'))" />
     <Reference Include="nunit.framework, Version=2.6.7.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
       <HintPath>..\..\..\packages\NUnit.2.6.7\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -77,9 +76,7 @@
     <Compile Include="HelperClasses\StaticClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
     <Compile Include="NestedPrivateTypeTest.cs" />
-    <Compile Include="PrivateObjectAccessor.cs" />
     <Compile Include="PrivateObjectTest.cs" />
-    <Compile Include="PrivateTypeAccessor.cs" />
     <Compile Include="PrivateTypeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HelperClasses\PublicClassTest.cs" />
