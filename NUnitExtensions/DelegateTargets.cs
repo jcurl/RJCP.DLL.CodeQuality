@@ -37,7 +37,7 @@
         /// <param name="eventName">Name of the event for the look up.</param>
         /// <param name="source">The source delegate which the user provided.</param>
         /// <returns>The delegate that was registered in the look up.</returns>
-        /// <exception cref="System.ArgumentException">
+        /// <exception cref="ArgumentException">
         /// <para>Event <paramref name="eventName"/> not found</para>
         /// - or -
         /// <para>Delegate <paramref name="source"/> not found</para>

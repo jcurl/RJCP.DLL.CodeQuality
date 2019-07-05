@@ -44,7 +44,7 @@
         /// Initializes a new instance of the <see cref="AccessorBase"/> class from an existing object.
         /// </summary>
         /// <param name="pObject">The object wrapped in a <see cref="PrivateObject"/>.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="pObject"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="pObject"/> may not be <see langword="null"/>.</exception>
         protected AccessorBase(PrivateObject pObject)
         {
             if (pObject == null) throw new ArgumentNullException(nameof(pObject));

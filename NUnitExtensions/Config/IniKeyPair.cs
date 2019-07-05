@@ -17,7 +17,7 @@
         /// </summary>
         /// <param name="key">The case insensitive key.</param>
         /// <returns>The object stored in the key/value dictionary.</returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// <paramref name="key"/> and <paramref name="value"/> may not be <see langword="null"/>.
         /// </exception>
         public T this[string key]
@@ -137,7 +137,7 @@
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
+        /// <returns>An <see cref="IEnumerator{T}" /> that can be used to iterate through the collection.</returns>
         public Dictionary<string, T>.Enumerator GetEnumerator()
         {
             return m_Database.GetEnumerator();

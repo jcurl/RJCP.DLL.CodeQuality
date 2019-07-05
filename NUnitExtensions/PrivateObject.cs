@@ -25,7 +25,7 @@
         /// Initializes a new instance of the <see cref="PrivateObject"/> class that creates the wrapper for the specified object.
         /// </summary>
         /// <param name="obj">The object to wrap.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="obj"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="obj"/> may not be <see langword="null"/>.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
         /// https://msdn.microsoft.com/en-us/library/ms243350.aspx.
@@ -72,7 +72,7 @@
         /// </summary>
         /// <param name="obj">The object to wrap. This serves as starting point to reach the private members.</param>
         /// <param name="type">The type of the object as given by a <see cref="PrivateType"/>.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="obj"/> or <paramref name="type"/> may not
+        /// <exception cref="ArgumentNullException"><paramref name="obj"/> or <paramref name="type"/> may not
         /// be <see langword="null"/>.</exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
@@ -207,7 +207,7 @@
         /// </para>
         /// <para>-or-</para>
         /// <para>
-        /// <paramref name="assemblyName"/> and <paramref name="typeName"/> is not found (<see cref="System.Reflection.Assembly.GetType(string)"/>).
+        /// <paramref name="assemblyName"/> and <paramref name="typeName"/> is not found (<see cref="Assembly.GetType(string)"/>).
         /// </para>
         /// </exception>
         /// <exception cref="InvalidOperationException"><paramref name="typeName"/> it's not a generic type.</exception>
@@ -220,7 +220,7 @@
         /// <paramref name="typeName"/> was not found.
         /// </para>
         /// </exception>
-        /// <exception cref="System.Reflection.TargetInvocationException">The constructor being called throws an exception.</exception>
+        /// <exception cref="TargetInvocationException">The constructor being called throws an exception.</exception>
         /// <exception cref="TypeLoadException"><paramref name="typeName"/> is not a valid type.</exception>
         /// <exception cref="MissingMethodException">No matching public constructor was found to match the
         /// <paramref name="typeName"/> and <paramref name="args"/>.</exception>
@@ -398,7 +398,7 @@
         /// </summary>
         /// <param name="name">The name of the method to be invoked.</param>
         /// <param name="args">The arguments required by the method that is to be invoked.</param>
-        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="System.Reflection.BindingFlags"/> that specifies how the search for the method is conducted.</param>
+        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the method is conducted.</param>
         /// <returns>An object that represents the return value of a private member.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/></exception>
         /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
@@ -417,7 +417,7 @@
         /// Invoke private methods on a <see cref="PrivateObject" /> object.
         /// </summary>
         /// <param name="name">The name of the method to be invoked.</param>
-        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="System.Reflection.BindingFlags" /> that specifies how the search for the method is conducted.</param>
+        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags" /> that specifies how the search for the method is conducted.</param>
         /// <param name="parameterTypes">The parameter types required by the method that is to be invoked.</param>
         /// <param name="args">The arguments required by the method that is to be invoked.</param>
         /// <returns>
@@ -508,7 +508,7 @@
         /// Sets a value for the field or property of the wrapped object, identified by name.
         /// </summary>
         /// <param name="name">The name of the private field or property to set.</param>
-        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="System.Reflection.BindingFlags"/> that specifies how the search for the field or property is conducted.</param>
+        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted.</param>
         /// <param name="value">The value to set.</param>
         /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
         /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
@@ -544,7 +544,7 @@
         /// Gets a value of a wrapped field or property based on the name.
         /// </summary>
         /// <param name="name">The name of the private field or property to get.</param>
-        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="System.Reflection.BindingFlags"/> that specifies how the search for the field or property is conducted. The type of lookup need not be specified.</param>
+        /// <param name="bindingFlags">A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or property is conducted. The type of lookup need not be specified.</param>
         /// <returns>The value set for the name field or property.</returns>
         /// <exception cref="MissingMethodException">The field or property <paramref name="name"/> doesn't exist.</exception>
         /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>

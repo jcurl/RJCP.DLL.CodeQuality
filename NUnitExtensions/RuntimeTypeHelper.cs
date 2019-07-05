@@ -14,7 +14,7 @@
     {
         internal static MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
-            if (match == null) throw new ArgumentNullException("match");
+            if (match == null) throw new ArgumentNullException(nameof(match));
             Type[] typeArray = new Type[types.Length];
 
             for (int i = 0; i < types.Length; i++) {

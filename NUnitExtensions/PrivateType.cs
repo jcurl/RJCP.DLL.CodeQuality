@@ -213,8 +213,8 @@ namespace NUnit.Framework
         /// method that takes no parameters.</para></param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -238,8 +238,8 @@ namespace NUnit.Framework
         /// <param name="args">An array of arguments to pass.</param>
         /// <param name="typeArguments">An array of type arguments to use when invoking a generic method.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -258,8 +258,8 @@ namespace NUnit.Framework
         /// <param name="bindingFlags">A bitmask comprised of one or more BindingFlags that specifies how the search for the element is conducted.</param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -283,8 +283,8 @@ namespace NUnit.Framework
         /// method that takes no parameters.</para></param>
         /// <param name="args">An array of arguments to pass.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -309,8 +309,8 @@ namespace NUnit.Framework
         /// <param name="args">An array of arguments to pass.</param>
         /// <param name="typeArguments">An array of type arguments to use when invoking a generic method.</param>
         /// <returns>An object that represents the invoked static method's return value, if any.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The method being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is a CultureInvariant version
@@ -342,8 +342,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="name">The name of the static field or property to get.</param>
         /// <returns>The value set for the <paramref name="name"/> field or property.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -363,8 +363,8 @@ namespace NUnit.Framework
         /// field or property is conducted. The type of lookup need not be specified.
         /// <para>The default values are GetField, GetProperty, and Static.</para></param>
         /// <returns>The value set for the <paramref name="name"/> field or property.</returns>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -381,8 +381,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="name">The name of the static field or property to get.</param>
         /// <param name="value">The value to set to the static field or property.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as
@@ -402,8 +402,8 @@ namespace NUnit.Framework
         /// field or property is conducted. The type of lookup need not be specified.
         /// <para>The default values are GetField, GetProperty, and Static.</para></param>
         /// <param name="value">The value to set to the static field or property.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
-        /// <exception cref="System.ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> may not be <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         /// <exception cref="TargetInvocationException">The field or property being called throws an exception.</exception>
         /// <remarks>
         /// Invokes the method provided for the object given using Reflection. This method is intended to be the same as

@@ -11,7 +11,7 @@
         /// Determines whether the operating system is Windows NT or later.
         /// </summary>
         /// <returns>
-        /// <c>true</c> if the operating system is Windows NT or later; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the operating system is Windows NT or later; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool IsWinNT()
         {
@@ -22,7 +22,7 @@
         /// Determines whether the operating system is a supported version of a Unix based system.
         /// </summary>
         /// <returns>
-        /// <c>true</c> if the operating system is a supported version of a Unix based system; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the operating system is a supported version of a Unix based system; otherwise, <see langword="false"/>.
         /// </returns>
         /// <remarks>
         /// The method is meant to be compatible with both the .NET CLR and the MONO framework.
