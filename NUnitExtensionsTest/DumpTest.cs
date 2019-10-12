@@ -56,10 +56,12 @@
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
+                // Capture the exception, so we can analyse it in the minidump.
                 exception = ex;
                 result = Dump.MiniDump(dumpName, dumpType);
             }
             Assert.That(result, Is.True);
+            Assert.That(exception, Is.Not.Null);
             CheckFile(dumpName);
         }
 
@@ -75,10 +77,12 @@
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
+                // Capture the exception, so we can analyse it in the minidump.
                 exception = ex;
                 result = Dump.MiniDump(dumpName);
             }
             Assert.That(result, Is.True);
+            Assert.That(exception, Is.Not.Null);
             CheckFile(dumpName);
         }
 
@@ -88,7 +92,9 @@
         {
             // Runs also on Linux, just that no file will be created. We don't test for that, because we just don't want
             // it to crash.
-            Dump.MiniDump("MinidumpLinux.dmp");
+            Assert.That(() => {
+                Dump.MiniDump("MinidumpLinux.dmp");
+            }, Throws.Nothing);
         }
     }
 }

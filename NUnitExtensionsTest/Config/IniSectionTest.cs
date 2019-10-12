@@ -522,7 +522,11 @@ namespace NUnit.Framework.Config
             IniSection section = new IniSection("header");
             string[] keys = new string[1];
 
-            section.Keys.CopyTo(keys, 1);
+            Assert.That(() => {
+                // Even though there is no space in the array (length=1, index=1), no exception should be raised as
+                // there is nothing to copy.
+                section.Keys.CopyTo(keys, 1);
+            }, Throws.Nothing);
         }
 
         [Test]
@@ -897,6 +901,8 @@ namespace NUnit.Framework.Config
             result.AppendFormat("[Gen-2]\t{0}", GC.CollectionCount(2) - gc2);
 
             Console.WriteLine(result.ToString());
+
+            Assert.Pass();
         }
     }
 }
