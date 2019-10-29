@@ -2,6 +2,8 @@
 {
     using System;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes1Accessor
     {
         private const string AssemblyName = "NUnitExtensionsTest";
@@ -20,6 +22,8 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes2Accessor<T>
     {
         private const string AssemblyName = "NUnitExtensionsTest";
@@ -38,6 +42,8 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes3Accessor
     {
         private const string AssemblyName = "NUnitExtensionsTest";
@@ -56,6 +62,8 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes4Accessor<T>
     {
         private const string AssemblyName = "NUnitExtensionsTest";
@@ -74,6 +82,8 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes5Accessor<T>
     {
         private const string AssemblyName = "NUnitExtensionsTest";
@@ -93,6 +103,7 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public static class NestedStaticGTypes6Accessor<T>
     {
         private const string AssemblyName = "NUnitExtensionsTest";
@@ -112,6 +123,7 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedGTypes1Accessor<T> : AccessorBase
     {
         private const string AssemblyName = "NUnitExtensionsTest";

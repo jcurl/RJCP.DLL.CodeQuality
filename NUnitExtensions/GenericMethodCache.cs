@@ -51,10 +51,9 @@
         {
             m_MethodCache = new Dictionary<string, LinkedList<MethodInfo>>();
             MethodInfo[] methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            LinkedList<MethodInfo> linkedList = null;
             foreach (MethodInfo method in methods) {
                 if (method.IsGenericMethod || method.IsGenericMethodDefinition) {
-                    if (!m_MethodCache.TryGetValue(method.Name, out linkedList)) {
+                    if (!m_MethodCache.TryGetValue(method.Name, out LinkedList<MethodInfo> linkedList)) {
                         linkedList = new LinkedList<MethodInfo>();
                         m_MethodCache.Add(method.Name, linkedList);
                     }
@@ -67,8 +66,7 @@
         private LinkedList<MethodInfo> GetMethodCandidates(string methodName, Type[] parameterTypes, Type[] typeArguments, BindingFlags bindingFlags)
         {
             LinkedList<MethodInfo> methodCandidates = new LinkedList<MethodInfo>();
-            LinkedList<MethodInfo> cachedCandidates = null;
-            if (!MethodCache.TryGetValue(methodName, out cachedCandidates)) {
+            if (!MethodCache.TryGetValue(methodName, out LinkedList<MethodInfo> cachedCandidates)) {
                 return methodCandidates;
             }
 

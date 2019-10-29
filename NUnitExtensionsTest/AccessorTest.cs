@@ -224,8 +224,9 @@
         [Test]
         public void SetPropertyValue()
         {
-            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
-            accessor.ThreadsNumber = 30;
+            GenericClassTestAccessor accessor = new GenericClassTestAccessor(5) {
+                ThreadsNumber = 30
+            };
 
             Assert.That(accessor.ThreadsNumber, Is.EqualTo(30));
         }
@@ -235,7 +236,7 @@
         {
             GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
-                int itemValue = accessor.InexistentProperty;
+                _ = accessor.InexistentProperty;
             }, Throws.TypeOf<MissingMethodException>());
         }
 
@@ -253,7 +254,7 @@
         {
             GenericClassTestAccessor accessor = new GenericClassTestAccessor(5);
             Assert.That(() => {
-                int element = accessor.Element;
+                _ = accessor.Element;
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -388,7 +389,7 @@
         public void PropertyGetWithException()
         {
             ClassExceptionCtorTestAccessor c = new ClassExceptionCtorTestAccessor(0);
-            Assert.That(() => { string x = c.Property; }, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => { _ = c.Property; }, Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
@@ -401,7 +402,9 @@
         [Test]
         public void StaticPropertyGetWithException()
         {
-            Assert.That(() => { int x = ClassExceptionCtorTestAccessor2.Property2; }, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => {
+                _ = ClassExceptionCtorTestAccessor2.Property2;
+            }, Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]

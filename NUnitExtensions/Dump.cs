@@ -96,10 +96,11 @@
 
             using (FileStream fsToDump = OpenFile(path)) {
                 NativeMethods.MINIDUMP_EXCEPTION_INFORMATION miniDumpInfo =
-                    new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION();
-                miniDumpInfo.ClientPointers = false;
-                miniDumpInfo.ExceptionPointers = Marshal.GetExceptionPointers();
-                miniDumpInfo.ThreadId = SafeNativeMethods.GetCurrentThreadId();
+                    new NativeMethods.MINIDUMP_EXCEPTION_INFORMATION {
+                        ClientPointers = false,
+                        ExceptionPointers = Marshal.GetExceptionPointers(),
+                        ThreadId = SafeNativeMethods.GetCurrentThreadId()
+                    };
 
                 IntPtr mem = Marshal.AllocHGlobal(Marshal.SizeOf(miniDumpInfo));
                 Marshal.StructureToPtr(miniDumpInfo, mem, false);

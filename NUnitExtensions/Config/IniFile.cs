@@ -92,8 +92,7 @@
 
                     if (IsBlankLine(line)) continue;
 
-                    string header;
-                    if (GetSectionHeader(line, out header)) {
+                    if (GetSectionHeader(line, out string header)) {
                         if (section != null) {
                             Add(section.Header, section);
                         }
@@ -107,9 +106,7 @@
                         continue;
                     }
 
-                    string key;
-                    string value;
-                    if (section != null && GetKeyValuePair(line, out key, out value)) {
+                    if (section != null && GetKeyValuePair(line, out string key, out string value)) {
                         if (section.ContainsKey(key)) continue;
                         section.Add(key, value);
                     }
@@ -214,11 +211,10 @@
 
         private static IniFile GetIniFile(string fileName)
         {
-            IniFile iniFile;
             string fullName = GetFullFileName(fileName);
             if (fullName == null) return new IniFile();
 
-            if (!m_Files.TryGetValue(fullName, out iniFile)) {
+            if (!m_Files.TryGetValue(fullName, out IniFile iniFile)) {
                 try {
                     iniFile = new IniFile(fullName);
                 } catch (FileNotFoundException) {       // The file cannot be found
@@ -264,12 +260,10 @@
         public static string GetKey(string fileName, string section, string key, string defaultValue)
         {
             IniFile iniFile = GetIniFile(fileName);
-            IniSection iniSection;
-            if (!iniFile.TryGetValue(section, out iniSection)) {
+            if (!iniFile.TryGetValue(section, out IniSection iniSection)) {
                 return defaultValue;
             }
-            string value;
-            if (!iniSection.TryGetValue(key, out value)) {
+            if (!iniSection.TryGetValue(key, out string value)) {
                 return defaultValue;
             }
             return value;
@@ -293,8 +287,7 @@
         public static IniSection GetSection(string fileName, string section)
         {
             IniFile iniFile = GetIniFile(fileName);
-            IniSection iniSection;
-            if (!iniFile.TryGetValue(section, out iniSection)) {
+            if (!iniFile.TryGetValue(section, out IniSection iniSection)) {
                 return new IniSection(section.Trim());
             }
             return iniSection;
@@ -316,8 +309,8 @@
             string value = GetKey(fileName, section, key, (string)null);
             if (value == null) return defaultValue;
 
-            int result;
-            if (!int.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out result))
+            if (!int.TryParse(value, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out int result))
                 return defaultValue;
             return result;
         }
@@ -345,8 +338,7 @@
             string value = GetKey(fileName, section, key, (string)null);
             if (value == null) return defaultValue;
 
-            int result;
-            if (!int.TryParse(value, style, provider, out result))
+            if (!int.TryParse(value, style, provider, out int result))
                 return defaultValue;
             return result;
         }
@@ -367,8 +359,7 @@
             string value = GetKey(fileName, section, key, (string)null);
             if (value == null) return defaultValue;
 
-            long result;
-            if (!long.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out result)) return defaultValue;
+            if (!long.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out long result)) return defaultValue;
             return result;
         }
 
@@ -395,8 +386,7 @@
             string value = GetKey(fileName, section, key, (string)null);
             if (value == null) return defaultValue;
 
-            long result;
-            if (!long.TryParse(value, style, provider, out result)) return defaultValue;
+            if (!long.TryParse(value, style, provider, out long result)) return defaultValue;
             return result;
         }
 
@@ -416,8 +406,7 @@
             string value = GetKey(fileName, section, key, (string)null);
             if (value == null) return defaultValue;
 
-            bool result;
-            if (!bool.TryParse(value, out result)) return defaultValue;
+            if (!bool.TryParse(value, out bool result)) return defaultValue;
             return result;
         }
     }

@@ -13,7 +13,7 @@
         public ClassTestAccessor(int length)
             : base("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ClassTest", new object[] { length })
         {
-            BindingFlags = BindingFlags | BindingFlags.NonPublic;
+            BindingFlags |= BindingFlags.NonPublic;
         }
     }
 }

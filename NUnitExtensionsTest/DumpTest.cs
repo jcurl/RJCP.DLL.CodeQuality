@@ -50,9 +50,9 @@
         {
             Deploy.CreateDirectory("Dumps");
             string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", fileName);
-
-            Exception exception = null;
             bool result;
+
+            Exception exception;
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {
@@ -71,9 +71,9 @@
         {
             Deploy.CreateDirectory("Dumps");
             string dumpName = Path.Combine(Deploy.WorkDirectory, "Dumps", "defaultdumpexception.dmp");
-
-            Exception exception = null;
             bool result;
+
+            Exception exception;
             try {
                 throw new InvalidOperationException("Test Throw");
             } catch (InvalidOperationException ex) {

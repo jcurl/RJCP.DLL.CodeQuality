@@ -57,8 +57,8 @@
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             ValidateAccessString(memberToAccess);
 
-            PrivateObject privateObject = obj as PrivateObject;
-            if (privateObject == null) privateObject = new PrivateObject(obj);
+            if (!(obj is PrivateObject privateObject))
+                privateObject = new PrivateObject(obj);
 
             string[] members = memberToAccess.Split('.');
             foreach (string name in members) {
@@ -247,12 +247,9 @@
                 throw new ArgumentException("Invalid access member syntax");
             foreach (string member in access.Split('.')) {
                 if (member.Length != 0) {
-                    if (-1 == member.IndexOfAny(new char[3] {
-                        ' ',
-                        '\t',
-                        '\n'
-                    }))
-                    continue;
+                    if (-1 == member.IndexOfAny(new char[3] { ' ', '\t', '\n' })) {
+                        continue;
+                    }
                 }
                 throw new ArgumentException("Invalid access member syntax");
             }
@@ -263,7 +260,7 @@
             if (assemblyName == null) throw new ArgumentNullException(nameof(assemblyName));
             if (typeName == null) throw new ArgumentNullException(nameof(typeName));
 
-            Assembly assembly = null;
+            Assembly assembly;
             try {
                 assembly = Assembly.Load(assemblyName);
             } catch (ArgumentException) {

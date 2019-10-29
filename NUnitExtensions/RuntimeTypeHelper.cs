@@ -12,6 +12,7 @@
     /// </remarks>
     internal static class RuntimeTypeHelper
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Decompiled from MS Sources")]
         internal static MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
             if (match == null) throw new ArgumentNullException(nameof(match));
@@ -55,7 +56,7 @@
                 numArray[i] = i;
             }
             for (int i = 1; i < num; i++) {
-                switch (FindMostSpecificMethod(match[k], numArray, (Type)null, match[i], numArray, (Type)null, types, (object[])null)) {
+                switch (FindMostSpecificMethod(match[k], numArray, null, match[i], numArray, null, types, null)) {
                 case 0:
                     flag = true;
                     break;

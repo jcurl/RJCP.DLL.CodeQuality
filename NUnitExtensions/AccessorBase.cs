@@ -19,8 +19,6 @@
         /// </summary>
         private readonly PrivateObject m_PrivateObject;
 
-        private BindingFlags m_BindingFlags = BindingFlags.Public | BindingFlags.Instance;
-
         /// <summary>
         /// A bit mask comprised of one or more <see cref="System.Reflection.BindingFlags"/> that specifies how the search for
         /// the properties or methods is conducted.
@@ -34,11 +32,7 @@
         /// to this bit mask.</para>
         /// <para>Please note, that this property naturally can only apply to non-static methods in this class.</para>
         /// </remarks>
-        protected BindingFlags BindingFlags
-        {
-            get { return m_BindingFlags; }
-            set { m_BindingFlags = value; }
-        }
+        protected BindingFlags BindingFlags { get; set; } = BindingFlags.Public | BindingFlags.Instance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccessorBase"/> class from an existing object.

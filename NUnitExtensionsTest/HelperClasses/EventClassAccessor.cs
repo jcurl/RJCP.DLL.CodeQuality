@@ -2,6 +2,7 @@
 {
     using System;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S3376:Attribute, EventArgs, and Exception type names should end with the type being extended", Justification = "Accessor Class")]
     public class MyPrivateEventArgsAccessor : EventArgs
     {
         private class Accessor : AccessorBase

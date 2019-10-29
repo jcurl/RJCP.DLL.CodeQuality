@@ -16,14 +16,12 @@
         /// <param name="target">The target delegate that is attached.</param>
         public void AddTarget(string eventName, Delegate source, Delegate target)
         {
-            Dictionary<Delegate, DelegateTarget> delegateMap;
-            if (!m_Events.TryGetValue(eventName, out delegateMap)) {
+            if (!m_Events.TryGetValue(eventName, out Dictionary<Delegate, DelegateTarget> delegateMap)) {
                 delegateMap = new Dictionary<Delegate, DelegateTarget>();
                 m_Events.Add(eventName, delegateMap);
             }
 
-            DelegateTarget delegateTarget;
-            if (!delegateMap.TryGetValue(source, out delegateTarget)) {
+            if (!delegateMap.TryGetValue(source, out DelegateTarget delegateTarget)) {
                 delegateTarget = new DelegateTarget(target);
                 delegateMap.Add(source, delegateTarget);
             }
@@ -44,13 +42,11 @@
         /// </exception>
         public Delegate RemoveTarget(string eventName, Delegate source)
         {
-            Dictionary<Delegate, DelegateTarget> delegateMap;
-            if (!m_Events.TryGetValue(eventName, out delegateMap)) {
+            if (!m_Events.TryGetValue(eventName, out Dictionary<Delegate, DelegateTarget> delegateMap)) {
                 throw new ArgumentException("Event not found", nameof(eventName));
             }
 
-            DelegateTarget delegateTarget;
-            if (!delegateMap.TryGetValue(source, out delegateTarget)) {
+            if (!delegateMap.TryGetValue(source, out DelegateTarget delegateTarget)) {
                 throw new ArgumentException("Delegate not found", nameof(source));
             }
 

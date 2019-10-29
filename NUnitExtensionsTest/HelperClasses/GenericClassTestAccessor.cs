@@ -85,6 +85,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3237:\"value\" parameters should be used", Justification = "Accessor Test Case")]
         public int Element
         {
             get
@@ -97,6 +98,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Blocker Code Smell", "S3237:\"value\" parameters should be used", Justification = "Accessor Test Case")]
         public int Value
         {
             get

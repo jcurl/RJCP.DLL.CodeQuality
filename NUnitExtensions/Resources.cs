@@ -136,9 +136,9 @@
             SortedDictionary<string, string> sorted = new SortedDictionary<string, string>();
             foreach (DictionaryEntry entry in set) {
                 string key = entry.Key.ToString();
-                string resource = entry.Value as string;
 
-                if (resource != null) sorted.Add(key, resource);
+                if (entry.Value is string resource)
+                    sorted.Add(key, resource);
             }
 
             Console.WriteLine("---------1---------2---------3---------4---------5---------6---------7---------8");

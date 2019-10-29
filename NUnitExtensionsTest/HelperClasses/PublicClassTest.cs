@@ -5,6 +5,10 @@
     /// <summary>
     /// Used for testing the <see cref="PrivateType"/> class functionality.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Test case uses reflection")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Test case uses reflection")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0052:Remove unread private members", Justification = "Test case uses reflection")]
     public class PublicClassTest
     {
         static PublicClassTest()
@@ -12,7 +16,7 @@
             MyStaticProperty = 111;
         }
 
-#pragma warning disable CS0414
+#pragma warning disable CS0414  // Assigned a value never used (obtained via reflection)
         private static string s_MyStatic = "static";
 #pragma warning restore CS0414
 

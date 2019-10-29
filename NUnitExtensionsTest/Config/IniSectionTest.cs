@@ -1,6 +1,4 @@
-﻿#pragma warning disable S1481 // Unused local variables should be removed - Can't do this in some test scenarios
-
-namespace NUnit.Framework.Config
+﻿namespace NUnit.Framework.Config
 {
     using System;
     using System.Collections.Generic;
@@ -90,8 +88,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddKeyValuePair()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(section.ContainsKey("key"), Is.True);
             Assert.That(section.Count, Is.EqualTo(1));
         }
@@ -99,8 +98,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddKeyValuePairInsensitive1()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(
                 () => {
                     section.Add("KEY", "value2");
@@ -111,8 +111,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddKeyValuePairInsensitive2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(
                 () => {
                     section.Add("Key", "value2");
@@ -123,8 +124,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePairContainsCaseInsensitive()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(section.ContainsKey("KEY"), Is.True);
             Assert.That(section.ContainsKey("keY"), Is.True);
             Assert.That(section.ContainsKey("kEY"), Is.True);
@@ -136,8 +138,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePairPrivateContains()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(((IDictionary<string, string>)section).Contains(new KeyValuePair<string, string>("KEY", "value")), Is.True);
             Assert.That(((IDictionary<string, string>)section).Contains(new KeyValuePair<string, string>("KEy", "value")), Is.True);
             Assert.That(((IDictionary<string, string>)section).Contains(new KeyValuePair<string, string>("KeY", "value")), Is.True);
@@ -160,8 +163,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddKeyValuePairTwice()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(() => { section.Add("key", "value2"); }, Throws.TypeOf<ArgumentException>());
             Assert.That(section.Count, Is.EqualTo(1));
         }
@@ -215,8 +219,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddPrivateKeyValuePairTwice3()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value2"));
@@ -227,8 +232,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddPrivateKeyValuePairInsensitive1()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("KEY", "value2"));
@@ -239,8 +245,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddPrivateKeyValuePairInsensitive2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("Key", "value2"));
@@ -251,26 +258,29 @@ namespace NUnit.Framework.Config
         [Test]
         public void AddMultipleKeys1()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key1", "value1");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key1", "value1" },
+                { "key2", "value2" }
+            };
             Assert.That(section.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void AddMultipleKeys2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key1", "value");
-            section.Add("key2", "value");
+            IniSection section = new IniSection("header") {
+                { "key1", "value" },
+                { "key2", "value" }
+            };
             Assert.That(section.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void ClearKeys1()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             section.Clear();
             Assert.That(section.Count, Is.EqualTo(0));
 
@@ -284,9 +294,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void ClearKeys2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
             section.Clear();
             Assert.That(section.Count, Is.EqualTo(0));
 
@@ -307,8 +318,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void RemoveKeyLastItem()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
             Assert.That(section.Remove("key"), Is.True);
             Assert.That(section.Count, Is.EqualTo(0));
         }
@@ -316,9 +328,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void RemoveSingleKeyItem1()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value" }
+            };
             Assert.That(section.Remove("key"), Is.True);
             Assert.That(section.Count, Is.EqualTo(1));
             Assert.That(section.ContainsKey("key2"), Is.True);
@@ -328,9 +341,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void RemoveSingleKeyItem2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value" }
+            };
             Assert.That(section.Remove("key2"), Is.True);
             Assert.That(section.Count, Is.EqualTo(1));
             Assert.That(section.ContainsKey("key"), Is.True);
@@ -341,68 +355,65 @@ namespace NUnit.Framework.Config
         public void TryGetKeyValuePairEmpty()
         {
             IniSection section = new IniSection("header");
-            string value;
-            Assert.That(section.TryGetValue("key", out value), Is.False);
+            Assert.That(section.TryGetValue("key", out _), Is.False);
         }
 
         [Test]
         public void TryGetKeyValuePairSingleCorrect()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            string value;
-            Assert.That(section.TryGetValue("key", out value), Is.True);
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
+            Assert.That(section.TryGetValue("key", out string value), Is.True);
             Assert.That(value, Is.EqualTo("value"));
         }
 
         [Test]
         public void TryGetKeyValuePairSingleIncorrect()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            string value;
-            Assert.That(section.TryGetValue("key2", out value), Is.False);
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
+            Assert.That(section.TryGetValue("key2", out _), Is.False);
         }
 
         [Test]
         public void TryGetKeyValuePairSingleCorrectCaseInsensitive()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
 
-            string value1;
-            Assert.That(section.TryGetValue("KEY", out value1), Is.True);
+            Assert.That(section.TryGetValue("KEY", out string value1), Is.True);
             Assert.That(value1, Is.EqualTo("value"));
 
-            string value2;
-            Assert.That(section.TryGetValue("Key", out value2), Is.True);
+            Assert.That(section.TryGetValue("Key", out string value2), Is.True);
             Assert.That(value2, Is.EqualTo("value"));
         }
 
         [Test]
         public void TryGetKeyValuePairMultiIncorrect()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
-            string value;
-            Assert.That(section.TryGetValue("foo", out value), Is.False);
+            Assert.That(section.TryGetValue("foo", out _), Is.False);
         }
 
         [Test]
         public void TryGetKeyValuePairMultiCorrect1()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
-            string value1;
-            Assert.That(section.TryGetValue("key", out value1), Is.True);
+            Assert.That(section.TryGetValue("key", out string value1), Is.True);
             Assert.That(value1, Is.EqualTo("value"));
 
-            string value2;
-            Assert.That(section.TryGetValue("key2", out value2), Is.True);
+            Assert.That(section.TryGetValue("key2", out string value2), Is.True);
             Assert.That(value2, Is.EqualTo("value2"));
         }
 
@@ -422,8 +433,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void SingleKeyInCollection()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
 
             int count = 0;
             bool keyFound = false;
@@ -439,8 +451,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void SingleKeyInCollectionCaseSensitive()
         {
-            IniSection section = new IniSection("header");
-            section.Add("KEY", "value");
+            IniSection section = new IniSection("header") {
+                { "KEY", "value" }
+            };
 
             int count = 0;
             bool keyFound = false;
@@ -456,9 +469,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionReadOnly()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             ICollection<string> keys = section.Keys;
             Assert.That(keys.IsReadOnly, Is.True);
@@ -471,9 +485,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionContains()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             ICollection<string> keys = section.Keys;
             Assert.That(keys.Contains("key2"), Is.True);
@@ -491,9 +506,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionEnumerator()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             HashSet<string> foundKeys = new HashSet<string>();
             ICollection<string> keys = section.Keys;
@@ -532,9 +548,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionCopyTo()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             string[] keys = new string[2];
             section.Keys.CopyTo(keys, 0);
@@ -548,9 +565,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionCopyTo2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             string[] keys = new string[5];
             keys[0] = "a";
@@ -572,9 +590,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionCopyToBoundaries()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             string[] keys = new string[5];
             Assert.That(
@@ -586,9 +605,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionCopyToArrayBoundaries()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             string[] keys = new string[5];
             Assert.That(
@@ -604,9 +624,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyCollectionCopyToNull()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             Assert.That(
                 () => {
@@ -630,8 +651,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void SingleKeyValueInCollection()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
+            IniSection section = new IniSection("header") {
+                { "key", "value" }
+            };
 
             int count = 0;
             bool valueFound = false;
@@ -647,9 +669,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void ValueCollectionCopyToBoundaries()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             string[] values = new string[5];
             Assert.That(
@@ -661,9 +684,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void ValueCollectionCopyToArrayBoundaries()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             string[] values = new string[5];
             Assert.That(
@@ -679,9 +703,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void ValueCollectionCopyToNull()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             Assert.That(
                 () => {
@@ -692,9 +717,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePrivateCopyTo()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[2];
             ((IDictionary<string, string>)section).CopyTo(array, 0);
@@ -707,9 +733,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePrivateCopyTo2()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[8];
             ((IDictionary<string, string>)section).CopyTo(array, 0);
@@ -722,9 +749,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePrivateCopyTo3()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[8];
             ((IDictionary<string, string>)section).CopyTo(array, 6);
@@ -737,9 +765,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePrivateCopyToBoundaries()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[8];
             Assert.That(
@@ -751,9 +780,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePrivateCopyToArrayBoundaries()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             KeyValuePair<string, string>[] array = new KeyValuePair<string, string>[8];
             Assert.That(
@@ -769,9 +799,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void KeyValuePrivateCopyToNull()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             Assert.That(
                 () => {
@@ -782,9 +813,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void ItemGetter()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             Assert.That(section["key"], Is.EqualTo("value"));
             Assert.That(section["KEY"], Is.EqualTo("value"));
@@ -794,13 +826,14 @@ namespace NUnit.Framework.Config
         [Test]
         public void ItemGetterMissing()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             Assert.That(
                 () => {
-                    string value = section["foo"];
+                    _ = section["foo"];
                 }, Throws.TypeOf<KeyNotFoundException>());
         }
 
@@ -810,7 +843,7 @@ namespace NUnit.Framework.Config
             IniSection section = new IniSection("header");
             Assert.That(
                 () => {
-                    string value = section[null];
+                    _ = section[null];
                 }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -838,8 +871,9 @@ namespace NUnit.Framework.Config
         [Test]
         public void ItemSetterNewKey()
         {
-            IniSection section = new IniSection("header");
-            section["key"] = "value";
+            IniSection section = new IniSection("header") {
+                ["key"] = "value"
+            };
             Assert.That(section.Count, Is.EqualTo(1));
             Assert.That(section["key"], Is.EqualTo("value"));
         }
@@ -847,9 +881,10 @@ namespace NUnit.Framework.Config
         [Test]
         public void PrivateEnumerator()
         {
-            IniSection section = new IniSection("header");
-            section.Add("key", "value");
-            section.Add("key2", "value2");
+            IniSection section = new IniSection("header") {
+                { "key", "value" },
+                { "key2", "value2" }
+            };
 
             HashSet<string> foundKeys = new HashSet<string>();
             foreach (KeyValuePair<string, string> item in (IDictionary<string, string>)section) {
@@ -881,12 +916,11 @@ namespace NUnit.Framework.Config
 
             Console.WriteLine(result.ToString());
 
-            //Dictionary<string, string> dic = new Dictionary<string, string>();
             IniSection dic = new IniSection("new");
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             for (var i = 0; i < 100000000; i++) {
-                foreach (var item in dic) {; }
+                foreach (var item in dic) { /* Iterate */ }
             }
             sw.Stop();
 
