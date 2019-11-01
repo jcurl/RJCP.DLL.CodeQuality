@@ -517,8 +517,8 @@
                 foundKeys.Add(key);
             }
 
-            Assert.That(foundKeys.Contains("key"));
-            Assert.That(foundKeys.Contains("key2"));
+            Assert.That(foundKeys, Has.Member("key"));
+            Assert.That(foundKeys, Has.Member("key2"));
         }
 
         [Test]
@@ -726,8 +726,8 @@
             ((IDictionary<string, string>)section).CopyTo(array, 0);
 
             var copiedKeys = from item in array select item.Key;
-            Assert.That(copiedKeys.Contains("key"));
-            Assert.That(copiedKeys.Contains("key2"));
+            Assert.That(copiedKeys, Has.Member("key"));
+            Assert.That(copiedKeys, Has.Member("key2"));
         }
 
         [Test]
@@ -742,8 +742,8 @@
             ((IDictionary<string, string>)section).CopyTo(array, 0);
 
             var copiedKeys = from item in array select item.Key;
-            Assert.That(copiedKeys.Contains("key"));
-            Assert.That(copiedKeys.Contains("key2"));
+            Assert.That(copiedKeys, Has.Member("key"));
+            Assert.That(copiedKeys, Has.Member("key2"));
         }
 
         [Test]
@@ -758,8 +758,8 @@
             ((IDictionary<string, string>)section).CopyTo(array, 6);
 
             var copiedKeys = from item in array select item.Key;
-            Assert.That(copiedKeys.Contains("key"));
-            Assert.That(copiedKeys.Contains("key2"));
+            Assert.That(copiedKeys, Has.Member("key"));
+            Assert.That(copiedKeys, Has.Member("key2"));
         }
 
         [Test]
@@ -892,8 +892,8 @@
             }
 
             Assert.That(foundKeys.Count, Is.EqualTo(2));
-            Assert.That(foundKeys.Contains("key"));
-            Assert.That(foundKeys.Contains("key2"));
+            Assert.That(foundKeys, Has.Member("key"));
+            Assert.That(foundKeys, Has.Member("key2"));
         }
 
         [Test]

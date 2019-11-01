@@ -31,7 +31,7 @@
                 new object[] { "abc" },                       // Values to the constructor
                 new[] { typeof(int), typeof(string) });       // Type arguments
 
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]

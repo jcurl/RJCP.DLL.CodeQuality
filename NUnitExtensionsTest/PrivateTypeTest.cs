@@ -82,9 +82,7 @@
                 Assert.That(() => { privType.InvokeStatic("ThrowEx", null); },
                     Throws.TypeOf<TargetInvocationException>().With.InnerException.TypeOf<InvalidOperationException>());
             } catch (AssertionException) {
-
                 throw;
-
             }
         }
         #endregion

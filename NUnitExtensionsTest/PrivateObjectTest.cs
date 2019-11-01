@@ -22,7 +22,7 @@
         [Test]
         public void PrivateObject_Object()
         {
-            Assert.NotNull(new PrivateObject(new object()));
+            Assert.That(new PrivateObject(new object()), Is.Not.Null);
         }
 
         [Test]
@@ -67,14 +67,14 @@
             Type objectType = typeof(ObjectClassTest);
             object[] args = null;
 
-            Assert.NotNull(new PrivateObject(objectType, args));
+            Assert.That(new PrivateObject(objectType, args), Is.Not.Null);
         }
 
         [Test]
         public void InstanceFromType()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]
@@ -83,7 +83,7 @@
             object[] args = new object[] { "ObjectName" };
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), args);
 
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]
@@ -111,7 +111,7 @@
             object obj = new object();
             Type type = typeof(ObjectClassTest);
 
-            Assert.NotNull(new PrivateObject(obj, new PrivateType(type)));
+            Assert.That(new PrivateObject(obj, new PrivateType(type)), Is.Not.Null);
         }
 
         [Test]
@@ -153,14 +153,14 @@
         public void InstanceFromAssembly_WithTypeName()
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", 7);
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]
         public void PrivateCtorFromAssembly_WithType()
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", "ObjectName");
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]
@@ -169,7 +169,9 @@
             Type[] parameterTypes = new Type[] { typeof(int) };
             object[] args = new object[] { 7 };
 
-            Assert.NotNull(new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", parameterTypes, args));
+            Assert.That(
+                new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", parameterTypes, args),
+                Is.Not.Null);
         }
 
         [Test]
@@ -234,7 +236,7 @@
             Type[] parameterTypes = new Type[] { typeof(int) };
             object[] args = new object[] { 7 };
 
-            Assert.NotNull(new PrivateObject(type, parameterTypes, args));
+            Assert.That(new PrivateObject(type, parameterTypes, args), Is.Not.Null);
         }
 
         #region Invoke
@@ -305,7 +307,7 @@
         public void SetTargetNull()
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", 7);
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
             Assert.That(() => { privateObject.Target = null; }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -313,7 +315,7 @@
         public void SetAnotherTarget()
         {
             PrivateObject privateObject = new PrivateObject("NUnitExtensionsTest", "NUnit.Framework.HelperClasses.ObjectClassTest", 7);
-            Assert.NotNull(privateObject.Target);
+            Assert.That(privateObject.Target, Is.Not.Null);
             ObjectClassTest testInstance = new ObjectClassTest(33);
             privateObject.Target = testInstance;
             Assert.That(privateObject.Target, Is.SameAs(testInstance));
