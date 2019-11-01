@@ -1,6 +1,5 @@
 ﻿namespace NUnitExtensionsTest.NUnit3
 {
-    using System;
     using NUnit.Framework;
 
     [TestFixture(Category = "NUnitExtensions.Deployment.NUnit3")]

@@ -1,7 +1,5 @@
 ﻿namespace NUnit.Framework.HelperClasses
 {
-    using System;
-
     public static class StaticClassTestAccessor
     {
         private const string AssemblyName = "NUnitExtensionsTest";

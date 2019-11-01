@@ -1,7 +1,5 @@
 ﻿namespace NUnit.Framework.HelperClasses
 {
-    using System;
-
     internal class RelatedClassTest
     {
         public RelatedClassTest(int initialValue)

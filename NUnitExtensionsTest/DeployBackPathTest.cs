@@ -1,6 +1,5 @@
 ﻿namespace NUnit.Framework
 {
-    using System;
     using System.IO;
 
     [TestFixture(Category = "NUnitExtensions.Deployment.BackPath")]

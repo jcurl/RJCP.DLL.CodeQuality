@@ -1,7 +1,5 @@
 ﻿namespace NUnit.Framework
 {
-    using System;
-
     internal class TestAccessor : AccessorBase
     {
         public TestAccessor(object testObject)

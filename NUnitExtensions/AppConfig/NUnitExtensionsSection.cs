@@ -1,6 +1,5 @@
 ﻿namespace NUnit.Framework.AppConfig
 {
-    using System;
     using System.Configuration;
 
     internal class NUnitExtensionsSection : ConfigurationSection

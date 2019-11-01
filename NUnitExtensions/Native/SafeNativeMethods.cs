@@ -3,7 +3,6 @@
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
-    using Microsoft.Win32.SafeHandles;
 
     [SuppressUnmanagedCodeSecurity]
     internal static class SafeNativeMethods

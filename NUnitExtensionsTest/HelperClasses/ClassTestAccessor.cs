@@ -1,6 +1,5 @@
 ﻿namespace NUnit.Framework.HelperClasses
 {
-    using System;
     using System.Reflection;
 
     /// <summary>

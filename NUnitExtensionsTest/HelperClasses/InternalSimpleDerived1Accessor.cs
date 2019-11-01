@@ -1,7 +1,5 @@
 ﻿namespace NUnit.Framework.HelperClasses
 {
-    using System;
-
     internal class InternalSimpleDerived1Accessor : InternalSimpleBase1Accessor
     {
         private const string AssemblyName = "NUnitExtensionsTest";

@@ -1,7 +1,5 @@
 ﻿namespace NUnit.Framework.HelperClasses
 {
-    using System;
-
     public class ClassExceptionCtorTestAccessor2 : AccessorBase
     {
         private const string AssemblyName = "NUnitExtensionsTest";

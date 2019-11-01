@@ -1,8 +1,6 @@
 ﻿namespace NUnit.Framework.Config
 {
-    using System;
     using System.IO;
-    using NUnit.Framework;
 
     [TestFixture(Category = "NUnitExtensions.Config.Ini")]
     public class IniFileTest
