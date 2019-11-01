@@ -238,6 +238,30 @@
         }
 
         /// <summary>
+        /// Gets the section of an INI file given the file name and section.
+        /// </summary>
+        /// <param name="fileName">Name of the file to read.</param>
+        /// <param name="section">The section (case insensitive).</param>
+        /// <returns>
+        /// The section requested as key/value pairs, where the keys are case insensitive. If the <paramref
+        /// name="fileName"/> or <paramref name="section"/> are not found, an empty <see cref="IniSection"/> is returned.
+        /// </returns>
+        /// <remarks>
+        /// The file is loaded into memory and cached for the lifetime of your program in static memory, so that further
+        /// accesses are faster by not having to read the INI file into memory again. There is no mechanism to release
+        /// this memory. If you don't want the INI file to be cached, you should use
+        /// <see cref="IniFile.IniFile(string)"/> to load the INI file from disk.
+        /// </remarks>
+        public static IniSection GetSection(string fileName, string section)
+        {
+            IniFile iniFile = GetIniFile(fileName);
+            if (!iniFile.TryGetValue(section, out IniSection iniSection)) {
+                return new IniSection(section.Trim());
+            }
+            return iniSection;
+        }
+
+        /// <summary>
         /// Gets a value for an INI file given the file name, section and key.
         /// </summary>
         /// <param name="fileName">Name of the file to read.</param>
@@ -267,30 +291,6 @@
                 return defaultValue;
             }
             return value;
-        }
-
-        /// <summary>
-        /// Gets the section of an INI file given the file name and section.
-        /// </summary>
-        /// <param name="fileName">Name of the file to read.</param>
-        /// <param name="section">The section (case insensitive).</param>
-        /// <returns>
-        /// The section requested as key/value pairs, where the keys are case insensitive. If the <paramref
-        /// name="fileName"/> or <paramref name="section"/> are not found, an empty <see cref="IniSection"/> is returned.
-        /// </returns>
-        /// <remarks>
-        /// The file is loaded into memory and cached for the lifetime of your program in static memory, so that further
-        /// accesses are faster by not having to read the INI file into memory again. There is no mechanism to release
-        /// this memory. If you don't want the INI file to be cached, you should use
-        /// <see cref="IniFile.IniFile(string)"/> to load the INI file from disk.
-        /// </remarks>
-        public static IniSection GetSection(string fileName, string section)
-        {
-            IniFile iniFile = GetIniFile(fileName);
-            if (!iniFile.TryGetValue(section, out IniSection iniSection)) {
-                return new IniSection(section.Trim());
-            }
-            return iniSection;
         }
 
         /// <summary>
