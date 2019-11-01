@@ -46,6 +46,8 @@
         [Platform(Include = "Win32NT")]
         [TestCase(DumpType.MiniDump, "minidumpexception.dmp", TestName = "MiniDumpException_Windows_MiniDump")]
         [TestCase(DumpType.FullHeap, "fulldumpexception.dmp", TestName = "MiniDump_WindowsException_FullDump")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1854:Dead stores should be removed",
+            Justification = "False positive, dumpName is not a useless assignment")]
         public void MiniDumpException_Windows(DumpType dumpType, string fileName)
         {
             Deploy.CreateDirectory("Dumps");
@@ -67,6 +69,8 @@
 
         [Test]
         [Platform(Include = "Win32NT")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1854:Dead stores should be removed",
+            Justification = "False positive, dumpName is not a useless assignment")]
         public void MiniDumpException_Windows_DefaultDump()
         {
             Deploy.CreateDirectory("Dumps");
