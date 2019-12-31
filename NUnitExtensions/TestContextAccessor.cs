@@ -9,13 +9,34 @@
     {
         public static TestContextAccessor GetTestContext()
         {
+            Assembly nUnitAssembly;
+
+            nUnitAssembly = GetNUnitFromStackTrace();
+            if (nUnitAssembly != null) return new TestContextAccessor(nUnitAssembly);
+            nUnitAssembly = GetNUnitFromAssemblyList();
+            if (nUnitAssembly != null) return new TestContextAccessor(nUnitAssembly);
+
+            throw new InvalidOperationException("Can't determine NUnit Test Context. Missing Test attribute or running on a thread?");
+        }
+
+        private static Assembly GetNUnitFromStackTrace()
+        {
             StackTrace stackTrace = new StackTrace();
             foreach (StackFrame frame in stackTrace.GetFrames()) {
                 Type nunitType = FindTestAttribute(frame.GetMethod());
                 if (nunitType != null) {
-                    Assembly nUnitAssembly = Assembly.GetAssembly(nunitType);
-                    return new TestContextAccessor(nUnitAssembly);
+                    return Assembly.GetAssembly(nunitType);
                 }
+            }
+            return null;
+        }
+
+        private static Assembly GetNUnitFromAssemblyList()
+        {
+            AppDomain domain = AppDomain.CurrentDomain;
+            foreach (Assembly assembly in domain.GetAssemblies()) {
+                Type attrType = assembly.GetType("NUnit.Framework.TestAttribute");
+                if (attrType != null) return assembly;
             }
             return null;
         }

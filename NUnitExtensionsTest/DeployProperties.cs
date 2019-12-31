@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
 
     [TestFixture(Category = "NUnitExtensions.Deployment")]
     public class DeployProperties
@@ -46,6 +47,20 @@
         public void TestCase(string name)
         {
             Assert.That(Deploy.TestName, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+        }
+
+        [Test]
+        public void WorkDirectoryOnThread()
+        {
+            // This test case is intended to run on its own, before the TestContextAccessor is instantiated the first
+            // time.
+
+            string workDirectory = null;
+            Thread workerThread = new Thread(() => { workDirectory = Deploy.WorkDirectory; });
+            workerThread.Start();
+            workerThread.Join();
+
+            Assert.That(workDirectory, Is.Not.Null);
         }
     }
 }
