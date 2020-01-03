@@ -1,11 +1,11 @@
-﻿namespace NUnit.Framework
+﻿namespace NUnit.Framework.OSInfo
 {
     using System;
 
     /// <summary>
     /// Utility class providing OS specific functionality.
     /// </summary>
-    internal static class Platform
+    public static class Platform
     {
         /// <summary>
         /// Determines whether the operating system is Windows NT or later.

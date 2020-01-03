@@ -67,7 +67,7 @@
         /// </remarks>
         public static bool MiniDump(string path, DumpType dumpType)
         {
-            if (!Platform.IsWinNT()) return false;
+            if (!OSInfo.Platform.IsWinNT()) return false;
             if (path == null) return false;
 
             // For some useful information about making dumps:

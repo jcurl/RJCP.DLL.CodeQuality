@@ -439,9 +439,9 @@
                 throw new UnauthorizedAccessException("Can't delete the file, it is a directory");
             if (!File.Exists(fullPath)) return;
 
-            if (Platform.IsWinNT()) {
+            if (OSInfo.Platform.IsWinNT()) {
                 DeleteFileWindows(fullPath);
-            } else if (Platform.IsUnix()) {
+            } else if (OSInfo.Platform.IsUnix()) {
                 DeleteFileUnix(fullPath);
             } else {
                 throw new PlatformNotSupportedException();
@@ -612,9 +612,9 @@
 
         private static void DeleteEmptyDirectory(string path)
         {
-            if (Platform.IsWinNT()) {
+            if (OSInfo.Platform.IsWinNT()) {
                 DeleteEmptyDirectoryWindows(path);
-            } else if (Platform.IsUnix()) {
+            } else if (OSInfo.Platform.IsUnix()) {
                 DeleteEmptyDirectoryUnix(path);
             } else {
                 throw new PlatformNotSupportedException();
