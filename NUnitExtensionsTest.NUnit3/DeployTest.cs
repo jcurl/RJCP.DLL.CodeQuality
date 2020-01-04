@@ -8,8 +8,8 @@
         [Test]
         public void DeployTestItem()
         {
-            string workDirectory = TestContext.CurrentContext.TestDirectory;
-            string testDirectory = TestContext.CurrentContext.WorkDirectory;
+            string workDirectory = TestContext.CurrentContext.WorkDirectory;
+            string testDirectory = TestContext.CurrentContext.TestDirectory;
 
             Assert.That(Deploy.TestDirectory, Is.EqualTo(testDirectory));
             Assert.That(Deploy.WorkDirectory, Is.EqualTo(workDirectory));
@@ -18,8 +18,8 @@
         [TestCase("Name")]
         public void DeployTestCaseItem(string name)
         {
-            string workDirectory = TestContext.CurrentContext.TestDirectory;
-            string testDirectory = TestContext.CurrentContext.WorkDirectory;
+            string workDirectory = TestContext.CurrentContext.WorkDirectory;
+            string testDirectory = TestContext.CurrentContext.TestDirectory;
 
             Assert.That(Deploy.TestDirectory, Is.EqualTo(testDirectory));
             Assert.That(Deploy.WorkDirectory, Is.EqualTo(workDirectory));
