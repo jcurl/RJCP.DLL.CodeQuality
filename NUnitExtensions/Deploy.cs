@@ -152,6 +152,16 @@
             get { return TestContext.WorkDirectory ?? string.Empty; }
         }
 
+        private static string WorkDirectoryAbsolute
+        {
+            get
+            {
+                string workDirectory = WorkDirectory;
+                if (Path.IsPathRooted(workDirectory)) return workDirectory;
+                return Path.Combine(Environment.CurrentDirectory, workDirectory);
+            }
+        }
+
         /// <summary>
         /// Gets the name of the test that is currently executing.
         /// </summary>
@@ -248,7 +258,7 @@
 
             // Get the target-path where to copy the deployment item to
             string normalizedOutputDir = outputDirectory ?? string.Empty;
-            string fullOutputDirectory = GetFullPath(normalizedOutputDir, WorkDirectory);
+            string fullOutputDirectory = GetFullPath(normalizedOutputDir, WorkDirectoryAbsolute);
 
             if (Directory.Exists(itemPath)) {
                 // If the 'path' is a directory, the root path is the directory name.
@@ -330,11 +340,9 @@
         private static string GetFullPath(string path, string basePath)
         {
             if (path == null) path = string.Empty;
-            int platform = (int)Environment.OSVersion.Platform;
-            bool onUnix = platform == 4 || platform == 6 || platform == 128;
 
             string systemNormalizedPath;
-            if (!onUnix) {
+            if (!OSInfo.Platform.IsUnix()) {
                 // Convert forward slashes to windows paths.
                 systemNormalizedPath = path.Replace("/", @"\");
             } else {
@@ -378,7 +386,7 @@
             Justification = "False positive for variable 'created'")]
         public static void CreateDirectory(string directory)
         {
-            string fullPath = GetFullPath(directory, WorkDirectory);
+            string fullPath = GetFullPath(directory, WorkDirectoryAbsolute);
 
             if (Directory.Exists(fullPath)) return;
 
@@ -433,7 +441,7 @@
         /// </exception>
         public static void DeleteFile(string fileName)
         {
-            string fullPath = GetFullPath(fileName, WorkDirectory);
+            string fullPath = GetFullPath(fileName, WorkDirectoryAbsolute);
 
             if (Directory.Exists(fullPath))
                 throw new UnauthorizedAccessException("Can't delete the file, it is a directory");
@@ -586,7 +594,7 @@
         /// </exception>
         public static void DeleteDirectory(string path)
         {
-            string fullPath = GetFullPath(path, WorkDirectory);
+            string fullPath = GetFullPath(path, WorkDirectoryAbsolute);
 
             if (File.Exists(fullPath))
                 throw new UnauthorizedAccessException("Can't delete the directory, it is a file");
