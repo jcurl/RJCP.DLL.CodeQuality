@@ -47,7 +47,6 @@
     <Compile Include="DelegateTargets.cs" />
     <Compile Include="Deploy.cs" />
     <Compile Include="GenericMethodCache.cs" />
-    <Compile Include="Dump.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="Native\SafeNativeMethods.cs" />

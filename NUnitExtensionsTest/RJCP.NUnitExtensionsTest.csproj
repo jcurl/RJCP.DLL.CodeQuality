@@ -42,7 +42,6 @@
     <Compile Include="Config\IniFileTest.cs" />
     <Compile Include="Config\IniSectionTest.cs" />
     <Compile Include="DeployProperties.cs" />
-    <Compile Include="DumpTest.cs" />
     <Compile Include="GenericPrivateObjectTest.cs" />
     <Compile Include="GenericPrivateTypeTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
