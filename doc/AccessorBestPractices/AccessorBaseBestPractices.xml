@@ -1,0 +1,2226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>.NET Unit Testing with Accessor Classes and Reflection</title>
+
+    <author>
+      <firstname>Jason</firstname>
+
+      <surname>Curl</surname>
+    </author>
+
+    <pubdate>2018-01-21</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Abstract</title>
+
+    <para>There are many best practices and philosophies for unit testing of
+    components in .NET FX (desktop versions 2.0 and later), with tools such as
+    xUnit, nUnit and MSTest among others, supported by Visual Studio, Mono IDE
+    and extensions in NuGet. This article provides examples and "how to" for
+    testing using nUnit and reflection technologies using the NUnitExtensions
+    framework.</para>
+  </section>
+
+  <section>
+    <title>Reflection and Accessor Classes</title>
+
+    <para>Reflection in .NET is a runtime type technology for discovering and
+    instantiating types, possibly in other assemblies and possibly having
+    compiler inaccessible permissions. By using reflection, one can
+    instantiate a normally inaccessible target type, discover properties and
+    methods, invoke those property and methods. This makes reflection highly
+    suitable (if not fast) for testing internal classes that are in external
+    assemblies. In rare cases, this may also allow for testing of internal
+    state of classes for whitebox testing.</para>
+
+    <para>This work was initially inspired by <ulink
+    url="http://blog.instance-factory.com/?p=810">Home-made Private Accessor
+    for Visual Studio 2012+</ulink> and expanded upon for more complex use
+    cases.</para>
+
+    <section>
+      <title>Testing non-Public Implementations</title>
+
+      <para>The <literal>internal</literal> keyword of C# is special - it
+      makes a clear indication that functionality is expected to be available
+      for use from within the assembly, but that functionality may not meet
+      the (stricter) requirements for exposing to the outside world. A
+      <literal>private</literal> method or property within an assembly makes a
+      clear intention that no other class be able to access the functionality,
+      even if it is part of the same assembly.</para>
+
+      <para>The Accessor model is not intended to replace a good design
+      through the use of interfaces and mocks. While it is possible to access
+      private methods and fields using the Accessor model, one should consider
+      first if the design is correct that this should be done. Often through
+      the use of interfaces and contracts, or abstract classes, can one
+      achieve a better design where no private methods are required for
+      testing.</para>
+
+      <section>
+        <title>Test Driven Design</title>
+
+        <para>Some champions of test driven design make strong arguments that
+        unit testing should only be performed on public API. If an API is not
+        publicly visible to the outside world, it is not a candidate for
+        testing. Rewriting classes should be testable via the public API and
+        doesn't require any working test cases to be modified.</para>
+
+        <para>The other perspective is that software should be broken down
+        into its simplest components using the <ulink
+        url="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">SOLID
+        principle</ulink>. Typical engineering practices also suggest breaking
+        work down into its simplest components, that would require testing of
+        those simpler components which are built upon for more complex
+        components. The author of this document sees it is much more pragmatic
+        to test simple classes that may be internal to an assembly and
+        ensuring the correctness of building blocks, which also simplify the
+        implementation of test cases for more complex components by making
+        assumptions that the simpler components work. The internal types
+        should specify public methods which are then tested and made public
+        via Accessor classes.</para>
+
+        <para>For example, testing the insertion and removal of an object in a
+        collection is simple. If a more complex class were to use the
+        collection and the collection is not directly exposed, the number of
+        conditions required to test the more complex class may be
+        significantly higher than being able to test both classes directly.
+        Some safety standards, such as ASIL also take this approach.</para>
+      </section>
+
+      <section>
+        <title>Fault Injection</title>
+
+        <para>High availability software may also require the testing of fault
+        injection. In this special case, using an Accessor class may make it
+        easier to inject specific faults and ensure that software can recover
+        from these faults.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Accessor Classes</title>
+
+      <para>Accessor Classes use functionality provided by the Microsoft
+      Visual Studio <literal>PrivateType</literal> and
+      <literal>PrivateObject</literal> implementations. Such functionality was
+      provided in Visual Studio 2010, where an input class was provided and an
+      Accessor class was generated making methods publicly available. It was
+      removed in versions after Visual Studio 2010 with <ulink
+      url="https://blogs.msdn.microsoft.com/vstsqualitytools/2010/01/18/generation-of-private-accessors-publicize-and-code-generation-for-visual-studio-2010/">other
+      solutions as documented by Microsoft</ulink>.</para>
+
+      <para>The Accessor implementation uses reflection to write wrappers for
+      internal objects under test that exist in another assembly.</para>
+
+      <para>Some of the benefits of the Accessor model are:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Type Safety.</para>
+        </listitem>
+
+        <listitem>
+          <para>Protection against typographical errors by avoiding
+          strings.</para>
+        </listitem>
+
+        <listitem>
+          <para>Easier to handle when a rename is performed.</para>
+        </listitem>
+
+        <listitem>
+          <para>Encapsulate and hide the use of
+          <literal>PrivateObject</literal>. The implementation of
+          <literal>PrivateObject</literal> and <literal>PrivateType</literal>
+          has changed between VS2010-2015 and VS2017 that they are no longer
+          100% compatible. The Accessor classes hide this and provide our own
+          <literal>PrivateObject</literal> compatible for VS2017 that also
+          runs under .NET 4.0.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Some disadvantages are:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>No automatic code generators exist. Accessor classes have to
+          be written by hand.</para>
+        </listitem>
+
+        <listitem>
+          <para>It uses reflection, so can be slow.</para>
+        </listitem>
+      </itemizedlist>
+
+      <section>
+        <title>Functionality Supported by Accessors</title>
+
+        <para>The following functionality can be implemented using Accessor
+        Classes:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Can test instantiable methods of an instantiable class, or
+            static methods of classes;</para>
+          </listitem>
+
+          <listitem>
+            <para>Type Parameters can be provided for generic classes (either
+            public or internal)</para>
+          </listitem>
+
+          <listitem>
+            <para>Generic methods (those with Type Parameters);</para>
+          </listitem>
+
+          <listitem>
+            <para>Nested types, either static or instantiable;</para>
+          </listitem>
+
+          <listitem>
+            <para>Return accessor classes;</para>
+          </listitem>
+
+          <listitem>
+            <para>Accept accessor classes as parameter inputs;</para>
+          </listitem>
+
+          <listitem>
+            <para>Internal enumerations;</para>
+          </listitem>
+
+          <listitem>
+            <para>Internal delegates;</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>InternalsVisibleTo</title>
+
+      <para>Multiple languages offer features for enabling internal visibility
+      to specific components. In C++ this is the friend keyword. In C# there
+      is the internal keyword which makes types and methods public to code
+      within the assembly. The InternalsVisibleTo attribute of the assembly
+      can list other assemblies that should see internal methods as
+      public.</para>
+
+      <para>While there are many answers to testing by using the
+      InternalsVisibleTo attribute, the author of this article advises
+      strongly against its usage on two grounds:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Architecturally wrong dependencies: InternalsVisibleTo
+          reverses dependencies, so a component is now dependent on a
+          "client", which in this case the test assembly is the client.</para>
+        </listitem>
+
+        <listitem>
+          <para>It complicates significantly the work required for strong
+          naming components, an important technology and a requirement for
+          installation of assemblies in the GAC.</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Cyclic dependencies are now introduced, a test library
+              depends on an assembly that is strongly signed, the assembly
+              must however reference a strongly named test assembly</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Delegates</title>
+
+      <para>Internal delegates can be tested using reflection, a feature that
+      the <ulink
+      url="https://msdn.microsoft.com/en-us/library/dd569957(v=vs.100).aspx">publicize.exe
+      tool</ulink> from Microsoft cannot do. With the use of lambdas in C#
+      3.0, it is much easier to create delegates via reflection and execute
+      delegates from private code.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Basic Structure</title>
+
+    <section>
+      <title>Instantiable Classes</title>
+
+      <para>Classes that need to be instantiated, i.e. those that are
+      non-static and whose instance is created with the <literal>new</literal>
+      operator, must have an Accessor class that derives from
+      <literal>AccessorBase</literal>.</para>
+
+      <para>The <literal>AccessorBase</literal> class can't be instantiated on
+      its own as it's abstract. The Accessor class provides the base class
+      with the details required so it can be instantiated. There are six
+      constructors:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>AccessorBase(PrivateObject pObject)</literal>: Wrap
+          the Accessor class around an already instantiated object
+          <literal>pObject</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>AccessorBase(PrivateType pType, params object[]
+          params)</literal>: Instantiate a new instance of an Accessor class
+          of the type given by <literal>pType</literal>. The optional
+          parameters are used to determine how to construct the object. The
+          <literal>pType</literal> object usually describes the assembly and
+          the type within that assembly which is reflected upon.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>AccessorBase(PrivateType pType, Type[]
+          parameterTypes, object[] args)</literal>: Instantiate a new instance
+          of an Accessor class of the type given by <literal>pType</literal>.
+          The array of <literal>parameterTypes</literal> specifies concisely
+          the types for the constructor to instantiate, with
+          <literal>args</literal> forming the inputs to the
+          constructor.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>AccessorBase(string assemblyName, string typeName,
+          params object[] args)</literal>: Instantiates the object given the
+          assembly name and the type name as strings. It is otherwise
+          identical to using the constructor with the
+          <literal>PrivateType</literal> with the
+          <literal>assemblyName</literal> and
+          <literal>typeName</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>AccessorBase(string assemblyName, string typeName,
+          Type[] parameterTypes, object[] args)</literal>: Instantiates the
+          object given the assembly name and the type name as strings. It is
+          otherwise identical to using the constructor with the
+          <literal>PrivateType</literal> with the
+          <literal>assemblyName</literal> and
+          <literal>typeName</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>AccessorBase(string assemblyName, string typeName,
+          Type[] parameterTypes, object[] args, Type[]
+          typeArguments)</literal>: Instantiates an instance of a generic
+          class, specifying the type arguments in the generic class with the
+          array of <literal>typeArguments</literal>. It is otherwise identical
+          to using the constructor with the <literal>PrivateType</literal>
+          with the <literal>assemblyName</literal>,
+          <literal>typeName</literal> and the
+          <literal>typeArguments</literal>.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>See the next section on best practices. It is recommended to use
+      the version of the constructor that takes the
+      <literal>PrivateType</literal> as an input. As complexity grows, it is
+      likely you will need this reference to the
+      <literal>PrivateType</literal> for other methods.</para>
+    </section>
+
+    <section>
+      <title>Static Classes</title>
+
+      <para>Static Accessor classes are exposing non-public types and methods.
+      The <literal>AccessorBase</literal> class provides
+      <literal>static</literal> methods to implement static Accessor classes.
+      In all cases, one needs to define the PrivateType and pass this to the
+      static methods.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>object InvokeStatic(PrivateType type, string
+          methodName, params object[] args);</literal></para>
+        </listitem>
+
+        <listitem>
+          <para><literal>object InvokeStatic(PrivateType type, string
+          methodName, Type[] paramTypes, object[] args);</literal></para>
+        </listitem>
+
+        <listitem>
+          <para><literal>object InvokeStatic(PrivateType type, string
+          methodName, Type[] paramTypes, object[] args, Type[]
+          typeArguments);</literal></para>
+        </listitem>
+
+        <listitem>
+          <para><literal>object GetStaticFieldOrProperty(PrivateType type,
+          string name);</literal></para>
+        </listitem>
+
+        <listitem>
+          <para><literal>void SetStaticFieldOrProperty(PrivateType type,
+          string name, object value);</literal></para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Work was done to try and simplify the usage of the static methods
+      by trying to automatically identify the Accessor class (derived by
+      AccessorBase) to get the PrivateType as the object is constructed. Such
+      a solution relies on using stack frames to try and determine the type
+      containing the static method, which is ultimately unsuccessful due to
+      compiler optimizations such as inlining. To overcome inlining, an
+      explicit attribute was required for every method to disable inlining
+      which makes code harder to read. Thus it was decided that a static
+      Accessor should instantiate a static PrivateType for the non-public type
+      and allowing code to be more portable to multiple compilers.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Accessor Best Practices</title>
+
+    <section>
+      <title>Naming Accessor Classes</title>
+
+      <para>All types (except enumerations, <literal>enum</literal> type)
+      should have the word <literal>Accessor</literal> appended to it, to make
+      it obvious this is an Accessor class.</para>
+    </section>
+
+    <section>
+      <title>Naming Methods and Properties</title>
+
+      <para>The names of methods and properties should have the same name of
+      the methods and properties in the original class.</para>
+    </section>
+
+    <section>
+      <title>Use the "nameof" Operator</title>
+
+      <para>The methods and properties being tested in the Accessor class
+      should have the same name as the methods and properties in the class
+      being tested. Therefore, when providing the name of the method or
+      property being tested to the base class, use the
+      <literal>nameof()</literal> operator. This allows easier renaming of
+      method names and letting the IDE do the refactoring saving work and
+      errors.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Writing Accessor Classes Cook Book</title>
+
+    <para>The following sections provide common patterns and examples on how
+    an Accessor implementation can be written to test the code. Let's make the
+    following assumptions in all the following examples:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>The namespace for the code being tested and the test class are
+        identical: <literal>RJCP.Assembly</literal>.</para>
+      </listitem>
+
+      <listitem>
+        <para>The name of the assembly DLL being tested is
+        <filename>Assembly.dll</filename> and the test assembly is
+        <filename>AssemblyTest.dll</filename>.</para>
+      </listitem>
+
+      <listitem>
+        <para>The using statements are assumed and occur before the
+        namespace.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Please note, that the usage of the <literal>PrivateType</literal>
+    and <literal>PrivateObject</literal> classes are instantiated from
+    NUnitExtensions and are not from MSTest, due to subtle differences between
+    the different versions available for MS Test Classes.</para>
+
+    <section>
+      <title>Non-Public Classes</title>
+
+      <para>The simplest use case is to test a single non-public class where
+      all types are public. It is simple, has a single method and a single
+      property.</para>
+
+      <example>
+        <title>Simple Non-Public Class</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyClass {
+    public MyClass(int initialValue) {
+      Property = initialValue;
+    }
+
+    public int Property { get; set; }
+
+    public void DoSomething() {
+      Console.WriteLine("{0}", Property);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The Accessor class would be in the test project and could be
+      implemented as:</para>
+
+      <example>
+        <title>Simple Non-Public Class Accessor</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClassAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyClass";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public MyClassAccessor(int initialValue) : base(AccType, initialValue) { }
+
+    public int Property {
+      get { return (int)GetFieldOrProperty(nameof(Property)); }
+      set { SetFieldOrProperty(nameof(Property), value); }
+    }
+
+    public void DoSomething() {
+      Invoke(nameof(DoSomething));
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The constructor passes the input value and lets the reflection
+      system guess the type that is required.</para>
+
+      <example>
+        <title>Simple Non-Public Class Accessor with Explicit Types in
+        Construction</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClassAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyClass";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public MyClassAccessor(int initialValue)
+      : base(AccType,
+        new Type[] { typeof(int) },
+        new object[] { initialValue })
+    { }
+
+    public int Property {
+      get { return (int)GetFieldOrProperty(nameof(Property)); }
+      set { SetFieldOrProperty(nameof(Property), value); }
+    }
+
+    public void DoSomething() {
+      Invoke(nameof(DoSomething));
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The second example makes instantiation explicit for which
+      constructor should be used to give the initial value.</para>
+    </section>
+
+    <section>
+      <title>Non-Public Static Classes</title>
+
+      <para>The next simplest use case is to access public or internal static
+      methods of a class (be the class itself static or not). The reason why
+      it is not concerning if the class itself is static or not is because the
+      type is the only information needed to execute a static method or
+      property.</para>
+
+      <example>
+        <title>Simple Non-Public Static Class</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal static class MyStaticTest {
+    public static int Property { get; set; }
+    public static void DoSomething() {
+      Console.WriteLine("{0}", Property);
+    }
+  }
+} </programlisting>
+      </example>
+
+      <para>The Accessor class could look as such:</para>
+
+      <example>
+        <title>Simple Non-Public Static Class Accessor</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public static class MyStaticTestAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyStaticTest";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public static int Property {
+      get { return (int)AccessorBase.GetStaticFieldOrProperty(AccType, nameof(Property)); }
+      set { AccessorBase.SetStaticFieldOrProperty(AccType, nameof(Property), value); }
+    }
+
+    public static void DoSomething {
+      AccessorBase.InvokeStatic(AccType, nameof(DoSomething));
+    }
+  }
+}</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>Non-Public Class with Static Methods</title>
+
+      <para>Note now what happens if the class is not static, but the method
+      is static:</para>
+
+      <example>
+        <title>Simple Non-Public Class with Static Method and Property</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyTest {
+    public MyTest(int initialValue) {
+      MyTest.Property = initialValue;
+    }
+
+    public static int Property { get; set; }
+    public static void DoSomething() {
+      Console.WriteLine("{0}", Property);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The original test code for testing the static methods remain. We
+      can also add additional code for the constructor.</para>
+
+      <example>
+        <title>Simple Non-Public Class Accessor with Static Method and
+        Property</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyTestAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyTest";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public MyTestAccessor(int initialValue)
+     : base(AccType,
+       new Type[] { typeof(int) },
+       new object[] { initialValue })
+   { }
+
+    public static int Property {
+      get { return (int)AccessorBase.GetStaticFieldOrProperty(AccType, nameof(Property)); }
+      set { AccessorBase.SetStaticFieldOrProperty(AccType, nameof(Property), value); }
+    }
+
+    public static void DoSomething {
+      AccessorBase.InvokeStatic(AccType, nameof(DoSomething));
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>Now it is apparent the reason for using the constructor that takes
+      the <literal>PrivateType</literal> as its input. The
+      <literal>PrivateType</literal> is used for construction, as well as for
+      the static methods. Using <literal>AccType</literal> to start makes it
+      easier as your classes grow in complexity.</para>
+    </section>
+
+    <section id="sec.Derived">
+      <title>Derived Classes</title>
+
+      <para>Non-public types may derive from other non-public types.</para>
+
+      <example>
+        <title>Derived Non-Public Classes</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyBase {
+    public MyBase(int value) {
+      Value = value;
+    }
+
+    public int Value { get; set; }
+
+    public virtual void DoSomething() {
+      Console.WriteLine("{0}", Value);
+    }
+  }
+
+  internal class MyDerived : MyBase {
+    public string Description { get; set; }
+
+    public MyDerived(int value, string description) : base(value) {
+      Description = description;
+    }
+
+    public override void DoSomething() {
+      Console.WriteLine("{0}: {1}", Description, Value);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>One possible implementation of the Accessor classes is:</para>
+
+      <example>
+        <title>Derived Non-Public Accessor Classes</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyBaseAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyBase";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    protected MyBaseAccessor(PrivateType pType, Type[] parameterTypes, object[] args)
+     : base(pType, parameterTypes, args) { }
+
+    public MyBaseAccessor(PrivateObject pObj) : base(pObj) { }
+
+    public MyBaseAccessor(int value)
+     : base(AccType,
+       new Type[] { typeof(int) },
+       new object[] { value })
+    { }
+
+    public int Value {
+      get { return (int)GetFieldOrProperty(nameof(Value)); }
+      set { SetFieldOrProperty(nameof(Value), value); }
+    }
+
+    public virtual void DoSomething() {
+      Invoke(nameof(DoSomething));
+    }
+  }
+
+  public class MyDerivedAccessor : MyBaseAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyDerived";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    protected MyDerivedAccessor(PrivateType pType, Type[] parameterTypes, object[] args)
+      : base(pType, parameterTypes, args) { }
+
+    public MyDerivedAccessor(PrivateObject pObj) : base(pObj) { }
+
+    public MyDerivedAccessor(int value, string description)
+      : base(AccType,
+        new Type[] { typeof(int), typeof(string) },
+        new object[] { value, description })
+    { }
+
+    public string Description {
+      get { return (string)GetFieldOrProperty(nameof(Description)); }
+      set { SetFieldOrProperty(nameof(Description), value); }
+    }
+
+    public override void DoSomething() {
+      Invoke(nameof(DoSomething));
+    }
+  }
+]</programlisting>
+      </example>
+
+      <para>There are new constructors (protected) that support derived types
+      and their instantiation:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>The base class derives from <literal>AccessorBase</literal>.
+          Derived classes derive from the base class instead of
+          <literal>AccessorBase</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Both <literal>MyBaseAccessor</literal> and
+          <literal>MyDerivedAccessor</literal> have a protected method that
+          takes the <literal>PrivateType</literal>, the
+          <literal>parameterTypes</literal> and
+          <literal>args</literal>.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>MyDerivedAccessor</literal> uses the protected
+          constructor from <literal>MyBaseAccessor</literal> which in turn
+          instantiates via the <literal>AccessorBase</literal>.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Thus instantiating <literal>MyDerivedAccessor</literal> creates an
+      object of the correct type, as it uses
+      <literal>MyDerivedAccessor.AccType</literal>. It is no longer necessary
+      to make any of the base methods virtual in the base class, or to
+      override methods in the derived classes - the correct method will always
+      be called as per rules of object inheritance.</para>
+
+      <section id="sec.TypeConversions">
+        <title>Type Conversions</title>
+
+        <para>Building a class hierarchy can be very convenient with test
+        code, but one must be very careful. Typecasting between Accessor
+        classes has no effect. To understand why, is to understand that no
+        Accessor classes have state, it is all maintained in the
+        <literal>AccessorBase</literal> class in the
+        <literal>PrivateType</literal> and <literal>PrivateObject</literal>,
+        and so typecasting is simply exchanging one
+        <literal>AccessorBase</literal> with another
+        <literal>AccessorBase</literal> proving to be a no-operation. The only
+        difference is to change the available methods dependent on the
+        Accessor class being used.</para>
+
+        <para>Instead, to typecast one Accessor class to another requires
+        instantiation of a new Accessor class with the
+        <literal>PrivateObject</literal> from the original class with the
+        <literal>PrivateType</literal> of the new Accessor class. Note in the
+        implementations of <literal>MyBaseAccessor</literal> and
+        <literal>MyDerivedAccessor</literal> have each a constructor taking a
+        <literal>PrivateObject</literal> as an input. This is important to
+        allow for the type casting.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Performing an explicit type cast: Create a new Accessor
+            object and provide the type to be casted to. This example is
+            equivalent to <literal>(MyBase)derived</literal>. An explicit type
+            cast is required if behaviour of a object may change if type
+            casted, such as if derived class used the <literal>new</literal>
+            operator.</para>
+
+            <example>
+              <title>Recast BaseAccessor to DerivedAccessor explicitly</title>
+
+              <programlisting language="csharp">MyDerivedAccessor derived = FactoryAccessor.Create();
+MyBaseAccessor bclass = new MyBaseAccessor(
+  new PrivateObject(derived.PrivateTargetObject, MyBaseAccessor.AccType));</programlisting>
+            </example>
+
+            <para>Even though the underlying type of the object is
+            <literal>MyDerived</literal>, the
+            <literal>MyBaseAccessor</literal> is being instantiated and told
+            that the object should be handled as the <literal>MyBase</literal>
+            type. This is how an explicit type cast works.</para>
+          </listitem>
+
+          <listitem>
+            <para>Simply upcasting an object to a derived class: You may not
+            want to typecast the object as such, but simply "transfer" the
+            object being tested to a more correct Accessor class. Such an
+            example occurs in the factory model, where the factory create
+            method creates the derived class but returns it in a base factory.
+            Then your test code simply wants to upcast, but doesn't need to
+            change the type. This is only required if there is functionality
+            in the class that only accessible from the derived class.</para>
+
+            <example>
+              <title>Recast BaseAccessor to DerivedAccessor</title>
+
+              <programlisting language="csharp">MyBaseAccessor bclass = FactoryAccessor.Create();
+MyDerivedAccessor derived = new MyDerivedAccessor(
+  new PrivateObject(bclass.PrivateTargetObject));</programlisting>
+            </example>
+
+            <para>Internally, the .NET type system knows the object being
+            tested is of type <literal>MyDerived</literal>. But the
+            implementation of <literal>FactoryAccessor.Create()</literal> maps
+            this to <literal>MyBaseAccessor</literal>. Without the type cast,
+            calls to the base class still execute functionality in the derived
+            class as would normally be done in object oriented
+            programming.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>It is important to realize that the type cast of Accessor
+        classes effectively does nothing as the Invokes to the underlying
+        methods do not change as the internal types do not change. It is not
+        possible to implement an <literal>explicit</literal> operator using
+        .NET for classes that are derived from one another.</para>
+
+        <para>Your Accessor classes can also use standard .NET code to check
+        if one object is assignable from another object, so you can determine
+        at run time which Accessor class to instantiate based on the object.
+        Use the Type.IsAssignableFrom methods.</para>
+
+        <example>
+          <title>Possible Factory Accessor Method</title>
+
+          <programlisting language="csharp">public MyBaseAccessor Create() {
+  object obj = Invoke(nameof(Create));
+  if (MyDerivedAccessor.AccType.ReferencedType.IsAssignableFrom(obj.GetType()))
+    return new MyDerivedAccesor(obj);
+  return new MyBaseAccessor(obj);
+}</programlisting>
+        </example>
+      </section>
+    </section>
+
+    <section>
+      <title>Generic Classes with Public Type Arguments</title>
+
+      <para>The AccessorBase makes it significantly easier to implement
+      generic classes. A non-public class may be implemented as:</para>
+
+      <example>
+        <title>Non-Public Class with Generics having Public Type
+        Arguments</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class GenericClass&lt;T&gt; {
+    public void Push(T item) { ... }
+    public T Pop() { ... }
+  }
+}</programlisting>
+      </example>
+
+      <para>Writing the generic Accessor is similar to earlier examples,
+      except now a list of all the type arguments are provided in the
+      constructor.</para>
+
+      <example>
+        <title>Non-Public Class Accessor with Generics having Public Type
+        Arguments</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class GenericClassAccessor&lt;T&gt; : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.GenericClass`1";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName,
+      new Type[] { typeof(T) });
+
+    public GenericClassAccessor()
+      : base(AccType,
+      new Type[] { },         // Constructor signature to use.
+      new object[] { })       // Parameters
+    { }
+
+    public void Push(T item) {
+      Invoke(nameof(Push), item);
+    }
+
+    public T Pop() {
+      return (T)Invoke(nameof(Pop));
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The name of the type uses the back tick (<literal>`1</literal>)
+      describing the number of type arguments in the type. The default
+      constructor in the Accessor must be defined to properly instantiate the
+      class under test.</para>
+
+      <section>
+        <title>Generic Classes with Non-Public Type Arguments</title>
+
+        <para>One can easily see in this example why type arguments are
+        limited to public types.</para>
+
+        <para>In the example previously, a function returns an object of the
+        type argument T. If this is a public type, it is easy to test, the
+        return type is public and can be directly used in code as the type is
+        known to the compiler and .NET without reflection. If it is required
+        to test a class with generic types, and the type argument must be an
+        non-public type, it is recommended to create a specific Accessor class
+        for that non-public type and not to expose the type arguments via the
+        Accessor class at all.</para>
+
+        <example>
+          <title>Wrapped Generic Accessor for Non-Public Type
+          Arguments</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public class GenericClassPrivateTypeAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.GenericClass`1";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName,
+      new Type[] { OtherAccessor.AccType.ReferencedType });
+
+  public GenericClassPrivateTypeAccessor()
+    : base(AccType, new Type[] { }, new object[] { }) { }
+
+  public void Push(OtherAccessor item) {
+    Invoke(nameof(Push), item.PrivateTargetObject);
+  }
+
+  public OtherAccessor Pop() {
+    obj result = Invoke(nameof(Pop));
+    return new OtherAccessor(new PrivateObject(result));
+  }
+}</programlisting>
+        </example>
+      </section>
+    </section>
+
+    <section>
+      <title>Nested Types</title>
+
+      <para>Nested types occur commonly within the .NET framework. The
+      following examples show how to test static methods in nested classes
+      (whether those classes themselves are static or not).</para>
+
+      <section>
+        <title>Simplest Nested Type</title>
+
+        <para>The simplest kind of nested type is not using generics. Let's
+        have the following code:</para>
+
+        <example>
+          <title>Simple Nested Type</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal static class NestedStaticTypes {
+    internal static class NestedStaticType {
+      public static int NestedMethod() {
+        return 42;
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The equivalent nested classes for the two types mentioned would
+        be written as:</para>
+
+        <example>
+          <title>Simple Nested Type Accessor</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public static class NestedStaticTypesAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.NestedStaticTypes";
+    private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public static class NestedStaticTypeAccessor {
+      private static readonly PrivateType AccType =
+        NestedStaticTypesAccessor.AccType.GetNestedType("NestedStaticType");
+
+      public static int NestedMethod() {
+        return (int)AccessorBase.InvokeStatic(AccType, nameof(NestedMethod));
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The top level class is defined with a
+        <literal>PrivateType</literal> object. The nested classes reference
+        the top level class <literal>PrivateType</literal> and request a new
+        private type for the nested class with the function
+        <literal>GetNestedType</literal>. One can repeat the pattern to have
+        further nested classes.</para>
+      </section>
+
+      <section>
+        <title>Generic Nested Class</title>
+
+        <para>In the case that the inner nested class uses generics, but the
+        outer class doesn't, it is expected that only the inner nested class
+        needs to provide details for the type arguments.</para>
+
+        <example>
+          <title>Non-Public Nested Classes with Nested Generic Class</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal static class NestedStaticGTypes {
+    internal static class NestedStaticGType&lt;T&gt; {
+      public static string Name() {
+        return typeof(T).ToString();
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The Accessor classes would be written as:</para>
+
+        <example>
+          <title>Nested Class Accessors with Nested Generic Class</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public static class NestedStaticGTypesAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.NestedStaticGTypes";
+    private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public static class NestedStaticGTypeAccessor&lt;T&gt; {
+      private static readonly PrivateType AccType =
+        NestedStaticGTypesAccessor.AccType.GetNestedType("NestedStaticGType`1",
+          new Type[] { typeof(T) });
+
+      public static string Name() {
+        return (string)AccessorBase.InvokeStatic(AccType, nameof(Name));
+      }
+    }
+  }
+}</programlisting>
+        </example>
+      </section>
+
+      <section>
+        <title>Top Level Generic Type with Nested Class</title>
+
+        <para>If the outer class uses generics, the inner class also needs to
+        be instantiated with the type argument, even if in C# it isn't
+        explicitly mentioned.</para>
+
+        <example>
+          <title>Non-Public Nested Classes with Generics</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {  xcv bn
+  internal static class NestedStaticGTypes&lt;T&gt; {
+    internal static class NestedStaticGType {
+      public static string Name() {
+        return typeof(T).ToString();
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The Accessor classes would be written as:</para>
+
+        <example>
+          <title>Nested Accessor Classes with Generics</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public static class NestedStaticGTypesAccessor&lt;T&gt; {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.NestedStaticGTypes`1";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName,
+      new Type[] { typeof(T) });
+
+    public static class NestedStaticGTypeAccessor {
+      public static readonly PrivateType AccType =
+        NestedStaticGTypesAccessor&amp;lt;T&amp;gt;.AccType.GetNestedType("NestedStaticGType",
+          new Type[] { typeof(T) });
+
+      public static string Name() {
+        return (string)AccessorBase.InvokeStatic(AccType, nameof(Name));
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>One should note how the nested class also needs to be
+        instantiated with the parameter type for the parent class.</para>
+      </section>
+
+      <section>
+        <title>Generic Method in Nested Class</title>
+
+        <para>This example is not really specific on showing how to access a
+        generic method, the same example as for the non-generic classes apply,
+        except now <literal>AccessorBase.InvokeStatic(PrivateType, string,
+        Type[], Object[], Type[])</literal> allows parameter types for
+        generics.</para>
+
+        <example>
+          <title>Nested Types with Generic Method</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal static class NestedStaticGTypes {
+    internal static class NestedStaticGType {
+      public static string Name&lt;T&gt;() {
+        return typeof(T).ToString();
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The Accessor code is therefore:</para>
+
+        <example>
+          <title>Accessor for Nested Types with Generic Method</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal static class NestedStaticGTypesAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.NestedStaticGTypes";
+    private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    internal static class NestedStaticGTypeAccessor {
+      private static readonly PrivateType AccType =
+        NestedStaticGTypesAccessor.AccType.GetNestedType("NestedStaticGType");
+
+      public static string Name&lt;T&gt;() {
+        return (string)AccessorBase.InvokeStatic(AccType, nameof(Name),
+          new Type[] { },
+          new object[] { },
+          new Type[] { typeof(T) } );
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The parameters <literal>parameterTypes</literal> and
+        <literal>arguments</literal> must be provided and may not be
+        <literal>null</literal>.</para>
+      </section>
+
+      <section>
+        <title>Nested Classes all with Generic Types</title>
+
+        <para>The most general example for types that are generic are
+        provided:</para>
+
+        <example>
+          <title>Non-Public Nested Classes with Generics for Every
+          Class</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class NestedStaticGTypes&lt;T&gt; {
+    internal class NestedStaticGType&lt;U&gt; {
+      public static string Name&lt;V&gt;() {
+        return String.Format("{0}+{1}+{2}",
+          typeof(T), typeof(U), typeof(V));
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The Accessor classes would be written as thus:</para>
+
+        <example>
+          <title>Accessor for Non-Public Nested Classes with Generics for
+          Every Class</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public class NestedStaticGTypesAccessor&amp;lt;T&amp;gt; {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "Namespace.NestedStaticGTypes`1";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName,
+      new Type[] { typeof(T) });
+
+    public class NestedStaticGTypeAccessor&amp;lt;U&amp;gt; {
+      private static readonly PrivateType AccType =
+        NestedStaticGTypesAccessor&amp;lt;T&amp;gt;.AccType.GetNestedType("NestedStaticGType`1",
+          new Type[] { typeof(T), typeof(U) });
+
+      public static string Name&amp;lt;V&amp;gt;() {
+        return (string)AccessorBase.InvokeStatic(AccType, nameof(Name),
+          new Type[] { }, new object[] { }, new Type[] { typeof(V) });
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>Interesting in this example is that the nested type shows it has
+        one parameter type with the back tick notation of
+        <literal>NestedStaticGType`1</literal>, but it itself requires two
+        generic type arguments.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Instantiations (objects) of Nested Types</title>
+
+      <para>The next logical step from Nested Types is to be able to
+      instantiate objects of nested types and test the methods of those
+      instances.</para>
+
+      <section>
+        <title>Nested Types</title>
+
+        <para>The simplest case to test for are non-generic classes:</para>
+
+        <example>
+          <title>Non-Public Nested Classes</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class NestedTypes {
+    public int MethodA() { return 42; }
+
+    internal class NestedType {
+      public int MethodB() { return 64; }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>In the case above, both classes have a default constructor. The
+        Accessor classes would therefore be:</para>
+
+        <example>
+          <title>Accessor Nested Classes</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public class NestedTypesAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.NestedTypes";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public NestedTypesAccessor() : base(AccType) { }
+
+    public int MethodA() {
+      return (int)Invoke(nameof(MethodA));
+    }
+
+    public class NestedTypeAccessor : AccessorBase {
+      public static readonly PrivateType AccType =
+        NestedTypesAccessor.AccType.GetNestedType("NestedType");
+
+      public NestedTypeAccessor() : base(AccType) { }
+
+      public int MethodB() {
+        return (int)Invoke(nameof(MethodB));
+      }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>In this example, we see a more universal pattern for
+        <literal>PrivateType</literal> and <literal>PrivateObject</literal>
+        forming, where a class is beginning to support static and non-static
+        methods, with or without nested classes.</para>
+      </section>
+
+      <section>
+        <title>Nested Types with Generics</title>
+
+        <para>The next example covers the case that the parent and nested
+        classes uses generics.</para>
+
+        <example>
+          <title>Non-Public Nested Type with Generics</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class NestedGTypes&lt;T&gt; {
+    private T m_Value;
+    public NestedGTypes(T initialValue) { m_Value = initialValue; }
+    public string Value() { return m_Value.ToString(); }
+
+    internal class NestedGType&lt;U&gt; {
+      private U m_Value;
+      public NestedGType(U initialValue) { m_Value = initialValue; }
+      public string ValueNested() { return m_Value.ToString(); }
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The Accessor code now creates the <literal>PrivateType</literal>
+        defining the generics and uses that to instantiate the base
+        <literal>AccessorBase</literal> class to create instances of the
+        specific generic types. You'll note in the example code, we don't need
+        to specify the generics details to the <literal>AccessorBase</literal>
+        as this is encapsulated by the <literal>PrivateType</literal>.</para>
+
+        <example>
+          <title>Accessor for Nested Type with Generics</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+public class NestedGTypesAccessor&amp;lt;T&amp;gt; : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.NestedGTypes`1";
+    private static readonly PrivateType AccType =
+      new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+
+    public NestedGTypesAccessor(T initialValue)
+      : base(AccType, new Type[] { typeof(T) }, new object[] { initialValue }) { }
+
+    public string Value() { return (string)Invoke(nameof(Value)); }
+
+    public class NestedGTypeAccessor&amp;lt;U&amp;gt; : AccessorBase {
+      private static readonly PrivateType AccType =
+        NestedGTypesAccessor&amp;lt;T&amp;gt;.AccType.GetNestedType("NestedGType`1",
+          new Type[] { typeof(T), typeof(U) });
+
+      public NestedGTypeAccessor(U initialValue)
+        : base(AccType, new Type[] { typeof(U) }, new object[] { initialValue }) { }
+      public string ValueNested() {
+        return (string)Invoke(nameof(ValueNested));
+      }
+    }
+  }
+}</programlisting>
+        </example>
+      </section>
+    </section>
+
+    <section id="sec.ReturnValues">
+      <title>Non-Public Type Return Values</title>
+
+      <para>The factory pattern often results in one class creating instances
+      of other classes. The <literal>AccessorBase</literal> can be used to
+      test private instances of the factory pattern. Take the simplest factory
+      pattern:</para>
+
+      <example>
+        <title>Non-Public Return Type</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class RelatedClassTest {
+    public RelatedClassTest(int initialValue) { Value = initialValue; }
+    public int Value { get; private set; }
+  }
+
+  internal class RelatedClassTestFactory {
+    public RelatedClassTestFactory() { }
+    public RelatedClassTest Create() {
+      return new RelatedClassTest(42);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The simplest case here is that the factory object creates a
+      specific instance having a value of 42. The Accessor versions of the two
+      classes would be:</para>
+
+      <example>
+        <title>Accessor for Non-Public Return Type</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class RelatedClassTestAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.RelatedClassTest";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public RelatedClassTestAccessor(PrivateObject obj) : base(obj) { }
+
+    public RelatedClassTestAccessor(int initialValue)
+      : base(AccType, new Type[] { typeof(int) }, new object[] { initialValue }) { }
+
+    public int Value {
+      get {
+        return (int)GetFieldOrProperty(nameof(Value));
+      }
+    }
+  }
+
+  public class RelatedClassTestFactoryAccessor: AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.RelatedClassTestFactory";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public RelatedClassTestFactoryAccessor() : base(AccType) { }
+
+    public RelatedClassTestAccessor Create() {
+      object obj = Invoke(nameof(Create));
+      return obj == null ? null : new RelatedClassTestAccessor(new PrivateObject(obj));
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The <literal>RelatedClassTestAccessor</literal> requires a
+      constructor that takes a <literal>PrivateObject</literal> instance that
+      can be used to provide a way to access the methods of the object. It is
+      not expected that a non-public class have a constructor taking a type of
+      <literal>PrivateObject</literal>.</para>
+
+      <para>The <literal>RelatedClassTestFactoryAccessor</literal> returns an
+      object type, which is then used to wrap around the equivalent object
+      accessor class <literal>RelatedClassTestAccessor</literal>. If the
+      return value is <literal>null</literal>, then <literal>null</literal> is
+      also returned by the accessor, else the wrapped object.</para>
+    </section>
+
+    <section>
+      <title>Non-Public Type Input Parameters</title>
+
+      <para>A slightly more complex case is if private types are used as part
+      of signatures for other private types. Such situations might occur with
+      private collections of private objects.</para>
+
+      <example>
+        <title>Non-Public Types as Inputs</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class RelatedItemClass {
+    public RelatedItemClass(string value) { Value = value; }
+    public string Value { get; private set; }
+  }
+
+  internal class RelatedCollectionClass {
+    private HashSet&lt;string&gt; m_Set = new HashSet&lt;string&gt;();
+
+    public void Add(RelatedItemClass item) {
+      if (m_Set.Contains(item.Value)) {
+        throw new ArgumentException("Item already in collection", nameof(item));
+      }
+      m_Set.Add(item.Value);
+    }
+
+    public bool IsInCollection(string value) { return m_Set.Contains(value); }
+  }
+}</programlisting>
+      </example>
+
+      <para>In this example, the <literal>RelatedItemClass</literal> is a
+      private type and is used with the private collection type
+      <literal>RelatedCollectionClass</literal> for maintaining if an object
+      has already been added to a collection or not. The equivalent Accessor
+      classes would look like:</para>
+
+      <example>
+        <title>Accessors for Types as Inputs</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class RelatedItemClassAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.RelatedItemClass";
+    public static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public RelatedItemClassAccessor(string value)
+      : base(AccType, new Type[] { typeof(string) }, new object[] { value }) { }
+
+    public string Value {
+      get {
+        return (string)GetFieldOrProperty(nameof(Value));
+      }
+    }
+  }
+
+  public class RelatedCollectionClassAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.RelatedCollectionClass";
+    public static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public RelatedCollectionClassAccessor() : base(AccType) { }
+
+    public void Add(RelatedItemClassAccessor item) {
+      Invoke(nameof(Add),
+        new Type[] { RelatedItemClassAccessor.AccType.ReferencedType },
+        new object[] { item.PrivateTargetObject });
+    }
+
+    public bool IsInCollection(string value) {
+      return (bool)Invoke(nameof(IsInCollection), value);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The <literal>RelatedItemClassAccessor</literal> has to provide a
+      reference to the actual private type so that
+      <literal>RelatedCollectionClassAccessor.Add</literal> can call the
+      private type method with the correct type (not the accessor type). When
+      invoking, it retrieves the actual referenced type and the actual
+      underlying object via <literal>PrivateTargetObject</literal>.</para>
+
+      <para>As the <literal>AccessorBase</literal> must maintain a reference
+      to the underlying object, but expose this for cases such as
+      <literal>Invoke</literal> when it's needed, that a class that is under
+      test may not have a property with the name
+      <literal>PrivateTargetObject</literal>. The name of the property is such
+      to reduce the likelihood of a name conflict for the class being
+      tested.</para>
+    </section>
+
+    <section>
+      <title>Input Parameters Reference and Out Types</title>
+
+      <para>Handling of reference types and output types with Accessor classes
+      is no different to how it's done with reflection.</para>
+
+      <section>
+        <title>Out Types</title>
+
+        <para>Let's say the non-public implementation looks as such:</para>
+
+        <example>
+          <title>Non-Public Out Type in Parameter List</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  internal MyClass {
+    public void OutMethod(out int value) {
+      value = 42;
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The corresponding Accessor method would be:</para>
+
+        <example>
+          <title>Accessor with Out Type in Parameter List</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public MyClassAccessor : AccessorBase {
+    private const string Assembly = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyClass";
+    public static readonly PrivateType AccType = new PrivateType(Assembly, TypeName);
+
+    public MyClassAccessor() : base(AccType) { }
+
+    public void OutMethod(out int value) {
+      int internalValue = 0;
+      object[] args = new object[] { internalValue };
+      Invoke(nameof(OutMethod),
+        new Type[] { typeof(int).MakeByRefType() },
+        args);
+      value = args[0];
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>For an <literal>out</literal> type, one needs to make a
+        temporary variable which will be converted to the reference type. This
+        allocates space on the argument stack. The non-public implementation
+        then overwrites the value of the argument, which on return from the
+        <literal>Invoke</literal> is read and placed into the Accessor methods
+        <literal>out</literal> variable.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Non-Public Enumerations</title>
+
+      <para>Enumerations appears to be a special case for testing, that they
+      are types, but not classes. To use non-public enumerations, make a copy
+      of the enumeration in the Accessor code that is public. A second class
+      is requiired that encapsulates the type of the non-public
+      enumeration.</para>
+
+      <example>
+        <title>Non-Public Enumeration</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal enum MyValues {
+    None = 0,
+    One,
+    Two
+  }
+
+  internal class MyClass {
+    public void DoSomething(MyValues value) { ... }
+  }
+}</programlisting>
+      </example>
+
+      <para>A copy of the enum and an Accessor class to hold the type would be
+      then:</para>
+
+      <example>
+        <title>Test Enumeration with Accessor</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public enum MyValues {
+    None = 0,
+    One,
+    Two
+  }
+
+  public static class MyValuesAccessor {
+    private const string Assembly = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyValues";
+    public static readonly PrivateType AccType = new PrivateType(Assembly, TypeName);
+  }
+
+  public class MyClassAccessor : AccessorBase {
+    private const string Assembly = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyClass";
+    public static readonly PrivateType AccType = new PrivateType(Assembly, TypeName);
+
+    public MyClassAccessor() : base(AccType) { }
+
+    public void DoSomething(MyValues value) {
+      Invoke(nameof(DoSomething),
+        new Type[] { MyValuesAccessor.AccType.ReferencedType },
+        new object[] { value });
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The enumeration itself derives from the system type
+      <literal>System.Int32</literal>. In inputs, the runtime system will do
+      the typecast from the test <literal>enum</literal> to the non-public
+      <literal>enum</literal>. Returning an <literal>enum</literal> (not
+      shown) would perform an explicit typecast to the test
+      <literal>enum</literal>.</para>
+    </section>
+
+    <section>
+      <title>Non-Public Events with Public Event Handlers</title>
+
+      <para>Events can be passed to base classes by using the
+      <literal>add</literal> and <literal>remove</literal> keywords. Let the
+      code to be tested look something like:</para>
+
+      <example>
+        <title>Non-Public Type with Events</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyEventClass {
+    public event EventHandler&lt;EventArgs&gt; MyEvent;
+
+    protected virtual void OnMyEvent(EventArgs args) {
+      EventHandler&lt;EventArgs&gt; handler = MyEvent;
+      if (myEvent != null) handler(this, args);
+    }
+
+    public void RaiseEvent(int value) {
+      if (value == 42) OnMyEvent(new EventArgs());
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>To implement an Accessor class allowing the event handler to be
+      tested:</para>
+
+      <example>
+        <title>Accessor Class Event Handler Implementation</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyEventHandlerAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "MyEventClass";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public MyEventHandlerAccessor() : base(AccType) { }
+
+    public event EventHandler&lt;EventArgs&gt; MyEvent {
+      add { AddEventHandler(nameof(MyEvent), value); }
+      remove { RemoveEventHandler(nameof(MyEvent), value); }
+    }
+
+    public virtual void OnMyEvent(EventArgs args) {
+      Invoke(nameof(OnMyEvent), args);
+    }
+
+    public void RaiseEvent(int value) {
+      Invoke(nameof(RaiseEvent), value);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>It is not required to provide an accessor method for
+      <literal>OnMyEvent</literal> as this is a private implementation feature
+      of the class being tested. It is not possible to test that
+      <literal>OnMyEvent</literal> will be called by raising the call to
+      <literal>RaiseEvent</literal> (as it is not possible to create a public
+      class for testing that derives from the non-public class).</para>
+    </section>
+
+    <section>
+      <title>Non-Public Events with Private Event Handlers</title>
+
+      <para>The information is based on <ulink
+      url="https://docs.microsoft.com/en-us/dotnet/framework/reflection-and-codedom/how-to-hook-up-a-delegate-using-reflection">Microsoft
+      Documentation - Hook up a Delegate using Reflection</ulink>. One can
+      expand on the examples to produce a generic implementation with Events
+      and the associated private delegates.</para>
+
+      <example>
+        <title>Non-Public Type with Events having Non-Public Delegate</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyPrivateEventArgs : EventArgs {
+    public MyPrivateEventArgs(int value) {
+      Value = value;
+    }
+
+    public int Value { get; private set; }
+  }
+
+  internal class MyEventClass {
+    public event EventHandler&lt;MyPrivateEventArgs&gt; MyPrivateEvent;
+
+    protected virtual void OnMyEvent(MyPrivateEventArgs args) {
+      EventHandler&lt;MyPrivateEventArgs&gt; handler = MyPrivateEvent;
+      if (handler != null) handler(this, args);
+    }
+
+    public void RaiseEvent(int value) {
+      OnMyEvent(new MyPrivateEventArgs(value));
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The creation of the Accessor <literal>EventArgs</literal> object
+      is very special. C# does not allow to inherit from two different
+      classes, so it is not possible to inherit from both
+      <literal>EventArgs</literal> and <literal>AccessorBase</literal> - a
+      decision needs to be made. Hence, the Accessor
+      <literal>EventArgs</literal> object therefore derives from
+      <literal>EventArgs</literal> so that it can be used as the type
+      parameter to <literal>EventHandler&lt;&gt;</literal>. Inside the
+      Accessor <literal>EventArgs</literal> is a private implementation of the
+      real accessor.</para>
+
+      <example>
+        <title>Accessor Types with Events having Non-Public Delegate</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyPrivateEventArgsAccessor : EventArgs {
+    private class Accessor : AccessorBase {
+      public Accessor(PrivateObject obj) : base(obj) { }
+
+      public int Value {
+        get {
+          return (int)GetFieldOrProperty(nameof(Value));
+        }
+      }
+    }
+
+    private Accessor m_Accessor;
+
+    public MyPrivateEventArgsAccessor(PrivateObject obj) {
+      m_Accessor = new Accessor(obj);
+    }
+
+    public int Value { get { return m_Accessor.Value; } }
+  }
+}</programlisting>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyEventClassAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyEventClass";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public MyEventClassAccessor() : base(AccType) { }
+
+    public event EventHandler&lt;MyPrivateEventArgsAccessor&gt; MyPrivateEvent {
+      add {
+        EventHandler&lt;MyPrivateEventArgsAccessor&gt; handler = value;
+        AccessorEventHandler ieh = (s, a) =&gt; {
+          handler(s, new MyPrivateEventArgsAccessor(new PrivateObject(a)));
+        };
+        AddIndirectEventHandler(nameof(MyPrivateEvent), value, ieh);
+      }
+      remove {
+        RemoveIndirectEventHandler(nameof(MyPrivateEvent), value);
+      }
+    }
+
+    public void DoWork(int value) {
+      Invoke(nameof(DoWork), value);
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>In studying the implementation,
+      <literal>MyPrivateEventArgsAccessor</literal> derives from
+      <literal>EventArgs</literal> and has an internal Accessor that does the
+      work. <literal>MyPrivateEventArgsAccessor</literal> only has a single
+      constructor taking a <literal>PrivateObject</literal>, as it is expected
+      this object is only instantiated from the code generating the event (the
+      code under test).</para>
+
+      <para>The registration of the event is done through a lambda expression
+      that is responsible for taking the private
+      <literal>MyPrivateEventArgs</literal> from the code being tested and
+      wrapping it in a <literal>MyPrivateEventArgsAccessor</literal>. Thus the
+      test code for the event looks very much similar to the original
+      code.</para>
+
+      <para>As the delegate <literal>ieh</literal> is what is really
+      associated with the event hander in the code under test, it has to be
+      "remembered" when removing the event. One cannot simply recreate the
+      lambda and expect it to be removed. Thus, the usage of
+      <literal>AddIndirectEventHandler</literal> which takes the name of the
+      event and the delegate the user provided to map to the lambda created.
+      So in <literal>RemoveIndirectEventHandler</literal>, the name of the
+      event and the user delegate can be used to get back the delegate
+      trampoline created in <literal>add</literal>.</para>
+
+      <para>The delegate <literal>AccessorEventHandler</literal> is a
+      convenience that has a compatible signature (.NET 2.0 and later) with
+      event handlers in private code. So long as the delegate for an event is
+      derived from <literal>EventHandler</literal> or
+      <literal>EventHandler&lt;T&gt;</literal> where <literal>T</literal> is
+      an <literal>EventArgs</literal>, one can use the
+      <literal>AccessorEventHandler</literal>.</para>
+
+      <para>The test code could look like:</para>
+
+      <example>
+        <title>Test Code using Accessor with Non-Public Delegate in Non-Public
+        Event</title>
+
+        <programlisting language="csharp">[Test]
+public void RaisePrivateEvent() {
+  EventClassAccessor accessor = new EventClassAccessor();
+
+  int count = 0;
+  EventHandler&lt;MyPrivateEventArgsAccessor&gt; handler = (s, e) =&gt; {
+    count += e.Value;
+  };
+
+  accessor.MyPrivateEvent += handler;
+  accessor.DoWork(45);
+  Assert.That(count, Is.EqualTo(45));
+
+  accessor.MyPrivateEvent -= handler;
+  accessor.DoWork(10);
+  Assert.That(count, Is.EqualTo(45));
+}</programlisting>
+      </example>
+    </section>
+
+    <section id="sec.Delegates">
+      <title>Non-Public Delegates</title>
+
+      <para>Probably one of the most complex cases of testing internal types
+      are delegates (events are covered separately). Implementing the use case
+      of non-public delegates is possible if done carefully.</para>
+
+      <para>The example provided here is for the case that a non-public
+      delegate is passed to a non-public method. The non-public delegate will
+      be executed at a later time by other logic in the code. This is a
+      different use case to events (and would commonly be found with
+      non-public P/Invoke implementations)</para>
+
+      <example>
+        <title>Non-Public Method with a Non-Public Delegate</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class Fd { ... }
+
+  internal enum FdMonEvents { ... }
+
+  internal class FdMon {
+    public delegate void FdEvent(FdMon sender, Fd fd,
+      FdMonEvents occurred, object userData);
+
+    public void RegisterEvent(Fd fd, FdMonEvents events,
+      FdEvent callback, object userData) {
+      ...
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The usage of lambdas to act as <ulink
+      url="https://en.wikipedia.org/wiki/Trampoline_(computing)">trampolines</ulink>
+      significantly simplifies the implementation.</para>
+
+      <example>
+        <title>Accessor Implementation for Non-Public Delegates</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class FdMonAccessor : AccessorBase {
+    private const string Assembly = "Assembly";
+    private const string TypeName = "RJCP.Assembly.FdMon";
+    public static readonly PrivateType AccType = new PrivateType(Assembly, TypeName);
+
+    public FdMonAccessor() : base(AccType) { }
+
+    private readonly static PrivateType FdEventType = AccType.GetNestedType("FdEvent");
+    public delegate void FdEventAccessor(FdMonAccessor sender, FdAccessor fd,
+      FdMonEvents occurred, object userData);
+    private delegate void FdEventInternal(object sender, object fd,
+      int occurred, object userData);
+
+    public void RegisterEvent(FdAccessor fd, FdMonEvents events,
+     FdEventAccessor callback, object userData) {
+      FdEventInternal cb = (csender, cfd, coccurred, cuserData) =&gt; {
+        callback(
+          new FdMonAccessor(new PrivateObject(csender)),
+          new FdAccessor(new PrivateObject(cfd)),
+          (FdMonEvents)coccurred,
+          cuserData);
+        };
+      Delegate d = Delegate.CreateDelegate(FdEventType.ReferencedType,
+        cb.Target, cb.Method);
+
+      Invoke(nameof(RegisterEvent),
+        new Type[] {
+          FdAccessor.AccType.ReferencedType,
+          FdMonEventsAccessor.AccType.ReferencedType,
+          FdEventType.ReferencedType,
+          typeof(object)
+        },
+        new object[] {
+          fd.PrivateTargetObject,
+          events,
+          d,
+          userData
+        });
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>In the above real world example, a temporary "trampoline" delegate
+      is created (called <literal>cb</literal>) which has a signature
+      compatible with the non-public delegate. Since .NET 2.0, a delegate
+      matches if the types are compatible (in .NET 1.1 and 1.0, it was
+      required that the types match exactly).</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Non-Public Original Delegate</para>
+
+          <programlisting language="csharp">internal delegate void FdEvent(FdMon sender, Fd fd,
+  FdMonEvents occurred, object userData)</programlisting>
+
+          <para>Both <literal>FdMon</literal> and <literal>Fd</literal> are
+          classes and derive from object, <literal>FdMonEvents</literal> is an
+          enumeration type (derived from <literal>System.Int32</literal>) and
+          <literal>object</literal> is a public type.</para>
+        </listitem>
+
+        <listitem>
+          <para>Trampoline Delegate can therefore be</para>
+
+          <programlisting language="csharp">private delegate void FdEventInternal(object sender, object fd,
+  int occurred, object userData)</programlisting>
+        </listitem>
+      </itemizedlist>
+
+      <para>The lambda notation significantly reduces overhead in writing code
+      by allowing the accessor callback <literal>FdEventAccessor
+      callback</literal> being used in our trampoline callback
+      <literal>cb</literal>. Inside our callback there is boilerplate code
+      which simply instantiates Accessor instances from the objects of
+      non-public types.</para>
+
+      <para>The main trick is now creating the delegate which can be passed to
+      the non-public method expecting the non-public delegate:</para>
+
+      <programlisting language="csharp">Delegate d = Delegate.CreateDelegate(FdEventType.ReferencedType, cb.Target, cb.Method);</programlisting>
+
+      <para>Because the delegate has context (it is not static), creating the
+      delegate requires the form where the callback target is required
+      (<literal>cb.Target</literal>). Not providing this will result in a type
+      mismatch when invoking the non-public method
+      <literal>RegisterEvent</literal>. The
+      <literal>FdEventType.ReferencedType</literal> is the type of the
+      delegate we're creating, which is the non-public delegate.</para>
+
+      <para>The lifetime of the delegate is for the lifetime for which there
+      is a reference. The <literal>FdEventInternal cb</literal> lives for as
+      long as <literal>Delegate d</literal> lives, which is determined by the
+      duration for which the non-public class <literal>FdMon</literal> keeps a
+      reference to <literal>Delegate d</literal>. Thus, special consideration
+      is not required to pin, or keep the delegate alive. The .NET garbage
+      collector will do the work for us.</para>
+    </section>
+
+    <section>
+      <title>Exceptions</title>
+
+      <para>Exceptions raised by the Accessor classes will be the same type as
+      raised by code under test. Any instances of the
+      <literal>TargetInvocationException</literal> are again raised with the
+      <literal>InnerException</literal>. Thus no special code is required if
+      the exception being raised is a public type.</para>
+
+      <section>
+        <title>Checking Non-Public Exceptions</title>
+
+        <para>The <literal>Type</literal> class is required to test type
+        equality for raised exceptions, where those exceptions are
+        non-public.</para>
+
+        <example>
+          <title>Non-Public Exception</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  [Serializable()]
+  internal class MyException : System.Exception {
+    public MyException() : base() { }
+    public MyException(string message) : base(message) { }
+    public MyException(string message, System.Exception inner) : base(message, inner) { }
+    protected MyException(System.Runtime.Serialization.SerializationInfo info,
+      System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+  }
+
+  internal class ClassException {
+    public void RaiseException() {
+      throw new MyException("Test");
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The following classes show the accessors and the test case
+        (using NUnit 2.6.4) to test that the exception was raised. Note that
+        the MyExceptionAccessor isn't really intended to be instantiated (but
+        has a constructor in case we want to wrap the raised exception in the
+        Accessor class).</para>
+
+        <example>
+          <title>Test Case for Non-Public Exception</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyExceptionAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyException";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public MyExceptionAccessor(PrivateObject obj) : base(obj) { }
+  }
+
+  public class ClassExceptionAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.ClassException";
+    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+
+    public ClassExceptionAccessor() : base(AccType) { }
+
+    public void RaiseException() {
+      Invoke(nameof(RaiseException));
+    }
+  }
+}</programlisting>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  [TestFixture]
+  public class ExceptionTest {
+    [Test]
+    public void CheckException() {
+      ClassExceptionAccessor ce = new ClassExceptionAccessor();
+      Assert.That( () =&gt; { ce.RaiseException(); },
+        Throws.TypeOf(MyExceptionAccessor.AccType.ReferencedType));
+    }
+  }
+}</programlisting>
+        </example>
+
+        <para>The test code uses the <literal>PrivateType</literal> referenced
+        type to perform a comparison of exactly the correct exception that is
+        raised.</para>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <title>PrivateType and PrivateObject</title>
+
+    <para>The PrivateType and PrivateObject are important for the
+    implementation of Accessor classes. The NUnitExtensions project has
+    provided a copy of the classes for portability, with portions decompiled
+    from the Microsoft implementations. This provides the following
+    benefits:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>The PrivateType/PrivateObject API has changed from VS2015 to
+        VS2017</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>VS2015 would sometimes raise the TargetInvocationException
+            raised by the Reflection system in .NET, sometimes it would catch
+            the exception and raise the inner exception - the one raised by
+            your code.</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>The NUnitExtension project is compatible with the VS2017
+                implementation and raises always TargetInvocationException,
+                the AccessorBase implementation always raises the inner
+                exception to make it easy to exchange test code against real
+                classes with test code against Accessor classes.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>VS2015 can target .NET 4.0 and earlier. VS2017 uses a
+            different assembly and can target .NET 4.5 and later.</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>The NUnitExtension project targets .NET 4.0 for the
+                highest level of compatibility.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Extension of Functionality:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Generic types are now supported by providing Type
+            Parameters</para>
+          </listitem>
+
+          <listitem>
+            <para>Instantiation of Nested Types, which may also be
+            generic</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Further Work</title>
+
+    <section>
+      <title>Type Casting System</title>
+
+      <para>The work to convert objects from one type to another as described
+      in the section <xref linkend="sec.TypeConversions"/> is significant and
+      can be repetitive. One could investigate a system to register
+      PrivateType objects with AccessorBase objects that can be used
+      to:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Instantiate an Accessor class of the correct type given an
+          object of a non-public type. One can check the type against a
+          PrivateObject and if they match, then instantiate the Accessor class
+          (with CreateInstance from reflection). This can assist with the
+          factory use case to create the correct type object. Examples where
+          this is useful may be:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Implementation of code for non-public return types (<xref
+              linkend="sec.ReturnValues"/>).</para>
+            </listitem>
+
+            <listitem>
+              <para>Implementation of trampoline callbacks (<xref
+              linkend="sec.Delegates"/>) to instantiate the correct member
+              from derived Accessor classes (<xref
+              linkend="sec.Derived"/>).</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para>Perform explicit type conversions. Such a static helper class
+          to instantiate new Accessor classes of types from other Accessor
+          classes can automatically check if the type conversion is valid by
+          checking the object inheritance tree of the Accessor classes, also
+          allowing for programmatic reduction of errors in test code.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Non-Public Interfaces</title>
+
+      <para>The usage of interfaces occurs often when implementing against
+      SOLID principles. One common model is to define interfaces for classes
+      and use dependency injection to specify behaviour of classes. The usage
+      of dependency injection and interfaces makes it theoretically simpler to
+      test behaviour, for example by abstracting behaviour by implementing a
+      test class against an interface and injecting that into a class under
+      test. It should be investigated how it might be possible for a test
+      class to be implemented against a non-public interface to inject into a
+      non-public class for testing.</para>
+    </section>
+  </section>
+</article>

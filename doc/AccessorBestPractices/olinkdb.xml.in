@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE targetset 
+       SYSTEM "@DOCBOOK45_XSL_DIR@/common/targetdatabase.dtd" [
+<!ENTITY nettargets SYSTEM "target.db">
+]>
+<targetset>
+  <targetsetinfo>
+    Description of this target database document,
+    which is for the examples in olink doc.
+  </targetsetinfo>
+
+  <!-- Site map for generating relative paths between documents -->
+  <sitemap>
+    <dir name=".">
+      <document targetdoc="Network">
+        &nettargets;
+      </document>
+    </dir>
+  </sitemap>
+</targetset>

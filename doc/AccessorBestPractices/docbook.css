@@ -1,0 +1,203 @@
+body {
+  font-family: 'Segoe UI' , 'Lucida Grande' , Verdana, Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  /* padding: 0;
+  margin: 0;
+  margin-left: auto;
+  margin-right: auto; */
+  color: #000;
+}
+
+h1 {
+  font-family: 'Segoe UI' , 'Lucida Grande' , Verdana, Arial, Helvetica, sans-serif;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-top: 0;
+  color: #000;
+}
+
+h2, h3 {
+  font-family: 'Segoe UI' , 'Lucida Grande' , Verdana, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  color: #000;
+}
+
+h2 {
+  font-size: 1.769em;
+}
+
+h3 {
+  font-size: 1.231em;
+}
+
+h4, .subHeading {
+  font-family: 'Segoe UI' , 'Lucida Grande' , Verdana, Arial, Helvetica, sans-serif;
+  font-size: 1.077em;
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+}
+
+.subHeading {
+  margin-top: 5px;
+}
+
+h5, h6 {
+  font-family: 'Segoe UI' , 'Lucida Grande' , Verdana, Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 130%;
+  margin: 0;
+  color: #000;
+}
+
+a, a:link {
+  text-decoration: none;
+  color: #1364c4;
+}
+
+a:visited, a:active {
+  text-decoration: none;
+  color: #03697a;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #3390b1;
+}
+
+pre.programlisting, pre.screen, pre.synopsis {
+  display: block;
+  padding: 10px;
+  border: 1px solid #B0B0B0;
+  color: #000;   
+  overflow: auto;
+  border-radius: 2.5px;
+  -moz-border-radius: 2.5px;
+  margin: 0.5em 2em;
+}
+
+pre.programlisting {
+  background-color: #F0F0F0;
+}
+
+pre.screen, pre.synopsis {
+  background-color: #F0F0FF;
+}
+
+code, pre.programlisting, pre.screen, pre.synopsis, .code, .literal {
+  font-family: 'Lucida Sans Typewriter', 'Consolas', 'Lucida Console', monospace;
+}
+
+pre.programlisting, pre.screen, pre.synopsis, pre.literallayout {
+  font-size: 0.9em;
+}
+
+.code {
+  color: #A00000;
+}
+
+.literal {
+  color: #A00000;
+}
+
+.command {
+  color: #A00080;
+}
+
+.userinput {
+  color: #C06060;
+}
+
+.replaceable {
+  color: #A00000;
+}
+
+.remark {
+  color: #0000A0;
+}
+
+.filename {
+  color: #00A000;
+}
+
+.revhistory table, .table-contents table {
+  border-collapse: collapse;
+  padding: 0;
+  margin-bottom: 15px;
+  font-size: 15px;
+  width: 100%;
+}
+
+.revhistory td, .revhistory th, .table-contents td, .table-contents th {
+  border-bottom: 1px solid #dbdbdb;
+  margin: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 8px;
+  padding-left: 8px;
+}
+
+.revhistory th, .table-contents th {
+  background-color: #ededed;
+  color: #636363;
+  text-align: left;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.revhistory td, .table-contents td {
+  color: #2a2a2a;
+  vertical-align: top;
+}
+
+.revhistory table p:last-child, .table-contents table p:last-child {
+  padding-bottom: 0;
+}
+
+.revhistory table.members, .table-contents table.members {
+  width: 100%;
+}
+
+.revhistory table.members td, .table-contents table.members td {
+  min-width: 72px;
+}
+
+.revhistory table.members img, .table-contents table.members img {
+  padding-right: 5px;
+}
+
+/* Blue circle 'i' icon */
+.important {
+  border: 1px solid #B0B0F0;
+  background-color: #E0E0FF;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+/* Yellow triangle '!' icon */
+.caution {
+  border: 1px solid #F0F0B0;
+  background-color: #FFFFE0;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+/* Red square 'X' icon */
+.warning {
+  border: 1px solid #F0B0B0;
+  background-color: #FFE0E0;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+/* Yellow lightbulb icon  */
+.note {
+  border: 1px solid #B0F0B0;
+  background-color: #E0FFE0;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+}
