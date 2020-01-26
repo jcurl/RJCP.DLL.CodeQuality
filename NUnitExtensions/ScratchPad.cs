@@ -179,6 +179,8 @@
         private static string SanitizeName(string name)
         {
             if (name == null) return string.Empty;
+
+            if (name.EndsWith("()")) name = name.Substring(0, name.Length - 2);
             int nameLength = name.Length;
             StringBuilder sb = null;
 
