@@ -11,7 +11,7 @@
       <surname>Curl</surname>
     </author>
 
-    <pubdate>2018-01-21</pubdate>
+    <pubdate>2020-01-29</pubdate>
   </articleinfo>
 
   <section>
@@ -21,8 +21,8 @@
     components in .NET FX (desktop versions 2.0 and later), with tools such as
     xUnit, nUnit and MSTest among others, supported by Visual Studio, Mono IDE
     and extensions in NuGet. This article provides examples and "how to" for
-    testing using nUnit and reflection technologies using the NUnitExtensions
-    framework.</para>
+    testing using nUnit and reflection technologies using the RJCP.CodeQuality
+    library.</para>
   </section>
 
   <section>
@@ -35,7 +35,7 @@
     methods, invoke those property and methods. This makes reflection highly
     suitable (if not fast) for testing internal classes that are in external
     assemblies. In rare cases, this may also allow for testing of internal
-    state of classes for whitebox testing.</para>
+    state of classes for white box testing.</para>
 
     <para>This work was initially inspired by <ulink
     url="http://blog.instance-factory.com/?p=810">Home-made Private Accessor
@@ -95,7 +95,7 @@
       <section>
         <title>Fault Injection</title>
 
-        <para>High availability software may also require the testing of fault
+        <para>High availability software may also require testing via fault
         injection. In this special case, using an Accessor class may make it
         easier to inject specific faults and ensure that software can recover
         from these faults.</para>
@@ -155,6 +155,11 @@
         <listitem>
           <para>It uses reflection, so can be slow.</para>
         </listitem>
+
+        <listitem>
+          <para>Exceptions in private classes are difficult to analyze due to
+          missing stack traces across reflection boundaries.</para>
+        </listitem>
       </itemizedlist>
 
       <section>
@@ -199,6 +204,18 @@
           </listitem>
         </itemizedlist>
       </section>
+
+      <section>
+        <title>Functionality Not Supported by Accessors</title>
+
+        <para>It is not possible to test:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Internal interfaces.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
     </section>
 
     <section>
@@ -206,20 +223,21 @@
 
       <para>Multiple languages offer features for enabling internal visibility
       to specific components. In C++ this is the friend keyword. In C# there
-      is the internal keyword which makes types and methods public to code
-      within the assembly. The InternalsVisibleTo attribute of the assembly
-      can list other assemblies that should see internal methods as
-      public.</para>
+      is the <literal>internal</literal> keyword which makes types and methods
+      public to code within the assembly. The
+      <literal>InternalsVisibleTo</literal> attribute of the assembly can list
+      other assemblies that should see internal methods as public.</para>
 
       <para>While there are many answers to testing by using the
-      InternalsVisibleTo attribute, the author of this article advises
-      strongly against its usage on two grounds:</para>
+      <literal>InternalsVisibleTo</literal> attribute, the author of this
+      article advises strongly against its usage on two grounds:</para>
 
       <itemizedlist>
         <listitem>
-          <para>Architecturally wrong dependencies: InternalsVisibleTo
-          reverses dependencies, so a component is now dependent on a
-          "client", which in this case the test assembly is the client.</para>
+          <para>Architecturally wrong dependencies:
+          <literal>InternalsVisibleTo</literal> reverses dependencies, so a
+          component is now dependent on a "client", which in this case the
+          test assembly is the client.</para>
         </listitem>
 
         <listitem>
@@ -371,14 +389,15 @@
 
       <para>Work was done to try and simplify the usage of the static methods
       by trying to automatically identify the Accessor class (derived by
-      AccessorBase) to get the PrivateType as the object is constructed. Such
-      a solution relies on using stack frames to try and determine the type
-      containing the static method, which is ultimately unsuccessful due to
-      compiler optimizations such as inlining. To overcome inlining, an
-      explicit attribute was required for every method to disable inlining
-      which makes code harder to read. Thus it was decided that a static
-      Accessor should instantiate a static PrivateType for the non-public type
-      and allowing code to be more portable to multiple compilers.</para>
+      AccessorBase) to get the <literal>PrivateType</literal> as the object is
+      constructed. Such a solution relies on using stack frames to try and
+      determine the type containing the static method, which is ultimately
+      unsuccessful due to compiler optimizations such as inlining. To overcome
+      inlining, an explicit attribute was required for every method to disable
+      inlining which makes code harder to read. Thus it was decided that a
+      static Accessor should instantiate a static
+      <literal>PrivateType</literal> for the non-public type and allowing code
+      to be more portable to multiple compilers.</para>
     </section>
   </section>
 
@@ -407,7 +426,7 @@
       should have the same name as the methods and properties in the class
       being tested. Therefore, when providing the name of the method or
       property being tested to the base class, use the
-      <literal>nameof()</literal> operator. This allows easier renaming of
+      <literal>nameof</literal> operator. This allows easier renaming of
       method names and letting the IDE do the refactoring saving work and
       errors.</para>
     </section>
@@ -440,8 +459,9 @@
 
     <para>Please note, that the usage of the <literal>PrivateType</literal>
     and <literal>PrivateObject</literal> classes are instantiated from
-    NUnitExtensions and are not from MSTest, due to subtle differences between
-    the different versions available for MS Test Classes.</para>
+    <literal>RJCP.CodeQuality</literal> and are not from MSTest, due to subtle
+    differences between the different versions available for MS Test
+    Classes.</para>
 
     <section>
       <title>Non-Public Classes</title>
@@ -2048,11 +2068,11 @@ public void RaisePrivateEvent() {
 }</programlisting>
         </example>
 
-        <para>The following classes show the accessors and the test case
-        (using NUnit 2.6.4) to test that the exception was raised. Note that
-        the MyExceptionAccessor isn't really intended to be instantiated (but
-        has a constructor in case we want to wrap the raised exception in the
-        Accessor class).</para>
+        <para>The following classes show the accessors and the test case to
+        test that the exception was raised. Note that the MyExceptionAccessor
+        isn't really intended to be instantiated (but has a constructor in
+        case we want to wrap the raised exception in the Accessor
+        class).</para>
 
         <example>
           <title>Test Case for Non-Public Exception</title>
@@ -2102,31 +2122,35 @@ public void RaisePrivateEvent() {
   <section>
     <title>PrivateType and PrivateObject</title>
 
-    <para>The PrivateType and PrivateObject are important for the
-    implementation of Accessor classes. The NUnitExtensions project has
-    provided a copy of the classes for portability, with portions decompiled
-    from the Microsoft implementations. This provides the following
-    benefits:</para>
+    <para>The <literal>PrivateType</literal> and
+    <literal>PrivateObject</literal> are important for the implementation of
+    Accessor classes. The RJCP.CodeQuality project has provided a copy of the
+    classes for portability, with portions decompiled from the Microsoft
+    implementations. This provides the following benefits:</para>
 
     <itemizedlist>
       <listitem>
-        <para>The PrivateType/PrivateObject API has changed from VS2015 to
-        VS2017</para>
+        <para>The
+        <literal>PrivateType</literal>/<literal>PrivateObject</literal> API
+        has changed from VS2015 to VS2017, now .NET 4.0 can use VS2017
+        semantics</para>
 
         <itemizedlist>
           <listitem>
-            <para>VS2015 would sometimes raise the TargetInvocationException
-            raised by the Reflection system in .NET, sometimes it would catch
-            the exception and raise the inner exception - the one raised by
-            your code.</para>
+            <para>VS2015 would sometimes raise the
+            <literal>TargetInvocationException</literal> raised by the
+            Reflection system in .NET, sometimes it would catch the exception
+            and raise the inner exception - the one raised by your
+            code.</para>
 
             <itemizedlist>
               <listitem>
-                <para>The NUnitExtension project is compatible with the VS2017
-                implementation and raises always TargetInvocationException,
-                the AccessorBase implementation always raises the inner
-                exception to make it easy to exchange test code against real
-                classes with test code against Accessor classes.</para>
+                <para>The RJCP.CodeQuality project is compatible with the
+                VS2017 implementation and raises always
+                <literal>TargetInvocationException</literal>, the AccessorBase
+                implementation always raises the inner exception to make it
+                easy to exchange test code against real classes with test code
+                against Accessor classes.</para>
               </listitem>
             </itemizedlist>
           </listitem>
@@ -2137,7 +2161,7 @@ public void RaisePrivateEvent() {
 
             <itemizedlist>
               <listitem>
-                <para>The NUnitExtension project targets .NET 4.0 for the
+                <para>The RJCP.CodeQuality project targets .NET 4.0 for the
                 highest level of compatibility.</para>
               </listitem>
             </itemizedlist>
@@ -2150,8 +2174,8 @@ public void RaisePrivateEvent() {
 
         <itemizedlist>
           <listitem>
-            <para>Generic types are now supported by providing Type
-            Parameters</para>
+            <para>Generic types are now supported by providing
+            <literal>Type</literal> parameters</para>
           </listitem>
 
           <listitem>
@@ -2172,17 +2196,17 @@ public void RaisePrivateEvent() {
       <para>The work to convert objects from one type to another as described
       in the section <xref linkend="sec.TypeConversions"/> is significant and
       can be repetitive. One could investigate a system to register
-      PrivateType objects with AccessorBase objects that can be used
-      to:</para>
+      <literal>PrivateType</literal> objects with
+      <literal>AccessorBase</literal> objects that can be used to:</para>
 
       <itemizedlist>
         <listitem>
           <para>Instantiate an Accessor class of the correct type given an
           object of a non-public type. One can check the type against a
-          PrivateObject and if they match, then instantiate the Accessor class
-          (with CreateInstance from reflection). This can assist with the
-          factory use case to create the correct type object. Examples where
-          this is useful may be:</para>
+          <literal>PrivateObject</literal> and if they match, then instantiate
+          the Accessor class (with <literal>CreateInstance</literal> from
+          reflection). This can assist with the factory use case to create the
+          correct type object. Examples where this is useful may be:</para>
 
           <itemizedlist>
             <listitem>
