@@ -20,7 +20,7 @@
     /// <para>
     /// To create a temporary directory based on the name of the test case, and execute code from within that
     /// directory, create an instance using <see cref="ScratchPad()"/> with the default options:
-    /// <code languague="csharp">
+    /// <code language="csharp"><![CDATA[
     /// [Test]
     /// public void MyTestCase() {
     ///   using (Deploy.ScratchPad()) {
@@ -28,7 +28,7 @@
     ///     o.Save("relative.txt");
     ///   }
     /// }
-    /// </code>
+    /// ]]></code>
     /// This sample code creates a directory called <c>MyTestCase</c> with in <see cref="Deploy.WorkDirectory"/> (based
     /// on the test name of the current test case, obtained via reflection from
     /// <c>NUnit.Framework.TestContext.CurrentContext.Test.Name</c>.
@@ -38,7 +38,7 @@
     /// <see cref="Environment.CurrentDirectory"/> itself to something different, but still need to make a folder
     /// within the <see cref="Deploy.WorkDirectory"/>, use the constructor <see cref="ScratchPad(ScratchOptions)"/>
     /// with the option <see cref="ScratchOptions.KeepCurrentDir"/>.
-    /// <code languague="csharp">
+    /// <code language="csharp"><![CDATA[
     /// [Test]
     /// public void MyTestCase() {
     ///   using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.KeepCurrentDir)) {
@@ -47,13 +47,13 @@
     ///     o.Save(path);
     ///   }
     /// }
-    /// </code>
+    /// ]]></code>
     /// </para>
     /// <para>
     /// Similarly, you can still create the <see cref="ScratchPad"/> and set the directory to
     /// <see cref="Deploy.WorkDirectory"/> immediately using the <see cref="ScratchOptions.UseDeployDir"/> option.
     /// The property <see cref="Path"/> will still be the full path of the scratch pad.
-    /// <code languague="csharp">
+    /// <code language="csharp"><![CDATA[
     /// [Test]
     /// public void MyTestCase() {
     ///   using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.UseDeployDir)) {
@@ -62,7 +62,7 @@
     ///     o.Save(path);
     ///   }
     /// }
-    /// </code>
+    /// ]]></code>
     /// </para>
     /// <para>
     /// The <see cref="ScratchPad"/> will always restore the current directory when <see cref="ScratchPad.Dispose()"/>
@@ -72,7 +72,7 @@
     /// within the test case, or you can still set the directory to the <see cref="Deploy.WorkDirectory"/> by combining
     /// with the option <see cref="ScratchOptions.UseDeployDir"/> (the option <see cref="ScratchOptions.UseScratchDir"/>
     /// will be ignored).
-    /// <code languague="csharp">
+    /// <code language="csharp"><![CDATA[
     /// [Test]
     /// public void MyTestCase() {
     ///   using (ScratchPad scratch = Deploy.ScratchPad(ScratchOptions.NoScratch)) {
@@ -81,7 +81,7 @@
     ///     o.Load("relativefile.txt");
     ///   }
     /// }
-    /// </code>
+    /// ]]></code>
     /// </para>
     /// </remarks>
     public class ScratchPad : IDisposable

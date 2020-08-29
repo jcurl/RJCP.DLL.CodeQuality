@@ -14,14 +14,14 @@
     /// <para>
     /// An INI file is a text file that is formed by section headers and key/value pairs. Comments are prefixed with a semicolon.
     /// </para>
-    /// <code>
+    /// <code language="ini"><![CDATA[
     /// ; Comment
     /// [SECTION]
     /// KEY=VALUE ; Comment
     ///
     /// [SECTION2]
     /// KEY=VALUE
-    /// </code>
+    /// ]]></code>
     /// <para>
     /// When reading the file, the sections and keys are case insensitive. This is consistent with Windows. The values of
     /// a key are case sensitive.

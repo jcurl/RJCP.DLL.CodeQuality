@@ -20,7 +20,7 @@
         /// <remarks>
         /// To get the base name of the resource, look at the applications <c><i>Resource</i>.Designer.cs</c> file, where
         /// there's often code such as:
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// internal static global::System.Resources.ResourceManager ResourceManager {
         ///   get {
         ///     if (object.ReferenceEquals(resourceMan, null)) {
@@ -33,7 +33,7 @@
         ///     return resourceMan;
         ///   }
         /// }
-        /// </code>
+        /// ]]></code>
         /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the current UI culture.</para>
         /// </remarks>
@@ -51,7 +51,7 @@
         /// <remarks>
         /// To get the base name of the resource, look at the applications <c><i>Resource</i>.Designer.cs</c> file, where
         /// there's often code such as:
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// internal static global::System.Resources.ResourceManager ResourceManager {
         ///   get {
         ///     if (object.ReferenceEquals(resourceMan, null)) {
@@ -64,7 +64,7 @@
         ///     return resourceMan;
         ///   }
         /// }
-        /// </code>
+        /// ]]></code>
         /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the specified culture.</para>
         /// </remarks>
@@ -81,7 +81,7 @@
         /// <remarks>
         /// To get the base name of the resource, look at the applications <c><i>Resource</i>.Designer.cs</c> file, where
         /// there's often code such as:
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// internal static global::System.Resources.ResourceManager ResourceManager {
         ///   get {
         ///     if (object.ReferenceEquals(resourceMan, null)) {
@@ -94,7 +94,7 @@
         ///     return resourceMan;
         ///   }
         /// }
-        /// </code>
+        /// ]]></code>
         /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the current UI culture.</para>
         /// </remarks>
@@ -112,7 +112,7 @@
         /// <remarks>
         /// To get the base name of the resource, look at the applications <c><i>Resource</i>.Designer.cs</c> file, where
         /// there's often code such as:
-        /// <code lang="csharp">
+        /// <code language="csharp"><![CDATA[
         /// internal static global::System.Resources.ResourceManager ResourceManager {
         ///   get {
         ///     if (object.ReferenceEquals(resourceMan, null)) {
@@ -125,7 +125,7 @@
         ///     return resourceMan;
         ///   }
         /// }
-        /// </code>
+        /// ]]></code>
         /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the specified culture.</para>
         /// </remarks>

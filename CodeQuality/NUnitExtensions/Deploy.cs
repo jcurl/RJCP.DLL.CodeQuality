@@ -39,8 +39,7 @@
     /// especially useful when running unit tests within the Visual Studio environment.
     /// </para>
     /// <para>The following code snippet shows how to append the directory <c>work</c> to the work directory.</para>
-    /// <code language="xml">
-    /// <![CDATA[
+    /// <code language="xml"><![CDATA[
     /// <configSections>
     ///   <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
     /// </configSections>
@@ -48,10 +47,9 @@
     /// <NUnitExtensions>
     ///   <deploy workDir="work" force="false"/>
     /// </NUnitExtensions>
-    /// ]]>
-    /// </code>
+    /// ]]></code>
     /// <para>
-    /// The extension given by the <c>&lt;deploy&gt;</c> tag is only used if NUnit's <c>TestContext.CurrentContext</c>
+    /// The extension given by the <c><![CDATA[<deploy>]]></c> tag is only used if NUnit's <c>TestContext.CurrentContext</c>
     /// properties <c>TestDirectory</c> and <c>WorkDirectory</c> have the same value, or if the property
     /// <c>force="true"</c> is provided in the tag.
     /// </para>
@@ -73,8 +71,7 @@
     /// when using NUnit 3 (the current directory is usually read-only and points to the Visual Studio installation for
     /// NUnit 3).
     /// </para>
-    /// <code language="xml">
-    /// <![CDATA[
+    /// <code language="xml"><![CDATA[
     /// <configSections>
     ///   <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
     /// </configSections>
@@ -82,8 +79,7 @@
     /// <NUnitExtensions>
     ///   <deploy useCwd="true"/>
     /// </NUnitExtensions>
-    /// ]]>
-    /// </code>
+    /// ]]></code>
     /// </remarks>
     public static class Deploy
     {
