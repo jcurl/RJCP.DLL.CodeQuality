@@ -303,7 +303,7 @@ supports a configuration:
 File: `app.config`
 ```xml
 <configSections>
-  <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
+  <section name="NUnitExtensions" type="RJCP.CodeQuality.AppConfig.NUnitExtensionsSection, RJCP.CodeQuality"/>
 </configSections>
 
 <NUnitExtensions>
@@ -328,7 +328,7 @@ provide the `force` attribute.
 File: `app.config`
 ```xml
 <configSections>
-  <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
+  <section name="NUnitExtensions" type="RJCP.CodeQuality.AppConfig.NUnitExtensionsSection, RJCP.CodeQuality"/>
 </configSections>
 
 <NUnitExtensions>
@@ -347,7 +347,7 @@ this sets the work directory to be the `TestDirectory` which is also the
 File: `app.config`
 ```xml
 <configSections>
-  <section name="NUnitExtensions" type="NUnit.Framework.AppConfig.NUnitExtensionsSection, RJCP.NUnitExtensions"/>
+  <section name="NUnitExtensions" type="RJCP.CodeQuality.AppConfig.NUnitExtensionsSection, RJCP.CodeQuality"/>
 </configSections>
 
 <NUnitExtensions>
