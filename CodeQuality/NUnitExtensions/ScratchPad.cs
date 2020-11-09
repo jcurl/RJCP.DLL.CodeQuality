@@ -86,7 +86,17 @@
     /// </remarks>
     public class ScratchPad : IDisposable
     {
-        private const ScratchOptions ScratchDirMask = (ScratchOptions)0x0F;
+        // The flags are made up of bitfield for options
+        //
+        //   xxx 0000 - UseScratchDir
+        //   xxx 0001 - KeepCurrentDir
+        //   xxx 0010 - UseDeployDir
+        //
+        //   000 xxxx - CreateScratch
+        //   001 xxxx - NoScratch
+        //   010 xxxx - CreateOnMissing
+        private const ScratchOptions ScratchChDirMask = (ScratchOptions)0x0F;
+        private const ScratchOptions ScratchMkDirMask = (ScratchOptions)0x70;
 
         private static readonly Dictionary<string, string> s_NameMapping = new Dictionary<string, string>();
         private static readonly HashSet<string> s_NamesUsed = new HashSet<string>();
@@ -127,7 +137,6 @@
             Initialize(dirName, options);
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ScratchPad"/> class.
         /// </summary>
@@ -156,17 +165,7 @@
             Path = System.IO.Path.Combine(Deploy.WorkDirectory, RelativePath);
 
             m_OriginalCurrentDir = Environment.CurrentDirectory;
-
-            ScratchOptions dirOptions = options & ScratchDirMask;
-            if ((options & ScratchOptions.NoScratch) == ScratchOptions.CreateScratch) {
-                CreateScratchPad(RelativePath, dirOptions);
-            } else {
-                if (dirOptions == ScratchOptions.UseDeployDir) {
-                    Environment.CurrentDirectory = Deploy.WorkDirectory;
-
-                    // Else we keep the current directory
-                }
-            }
+            CreateScratchPad(RelativePath, options);
         }
 
         /// <summary>
@@ -218,14 +217,41 @@
 
         private string m_OriginalCurrentDir;
 
-        private void CreateScratchPad(string dirName, ScratchOptions dirOptions)
+        private void CreateScratchPad(string dirName, ScratchOptions options)
         {
-            Deploy.DeleteDirectory(dirName);
-            Deploy.CreateDirectory(dirName);
+            ScratchOptions chdirOptions = options & ScratchChDirMask;
+            ScratchOptions mkdirOptions = options & ScratchMkDirMask;
+            switch (mkdirOptions) {
+            case ScratchOptions.CreateScratch:
+                Deploy.DeleteDirectory(dirName);
+                Deploy.CreateDirectory(dirName);
+                SetScratchPadDir(dirName, chdirOptions);
+                break;
+            case ScratchOptions.NoScratch:
+                if (chdirOptions == ScratchOptions.UseDeployDir) {
+                    // We ignore the chdirOptions here, as there is no scratch directory
+                    Environment.CurrentDirectory = Deploy.WorkDirectory;
+                }
+                break;
+            case ScratchOptions.CreateOnMissing:
+                if (!System.IO.Directory.Exists(dirName)) {
+                    if (System.IO.File.Exists(dirName)) {
+                        Deploy.DeleteDirectory(dirName);
+                    }
+                    Deploy.CreateDirectory(dirName);
+                }
+                SetScratchPadDir(dirName, chdirOptions);
+                break;
+            }
+        }
 
-            switch (dirOptions) {
+        private void SetScratchPadDir(string dirName, ScratchOptions chdirOptions)
+        {
+            switch (chdirOptions) {
             case ScratchOptions.UseScratchDir:
                 Environment.CurrentDirectory = System.IO.Path.Combine(Deploy.WorkDirectory, dirName);
+                break;
+            case ScratchOptions.KeepCurrentDir:
                 break;
             case ScratchOptions.UseDeployDir:
                 Environment.CurrentDirectory = Deploy.WorkDirectory;

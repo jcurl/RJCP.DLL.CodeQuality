@@ -127,5 +127,65 @@
 
             Assert.That(Environment.CurrentDirectory, Is.EqualTo(originalPath));
         }
+
+        [Test]
+        public void ScratchPadCreateEnsureContentsDeleted()
+        {
+            string path;
+
+            using (ScratchPad scratch = new ScratchPad()) {
+                path = scratch.Path;
+                using (Stream fs = new FileStream("test.txt", FileMode.CreateNew, FileAccess.ReadWrite)) {
+                    fs.Write(new byte[] { 0x40 }, 0, 1);
+                }
+
+                Assert.That(File.Exists("test.txt"), Is.True);
+            }
+
+            using (ScratchPad scratch = new ScratchPad()) {
+                // Directory is deleted first, and the path should remain the same
+                Assert.That(scratch.Path, Is.EqualTo(path));
+                Assert.That(File.Exists("test.txt"), Is.False);
+            }
+        }
+
+        [Test]
+        public void ScratchPadCreateOnMissing()
+        {
+            string path;
+
+            using (ScratchPad scratch = new ScratchPad()) {
+                path = scratch.Path;
+                using (Stream fs = new FileStream("test.txt", FileMode.CreateNew, FileAccess.ReadWrite)) {
+                    fs.Write(new byte[] { 0x40 }, 0, 1);
+                }
+
+                Assert.That(File.Exists("test.txt"), Is.True);
+            }
+
+            using (ScratchPad scratch = new ScratchPad(ScratchOptions.CreateOnMissing)) {
+                // Directory is deleted first, and the path should remain the same
+                Assert.That(scratch.Path, Is.EqualTo(path));
+                Assert.That(File.Exists("test.txt"), Is.True);
+            }
+        }
+
+        [Test]
+        public void ScratchPadCreateOnMissingNested()
+        {
+            using (ScratchPad scratch = new ScratchPad()) {
+                using (Stream fs = new FileStream("test.txt", FileMode.CreateNew, FileAccess.ReadWrite)) {
+                    fs.Write(new byte[] { 0x40 }, 0, 1);
+                }
+
+                Assert.That(File.Exists("test.txt"), Is.True);
+
+                using (ScratchPad scratch2 = new ScratchPad(ScratchOptions.CreateOnMissing)) {
+                    // Directory is deleted first, and the path should remain the same
+                    Assert.That(scratch2.Path, Is.EqualTo(scratch.Path));
+                    Assert.That(File.Exists("test.txt"), Is.True);
+                }
+            }
+        }
     }
 }
