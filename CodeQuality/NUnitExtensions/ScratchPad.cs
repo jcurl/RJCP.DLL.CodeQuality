@@ -88,7 +88,8 @@
     {
         private const ScratchOptions ScratchDirMask = (ScratchOptions)0x0F;
 
-        private static HashSet<string> s_Names = new HashSet<string>();
+        private static readonly Dictionary<string, string> s_NameMapping = new Dictionary<string, string>();
+        private static readonly HashSet<string> s_NamesUsed = new HashSet<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScratchPad"/> class.
@@ -109,14 +110,23 @@
         /// </remarks>
         public ScratchPad(ScratchOptions options)
         {
-            string name = GetName();
+            string testFullName = Deploy.TestFullName;
+            string testName = SanitizeName(Deploy.TestName);
 
-            if (!s_Names.Add(name)) {
-                string fullName = Deploy.TestFullName;
-                name = string.Format("{0}-{1:8X}", name, fullName.GetHashCode());
+            string dirName;
+            if (s_NamesUsed.Add(testName)) {
+                s_NameMapping.Add(testFullName, testName);
+                dirName = testName;
+            } else {
+                if (!s_NameMapping.TryGetValue(testFullName, out dirName)) {
+                    dirName = string.Format("{0}-{1:X8}", testName, testFullName.GetHashCode());
+                    s_NameMapping.Add(testFullName, dirName);
+                }
             }
-            Initialize(name, true, options);
+
+            Initialize(dirName, options);
         }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScratchPad"/> class.
@@ -137,12 +147,12 @@
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name is empty", nameof(name));
-            Initialize(name, false, options);
+            Initialize(name, options);
         }
 
-        private void Initialize(string name, bool sanitize, ScratchOptions options)
+        private void Initialize(string name, ScratchOptions options)
         {
-            RelativePath = sanitize ? SanitizeName(name) : name;
+            RelativePath = name;
             Path = System.IO.Path.Combine(Deploy.WorkDirectory, RelativePath);
 
             m_OriginalCurrentDir = Environment.CurrentDirectory;
@@ -171,29 +181,29 @@
         /// <value>The absolute path of the scratch area.</value>
         public string Path { get; private set; }
 
-        private static string GetName()
-        {
-            return Deploy.TestName;
-        }
-
         private static string SanitizeName(string name)
         {
             if (name == null) return string.Empty;
 
-            if (name.EndsWith("()")) name = name.Substring(0, name.Length - 2);
             int nameLength = name.Length;
             StringBuilder sb = null;
 
             int pos = 0;
+            int endPos = -1;
             for (int i = 0; i < nameLength; i++) {
                 if (IsValidChar(name[i])) continue;
                 if (sb == null) sb = new StringBuilder(nameLength);
                 int l = i - pos;
-                if (l > 0) sb.Append(name, pos, l);
-                sb.Append('_');
+                if (l > 0) {
+                    sb.Append(name, pos, l);
+                    endPos = pos + l;
+                    sb.Append('_');
+                }
                 pos = i + 1;
             }
             if (sb == null) return name;
+
+            if (endPos != -1) return sb.ToString(0, endPos);
             return sb.ToString();
         }
 

@@ -78,6 +78,8 @@
     <Compile Include="HelperClasses\StaticClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
     <Compile Include="NestedPrivateTypeTest.cs" />
+    <Compile Include="NUnitExtensions\ScratchPad2ndTest.cs" />
+    <Compile Include="NUnitExtensions\ScratchPadTest.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
