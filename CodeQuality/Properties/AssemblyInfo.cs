@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -18,6 +19,8 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+[assembly: CLSCompliant(true)]
+
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("a4d356f2-15ac-4ffe-b0c4-1d3d0973a124")]
 
@@ -31,5 +34,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5.1")]
-[assembly: AssemblyFileVersion("0.5.1")]
+[assembly: AssemblyVersion("0.5.1.1")]
+[assembly: AssemblyFileVersion("0.5.1.1")]
