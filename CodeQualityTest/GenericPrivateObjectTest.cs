@@ -39,7 +39,7 @@
         public void GenericTypesNullAssemblyName()
         {
             Assert.That(() => {
-                new PrivateObject(null, "abc_xyz",
+                _ = new PrivateObject(null, "abc_xyz",
                     new[] { typeof(object), typeof(string) },
                     new object[] { 9, "xyz" },
                     new[] { typeof(object), typeof(string) });
@@ -50,7 +50,7 @@
         public void GenericTypesNullTypeName()
         {
             Assert.That(() => {
-                new PrivateObject("RJCP.CodeQualityTest", null,
+                _ = new PrivateObject("RJCP.CodeQualityTest", null,
                     new[] { typeof(object), typeof(string) },
                     new object[] { 9, "xyz" },
                     new[] { typeof(object), typeof(string) });

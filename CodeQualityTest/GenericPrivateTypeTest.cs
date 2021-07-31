@@ -28,14 +28,14 @@
         [Test]
         public void AssemblyNotFound()
         {
-            Assert.That(() => { new PrivateType("foo", "type", new Type[] { typeof(int) }); },
+            Assert.That(() => { _ = new PrivateType("foo", "type", new Type[] { typeof(int) }); },
                 Throws.InstanceOf<System.IO.FileNotFoundException>());
         }
 
         [Test]
         public void TypeNotFound()
         {
-            Assert.That(() => { new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.GenericPrivateType", new Type[] { typeof(int) }); },
+            Assert.That(() => { _ = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.GenericPrivateType", new Type[] { typeof(int) }); },
                 Throws.InstanceOf<TypeLoadException>());
         }
     }

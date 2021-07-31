@@ -12,31 +12,31 @@
         [Test]
         public void NullAssemblyName()
         {
-            Assert.That(() => { new PrivateType(null, "RJCP.CodeQuality.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType(null, "RJCP.CodeQuality.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void EmptyAssemblyName()
         {
-            Assert.That(() => { new PrivateType(string.Empty, "RJCP.CodeQuality.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType(string.Empty, "RJCP.CodeQuality.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void NullClassName()
         {
-            Assert.That(() => { new PrivateType("RJCP.CodeQualityTest", null); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType("RJCP.CodeQualityTest", null); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void EmptyClassName()
         {
-            Assert.That(() => { new PrivateType("RJCP.CodeQualityTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType("RJCP.CodeQualityTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void NullType()
         {
-            Assert.That(() => { new PrivateType(null); }, Throws.TypeOf<ArgumentNullException>());
+            Assert.That(() => { _ = new PrivateType(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

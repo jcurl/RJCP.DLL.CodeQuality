@@ -287,14 +287,14 @@
         [Test]
         public void ConstructorWithException()
         {
-            Assert.That(() => { new ClassExceptionCtorTestAccessor(); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor(); },
                 Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
         public void ConstructorWithExceptionsParamTypes()
         {
-            Assert.That(() => { new ClassExceptionCtorTestAccessor(42); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor(42); },
                 Throws.TypeOf<NotSupportedException>());
         }
 
@@ -306,7 +306,7 @@
             // InvalidOperationException instead, which would be wrong.
             //
             // Tests with parameterType != null
-            Assert.That(() => { new ClassExceptionCtorTestAccessor(43); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor(43); },
                 Throws.TypeOf<System.Reflection.TargetInvocationException>());
         }
 
@@ -318,21 +318,21 @@
             // InvalidOperationException instead, which would be wrong.
             //
             // Tests with parameterType != null
-            Assert.That(() => { new ClassExceptionCtorTestAccessor(false, 43); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor(false, 43); },
                 Throws.TypeOf<System.Reflection.TargetInvocationException>());
         }
 
         [Test]
         public void ConstructorWithException2()
         {
-            Assert.That(() => { new ClassExceptionCtorTestAccessor2(); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor2(); },
                 Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
         public void ConstructorWithExceptionsParamTypes2()
         {
-            Assert.That(() => { new ClassExceptionCtorTestAccessor2(42); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor2(42); },
                 Throws.TypeOf<NotSupportedException>());
         }
 
@@ -344,21 +344,21 @@
             // InvalidOperationException instead, which would be wrong.
             //
             // Tests with parameterType != null
-            Assert.That(() => { new ClassExceptionCtorTestAccessor2(43); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor2(43); },
                 Throws.TypeOf<System.Reflection.TargetInvocationException>());
         }
 
         [Test]
         public void ConstructorWithExceptionGeneric()
         {
-            Assert.That(() => { new ClassExceptionCtorTestAccessor<object>(); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor<object>(); },
                 Throws.TypeOf<InvalidOperationException>());
         }
 
         [Test]
         public void ConstructorWithExceptionGenericParamTypes()
         {
-            Assert.That(() => { new ClassExceptionCtorTestAccessor<string>("foo", 42); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor<string>("foo", 42); },
                 Throws.TypeOf<NotSupportedException>());
         }
 
@@ -370,7 +370,7 @@
             // InvalidOperationException instead, which would be wrong.
             //
             // Tests with parameterType != null
-            Assert.That(() => { new ClassExceptionCtorTestAccessor<string>("foo", 43); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor<string>("foo", 43); },
                 Throws.TypeOf<System.Reflection.TargetInvocationException>());
         }
 
@@ -382,7 +382,7 @@
             // InvalidOperationException instead, which would be wrong.
             //
             // Tests with parameterType != null
-            Assert.That(() => { new ClassExceptionCtorTestAccessor2(false, 43); },
+            Assert.That(() => { _ = new ClassExceptionCtorTestAccessor2(false, 43); },
                 Throws.TypeOf<System.Reflection.TargetInvocationException>());
         }
 

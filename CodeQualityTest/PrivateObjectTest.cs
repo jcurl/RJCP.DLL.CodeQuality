@@ -16,7 +16,7 @@
         {
             object obj = null;
             Assert.That(() => {
-                new PrivateObject(obj);
+                _ = new PrivateObject(obj);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -32,7 +32,7 @@
             object obj = null;
 
             Assert.That(() => {
-                new PrivateObject(obj, "test");
+                _ = new PrivateObject(obj, "test");
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -43,7 +43,7 @@
             string member = null;
 
             Assert.That(() => {
-                new PrivateObject(obj, member);
+                _ = new PrivateObject(obj, member);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -51,7 +51,7 @@
         public void PrivateObject_MemberToAccess_EmptyMember()
         {
             Assert.That(() => {
-                new PrivateObject(new object(), string.Empty);
+                _ = new PrivateObject(new object(), string.Empty);
             }, Throws.TypeOf<ArgumentException>());
         }
 
@@ -91,7 +91,7 @@
         public void PrivateObject_NullType()
         {
             Assert.That(() => {
-                new PrivateObject(null, new object[] { });
+                _ = new PrivateObject(null, new object[] { });
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -102,7 +102,7 @@
             Type type = null;
 
             Assert.That(() => {
-                new PrivateObject(obj, new PrivateType(type));
+                _ = new PrivateObject(obj, new PrivateType(type));
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -118,35 +118,35 @@
         [Test]
         public void NullAssemblyName()
         {
-            Assert.That(() => { new PrivateObject(null, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
+            Assert.That(() => { _ = new PrivateObject(null, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void EmptyAssemblyName()
         {
-            Assert.That(() => { new PrivateObject(string.Empty, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
+            Assert.That(() => { _ = new PrivateObject(string.Empty, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void NullClassName()
         {
-            Assert.That(() => { new PrivateObject("RJCP.CodeQualityTest", null, new object[0]); },
+            Assert.That(() => { _ = new PrivateObject("RJCP.CodeQualityTest", null, new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void EmptyClassName()
         {
-            Assert.That(() => { new PrivateObject("RJCP.CodeQualityTest", string.Empty, new object[0]); },
+            Assert.That(() => { _ = new PrivateObject("RJCP.CodeQualityTest", string.Empty, new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void NullTypeWithArgs()
         {
-            Assert.That(() => { new PrivateObject(null, 0, 1); },
+            Assert.That(() => { _ = new PrivateObject(null, 0, 1); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -182,7 +182,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                new PrivateObject(null, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args);
+                _ = new PrivateObject(null, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -193,7 +193,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                new PrivateObject("RJCP.CodeQualityTest", null, parameterTypes, args);
+                _ = new PrivateObject("RJCP.CodeQualityTest", null, parameterTypes, args);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -204,7 +204,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args);
+                _ = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args);
             }, Throws.TypeOf<ArgumentException>());
         }
 
@@ -215,7 +215,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                new PrivateObject(typeof(ObjectClassTest), parameterTypes, args);
+                _ = new PrivateObject(typeof(ObjectClassTest), parameterTypes, args);
             }, Throws.TypeOf<ArgumentException>());
         }
 
@@ -226,7 +226,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                new PrivateObject(null, parameterTypes, args);
+                _ = new PrivateObject(null, parameterTypes, args);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -498,7 +498,9 @@
         public void DifferentTypeAndArgCount()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
-            Assert.That(() => { new PrivateObject("RJCP.CodeQualityTest", genericType.GetGenericTypeDefinition().FullName, new[] { typeof(object), typeof(string) }, 9, "abc", 100); },
+            Assert.That(() => { 
+                _ = new PrivateObject("RJCP.CodeQualityTest", genericType.GetGenericTypeDefinition().FullName,
+                    new[] { typeof(object), typeof(string) }, 9, "abc", 100); },
                 Throws.TypeOf<ArgumentException>());
         }
 
@@ -506,7 +508,7 @@
         public void InvalidTypeName()
         {
             Assert.That(() => {
-                new PrivateObject("RJCP.CodeQualityTest", "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
+                _ = new PrivateObject("RJCP.CodeQualityTest", "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -515,7 +517,7 @@
         {
             object obj = new object();
             Assert.That(() => {
-                new PrivateObject(obj, new PrivateType(null));
+                _ = new PrivateObject(obj, new PrivateType(null));
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -525,7 +527,7 @@
             object obj = null;
             Type t = typeof(int);
             Assert.That(() => {
-                new PrivateObject(obj, new PrivateType(t));
+                _ = new PrivateObject(obj, new PrivateType(t));
             }, Throws.Nothing);
         }
     }
