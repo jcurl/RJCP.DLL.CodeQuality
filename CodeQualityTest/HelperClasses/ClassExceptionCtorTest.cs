@@ -31,7 +31,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Test case uses reflection")]
     internal class ClassExceptionCtorTest<T>
     {
         public ClassExceptionCtorTest()
