@@ -6,6 +6,7 @@
     /// List of options that can be given to the <see cref="ScratchPad"/> class.
     /// </summary>
     [Flags]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1069:Enums values should not be duplicated", Justification = "Duplicate meanings make code readable")]
     public enum ScratchOptions
     {
         /// <summary>
