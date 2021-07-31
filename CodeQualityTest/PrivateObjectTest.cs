@@ -498,9 +498,10 @@
         public void DifferentTypeAndArgCount()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
-            Assert.That(() => { 
+            Assert.That(() => {
                 _ = new PrivateObject("RJCP.CodeQualityTest", genericType.GetGenericTypeDefinition().FullName,
-                    new[] { typeof(object), typeof(string) }, 9, "abc", 100); },
+                    new[] { typeof(object), typeof(string) }, 9, "abc", 100);
+            },
                 Throws.TypeOf<ArgumentException>());
         }
 
