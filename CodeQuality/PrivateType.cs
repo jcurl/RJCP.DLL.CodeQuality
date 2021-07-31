@@ -61,8 +61,8 @@ namespace RJCP.CodeQuality
         /// </remarks>
         public PrivateType(string assemblyName, string typeName)
         {
-            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException(nameof(assemblyName));
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
             m_ObjectType = Assembly.Load(assemblyName).GetType(typeName, true);
         }
@@ -109,8 +109,8 @@ namespace RJCP.CodeQuality
         /// </remarks>
         public PrivateType(string assemblyName, string typeName, Type[] typeArguments)
         {
-            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException(nameof(assemblyName));
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
             Type type = Assembly.Load(assemblyName).GetType(typeName, true);
             if (type == null) throw new ArgumentNullException(nameof(typeName));
@@ -136,7 +136,7 @@ namespace RJCP.CodeQuality
         /// </exception>
         public PrivateType GetNestedType(string typeName)
         {
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
             Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding);
             if (nestedType == null) throw new ArgumentException("Type not found", nameof(typeName));
@@ -169,7 +169,7 @@ namespace RJCP.CodeQuality
         /// Derived classes must provide an implementation.</exception>
         public PrivateType GetNestedType(string typeName, Type[] typeArguments)
         {
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException(nameof(typeName));
+            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
             Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding);
             if (nestedType == null) throw new ArgumentException("Type not found", nameof(typeName));
