@@ -104,7 +104,7 @@
             }
         }
 
-        private PrivateObject GetCurrentContext(Assembly nUnitAssembly)
+        private static PrivateObject GetCurrentContext(Assembly nUnitAssembly)
         {
             PrivateType testContextType = new PrivateType(nUnitAssembly.GetType("NUnit.Framework.TestContext"));
             object currentContext = AccessorBase.GetStaticFieldOrProperty(testContextType, "CurrentContext");

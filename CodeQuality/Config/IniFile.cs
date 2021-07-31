@@ -114,7 +114,7 @@
             }
         }
 
-        private bool GetSectionHeader(string line, out string header)
+        private static bool GetSectionHeader(string line, out string header)
         {
             if (line.Length < 2) {
                 header = null;
@@ -134,14 +134,14 @@
             return false;
         }
 
-        private bool IsBlankLine(string line)
+        private static bool IsBlankLine(string line)
         {
             if (string.IsNullOrEmpty(line)) return true;
             if (line[0] == ';') return true;
             return false;
         }
 
-        private bool GetKeyValuePair(string line, out string key, out string value)
+        private static bool GetKeyValuePair(string line, out string key, out string value)
         {
             key = string.Empty;    // Must set this, the compiler can't figure out it's guaranteed to be set prior to returning.
 

@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0056:Use index operator", Justification = ".NET Core only feature")]
 [assembly: SuppressMessage("Style", "IDE0057:Use range operator", Justification = ".NET Core only feature")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Test Methods used for reflection")]

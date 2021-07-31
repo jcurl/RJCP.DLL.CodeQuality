@@ -217,7 +217,7 @@
 
         private string m_OriginalCurrentDir;
 
-        private void CreateScratchPad(string dirName, ScratchOptions options)
+        private static void CreateScratchPad(string dirName, ScratchOptions options)
         {
             ScratchOptions chdirOptions = options & ScratchChDirMask;
             ScratchOptions mkdirOptions = options & ScratchMkDirMask;
@@ -245,7 +245,7 @@
             }
         }
 
-        private void SetScratchPadDir(string dirName, ScratchOptions chdirOptions)
+        private static void SetScratchPadDir(string dirName, ScratchOptions chdirOptions)
         {
             switch (chdirOptions) {
             case ScratchOptions.UseScratchDir:
