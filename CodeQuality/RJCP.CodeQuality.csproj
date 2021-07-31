@@ -1,41 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}</ProjectGuid>
+    <TargetFrameworks>net40;netstandard2.1</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RJCP.CodeQuality</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
     <AssemblyName>RJCP.CodeQuality</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <AssemblyTitle>RJCP.CodeQuality</AssemblyTitle>
+    <Product>RJCP.CodeQuality</Product>
+    <RootNamespace>RJCP.CodeQuality</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2016-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <PackageId>RJCP.CodeQuality</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/jcurl/CodeQuality</PackageProjectUrl>
+    
+    <Description>Common functions to augment unit and integration testing, with some focus on the NUnit Test Framework.</Description>
+    <Version>0.6.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\RJCP.CodeQuality.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <!-- For loading the app.config file, as in .NET 4.x -->
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="AccessorBase.cs" />
     <Compile Include="AppConfig\Deploy.cs" />
@@ -45,29 +65,21 @@
     <Compile Include="Config\IniSection.cs" />
     <Compile Include="DelegateTarget.cs" />
     <Compile Include="DelegateTargets.cs" />
-    <Compile Include="NUnitExtensions\Deploy.cs" />
     <Compile Include="GenericMethodCache.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="NUnitExtensions\Deploy.cs" />
+    <Compile Include="NUnitExtensions\ScratchOptions.cs" />
+    <Compile Include="NUnitExtensions\ScratchPad.cs" />
+    <Compile Include="NUnitExtensions\TestAccessor.cs" />
+    <Compile Include="NUnitExtensions\TestContextAccessor.cs" />
+    <Compile Include="OSInfo\Platform.cs" />
     <Compile Include="PrivateObject.cs" />
     <Compile Include="PrivateType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="RuntimeTypeHelper.cs" />
-    <Compile Include="OSInfo\Platform.cs" />
-    <Compile Include="NUnitExtensions\ScratchOptions.cs" />
-    <Compile Include="NUnitExtensions\ScratchPad.cs" />
-    <Compile Include="NUnitExtensions\TestAccessor.cs" />
-    <Compile Include="NUnitExtensions\TestContextAccessor.cs" />
+    <None Include="maml\AccessorBase.xml" />
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="maml\AccessorBase.xml" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

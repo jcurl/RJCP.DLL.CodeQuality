@@ -1,53 +1,64 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\packages\NUnitTestAdapter.2.3.0\build\NUnitTestAdapter.props" Condition="Exists('$(SolutionDir)\packages\NUnitTestAdapter.2.3.0\build\NUnitTestAdapter.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{948DE275-A5ED-468A-A39B-B4BFDE7E0697}</ProjectGuid>
+    <TargetFrameworks>net40;netcoreapp3.1</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RJCP.CodeQuality</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+
     <AssemblyName>RJCP.CodeQualityTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <AssemblyTitle>RJCP.CodeQualityTest</AssemblyTitle>
+    <Product>RJCP.CodeQuality</Product>
+    <RootNamespace>RJCP.CodeQuality</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2016-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <Description>NUnit Test Harness for RJCP.CodeQuality.</Description>
+    <Version>1.0.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MSTEST;VS2012</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)\packages\NUnit.2.7.1\lib\nunit.framework.dll</HintPath>
-    </Reference>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.1.0" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <ProjectReference Include="..\CodeQuality\RJCP.CodeQuality.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="AccessorTest.cs" />
     <Compile Include="Config\IniFileTest.cs" />
     <Compile Include="Config\IniSectionTest.cs" />
-    <Compile Include="NUnitExtensions\DeployProperties.cs" />
     <Compile Include="GenericPrivateObjectTest.cs" />
     <Compile Include="GenericPrivateTypeTest.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTest.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor2.cs" />
@@ -71,6 +82,7 @@
     <Compile Include="HelperClasses\NestedStaticTypesAccessor.cs" />
     <Compile Include="HelperClasses\ObjectClassTest.cs" />
     <Compile Include="HelperClasses\ObjectGenericClassTest.cs" />
+    <Compile Include="HelperClasses\PublicClassTest.cs" />
     <Compile Include="HelperClasses\RelatedClassTest.cs" />
     <Compile Include="HelperClasses\RelatedClassTestAccessor.cs" />
     <Compile Include="HelperClasses\RelatedCollectionClass.cs" />
@@ -78,35 +90,26 @@
     <Compile Include="HelperClasses\StaticClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
     <Compile Include="NestedPrivateTypeTest.cs" />
+    <Compile Include="NUnitExtensions\DeployBackPathTest.cs" />
+    <Compile Include="NUnitExtensions\DeployForwardPathTest.cs" />
+    <Compile Include="NUnitExtensions\DeployProperties.cs" />
     <Compile Include="NUnitExtensions\ScratchPad2ndTest.cs" />
     <Compile Include="NUnitExtensions\ScratchPadTest.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HelperClasses\PublicClassTest.cs" />
-    <Compile Include="NUnitExtensions\DeployForwardPathTest.cs" />
-    <Compile Include="NUnitExtensions\DeployBackPathTest.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
-    <None Include="Resources\Config\TestEmptySection.ini">
+    <Content Include="Resources\Config\TestEmptySection.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Config\Test.ini">
+    </Content>
+    <Content Include="Resources\Config\Test.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\Config\TestDuplicate.ini">
+    </Content>
+    <Content Include="Resources\Config\TestDuplicate.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeQuality\RJCP.CodeQuality.csproj">
-      <Project>{A4D356F2-15AC-4FFE-B0C4-1D3D0973A124}</Project>
-      <Name>RJCP.CodeQuality</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    </Content>
     <Content Include="Resources\test1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -114,24 +117,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="$(SolutionDir)\packages\NUnit.Analyzers.0.6.0\analyzers\dotnet\cs\nunit.analyzers.dll" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\packages\NUnitTestAdapter.2.3.0\build\NUnitTestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\NUnitTestAdapter.2.3.0\build\NUnitTestAdapter.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

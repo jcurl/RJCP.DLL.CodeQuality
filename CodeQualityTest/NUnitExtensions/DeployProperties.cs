@@ -14,6 +14,11 @@
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             string testDirectory = TestContext.CurrentContext.TestDirectory;
 
+            Console.WriteLine("NUnit Work Directory: {0}", workDirectory);
+            Console.WriteLine("NUnit Test Directory: {0}", testDirectory);
+            Console.WriteLine("NUnitExtensions Work Directory: {0}", Deploy.WorkDirectory);
+            Console.WriteLine("NUnitExtensions Test Directory: {0}", Deploy.TestDirectory);
+
             Assert.That(Deploy.TestDirectory, Is.EqualTo(testDirectory));
 
             if (testDirectory.Equals(workDirectory)) {
@@ -25,11 +30,6 @@
                 // the directory.
                 Assert.That(Deploy.WorkDirectory, Is.EqualTo(workDirectory));
             }
-
-            Console.WriteLine("NUnit Work Directory: {0}", workDirectory);
-            Console.WriteLine("NUnit Test Directory: {0}", testDirectory);
-            Console.WriteLine("NUnitExtensions Work Directory: {0}", Deploy.WorkDirectory);
-            Console.WriteLine("NUnitExtensions Test Directory: {0}", Deploy.TestDirectory);
         }
 
         [Test]

@@ -1,8 +1,5 @@
 ﻿namespace RJCP.CodeQuality.HelperClasses
 {
-    using System;
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Accessor class variable 'AccType' is OK")]
     public static class NestedStaticTypesAccessor
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -21,7 +18,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Accessor class variable 'AccType' is OK")]
     public class NestedTypes1Accessor : AccessorBase
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";

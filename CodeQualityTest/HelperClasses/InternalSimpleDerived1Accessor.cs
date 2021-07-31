@@ -6,9 +6,10 @@
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.InternalSimpleDerived1";
 
         public InternalSimpleDerived1Accessor(int value, string description)
-            : base(AssemblyName, TypeName, new[] {typeof(int), typeof(string)}, new object[] { value, description }) { }
+            : base(AssemblyName, TypeName, new[] { typeof(int), typeof(string) }, new object[] { value, description }) { }
 
-        public string Description {
+        public string Description
+        {
             get { return (string)GetFieldOrProperty(nameof(Description)); }
             set { SetFieldOrProperty(nameof(Description), value); }
         }

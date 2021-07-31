@@ -378,8 +378,6 @@
         /// There is a configuration error in the applications configuration file. Check the description provided in the
         /// <see cref="System.Configuration.ConfigurationErrorsException"/> on exactly what went wrong.
         /// </exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Bug", "S2583:Conditionally executed blocks should be reachable",
-            Justification = "False positive for variable 'created'")]
         public static void CreateDirectory(string directory)
         {
             string fullPath = GetFullPath(directory, WorkDirectoryAbsolute);
@@ -490,8 +488,6 @@
             throw new IOException(message);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Bug", "S2583:Conditionally executed blocks should be reachable",
-            Justification = "False positive for variable 'copyFinished'")]
         private static void CopyFile(string source, string destination)
         {
             if (!File.Exists(source)) {

@@ -8,7 +8,7 @@
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.GenericStack`1";
 
         public GenericStackAccessor()
-            : base(AssemblyName, TypeName, new Type[] { }, new object[] { }, new Type[] {typeof(T)}) { }
+            : base(AssemblyName, TypeName, new Type[] { }, new object[] { }, new Type[] { typeof(T) }) { }
 
         public void Push(T item)
         {

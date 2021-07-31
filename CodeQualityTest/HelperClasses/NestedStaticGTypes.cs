@@ -2,8 +2,6 @@
 {
     using System;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Test case uses reflection")]
     internal class NestedStaticGTypes1
     {
         internal class NestedStaticGType<T>
@@ -15,8 +13,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Test case uses reflection")]
     internal class NestedStaticGTypes2<T>
     {
         internal class NestedStaticGType
@@ -28,8 +24,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Test case uses reflection")]
     internal class NestedStaticGTypes3
     {
         internal class NestedStaticGType
@@ -41,8 +35,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Test case uses reflection")]
     internal class NestedStaticGTypes4<T>
     {
         internal class NestedStaticGType<U>
@@ -55,8 +47,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Test case uses reflection")]
     internal class NestedStaticGTypes5<T>
     {
         internal class NestedStaticGType<U>
@@ -69,7 +59,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Test case uses reflection")]
     internal static class NestedStaticGTypes6<T>
     {
         internal static class NestedStaticGType<U>

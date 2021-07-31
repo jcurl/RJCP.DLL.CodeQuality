@@ -6,7 +6,8 @@
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.StaticClassTest";
         private static readonly PrivateType m_Type = new PrivateType(AssemblyName, TypeName);
 
-        public static int Property {
+        public static int Property
+        {
             get { return (int)AccessorBase.GetStaticFieldOrProperty(m_Type, nameof(Property)); }
             set { AccessorBase.SetStaticFieldOrProperty(m_Type, nameof(Property), value); }
         }

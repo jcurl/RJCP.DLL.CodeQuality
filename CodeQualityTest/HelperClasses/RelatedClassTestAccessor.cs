@@ -21,7 +21,7 @@
         }
     }
 
-    public class RelatedClassTestFactoryAccessor: AccessorBase
+    public class RelatedClassTestFactoryAccessor : AccessorBase
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedClassTestFactory";

@@ -216,7 +216,7 @@
         internal static MethodBase FindMostDerivedNewSlotMeth(MethodBase[] match, int cMatches)
         {
             int num = 0;
-            MethodBase methodBase = (MethodBase)null;
+            MethodBase methodBase = null;
             for (int index = 0; index < cMatches; ++index) {
                 int hierarchyDepth = RuntimeTypeHelper.GetHierarchyDepth(match[index].DeclaringType);
                 if (hierarchyDepth == num) {

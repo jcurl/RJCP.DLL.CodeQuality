@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+
+    <AssemblyName>RJCP.CodeQualityTest.NUnit2</AssemblyName>
+    <AssemblyTitle>RJCP.CodeQualityTest.NUnit2</AssemblyTitle>
+    <Product>RJCP.CodeQuality</Product>
+    <RootNamespace>RJCP.CodeQuality</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2016-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <Description>NUnit Test Harness for RJCP.CodeQuality using NUnit 2.x.</Description>
+    <Version>1.0.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="NUnit" Version="2.7.1" />
+    <PackageReference Include="NUnitTestAdapter" Version="2.3.0" />
+    <ProjectReference Include="..\CodeQuality\RJCP.CodeQuality.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployBackPathTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployForwardPathTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployProperties.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\ScratchPad2ndTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\ScratchPadTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="Resources\Config\TestEmptySection.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Config\Test.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Config\TestDuplicate.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\test1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\test2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

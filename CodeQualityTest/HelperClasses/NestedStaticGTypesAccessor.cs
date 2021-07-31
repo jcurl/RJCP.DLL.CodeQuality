@@ -2,8 +2,6 @@
 {
     using System;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes1Accessor
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -22,8 +20,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes2Accessor<T>
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -42,8 +38,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes3Accessor
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -57,13 +51,11 @@
 
             public static string Name<T>()
             {
-                return (string)AccessorBase.InvokeStatic(AccType, nameof(Name), new Type[] { }, new object[] { }, new Type[] { typeof(T) } );
+                return (string)AccessorBase.InvokeStatic(AccType, nameof(Name), new Type[] { }, new object[] { }, new Type[] { typeof(T) });
             }
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes4Accessor<T>
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -82,8 +74,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S1118:Utility classes should not have public constructors", Justification = "Access to match original class being accessed")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedStaticGTypes5Accessor<T>
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -103,7 +93,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public static class NestedStaticGTypes6Accessor<T>
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -123,7 +112,6 @@
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3218:Inner class members should not shadow outer class \"static\" or type members", Justification = "Not an issue for an accessor")]
     public class NestedGTypes1Accessor<T> : AccessorBase
     {
         private const string AssemblyName = "RJCP.CodeQualityTest";
@@ -133,7 +121,8 @@
         public NestedGTypes1Accessor(T initialValue)
             : base(AccType, new Type[] { typeof(T) }, new object[] { initialValue }) { }
 
-        public string Value() {
+        public string Value()
+        {
             return (string)Invoke(nameof(Value));
         }
 
@@ -145,7 +134,8 @@
             public NestedGTypeAccessor(U initialValue)
                 : base(AccType, new Type[] { typeof(U) }, new object[] { initialValue }) { }
 
-            public string ValueNested() {
+            public string ValueNested()
+            {
                 return (string)Invoke(nameof(ValueNested));
             }
         }

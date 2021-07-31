@@ -306,7 +306,7 @@
         /// <returns>The value stored in the file.</returns>
         public static int GetKey(string fileName, string section, string key, int defaultValue)
         {
-            string value = GetKey(fileName, section, key, (string)null);
+            string value = GetKey(fileName, section, key, null);
             if (value == null) return defaultValue;
 
             if (!int.TryParse(value, System.Globalization.NumberStyles.Any,
@@ -335,7 +335,7 @@
         /// <returns>The value stored in the file.</returns>
         public static int GetKey(string fileName, string section, string key, int defaultValue, System.Globalization.NumberStyles style, IFormatProvider provider)
         {
-            string value = GetKey(fileName, section, key, (string)null);
+            string value = GetKey(fileName, section, key, null);
             if (value == null) return defaultValue;
 
             if (!int.TryParse(value, style, provider, out int result))
@@ -356,7 +356,7 @@
         /// <returns>The value stored in the file.</returns>
         public static long GetKey(string fileName, string section, string key, long defaultValue)
         {
-            string value = GetKey(fileName, section, key, (string)null);
+            string value = GetKey(fileName, section, key, null);
             if (value == null) return defaultValue;
 
             if (!long.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out long result)) return defaultValue;
@@ -383,7 +383,7 @@
         /// <returns>The value stored in the file.</returns>
         public static long GetKey(string fileName, string section, string key, long defaultValue, System.Globalization.NumberStyles style, IFormatProvider provider)
         {
-            string value = GetKey(fileName, section, key, (string)null);
+            string value = GetKey(fileName, section, key, null);
             if (value == null) return defaultValue;
 
             if (!long.TryParse(value, style, provider, out long result)) return defaultValue;
@@ -403,7 +403,7 @@
         /// <returns>The value stored in the file.</returns>
         public static bool GetKey(string fileName, string section, string key, bool defaultValue)
         {
-            string value = GetKey(fileName, section, key, (string)null);
+            string value = GetKey(fileName, section, key, null);
             if (value == null) return defaultValue;
 
             if (!bool.TryParse(value, out bool result)) return defaultValue;

@@ -315,7 +315,7 @@
         // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private object InvokeHelper(string name, BindingFlags bindingFlags, object[] args)
         {
-            return m_ObjectType.InvokeMember(name, bindingFlags, (Binder)null, m_Instance, args, CultureInfo.InvariantCulture);
+            return m_ObjectType.InvokeMember(name, bindingFlags, null, m_Instance, args, CultureInfo.InvariantCulture);
         }
 
         #region Invoke

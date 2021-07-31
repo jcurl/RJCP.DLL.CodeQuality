@@ -1,7 +1,5 @@
 ﻿namespace RJCP.CodeQuality.HelperClasses
 {
-    using System;
-
     internal class InternalSimpleDerived1 : InternalSimpleBase1
     {
         public InternalSimpleDerived1(int value, string description) : base(value)

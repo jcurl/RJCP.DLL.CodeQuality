@@ -887,7 +887,7 @@
             };
 
             HashSet<string> foundKeys = new HashSet<string>();
-            foreach (KeyValuePair<string, string> item in (IDictionary<string, string>)section) {
+            foreach (KeyValuePair<string, string> item in section) {
                 foundKeys.Add(item.Key);
             }
 
