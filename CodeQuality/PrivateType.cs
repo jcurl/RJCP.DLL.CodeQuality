@@ -13,7 +13,7 @@ namespace RJCP.CodeQuality
     /// </remarks>
     public class PrivateType
     {
-        private Type m_ObjectType;
+        private readonly Type m_ObjectType;
 
         private const BindingFlags MemberDefaultBinding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 

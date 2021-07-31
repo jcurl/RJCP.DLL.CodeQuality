@@ -384,7 +384,7 @@
         /// <param name="args">The <see cref="EventArgs"/> arguments.</param>
         public delegate void AccessorEventHandler(object sender, object args);
 
-        private DelegateTargets m_EventTargets = new DelegateTargets();
+        private readonly DelegateTargets m_EventTargets = new DelegateTargets();
 
         /// <summary>
         /// Adds the event handler to the event specified by name.

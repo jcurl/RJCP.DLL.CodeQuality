@@ -66,6 +66,7 @@
     <Compile Include="DelegateTarget.cs" />
     <Compile Include="DelegateTargets.cs" />
     <Compile Include="GenericMethodCache.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="NUnitExtensions\Deploy.cs" />
     <Compile Include="NUnitExtensions\ScratchOptions.cs" />
     <Compile Include="NUnitExtensions\ScratchPad.cs" />

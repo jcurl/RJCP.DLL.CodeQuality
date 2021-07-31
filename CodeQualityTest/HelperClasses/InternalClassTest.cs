@@ -14,6 +14,7 @@
             MyStaticProperty = 111;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Set via reflection, .NET Core test case would fail")]
 #pragma warning disable CS0414  // Assigned a value never used (obtained via reflection)
         private static string s_MyStatic = "static";
 #pragma warning restore CS0414

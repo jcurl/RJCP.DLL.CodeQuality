@@ -73,7 +73,7 @@
 
     internal class NestedGTypes1<T>
     {
-        private T m_Value;
+        private readonly T m_Value;
 
         public NestedGTypes1(T initialValue)
         {
@@ -84,7 +84,7 @@
 
         internal class NestedGType<U>
         {
-            private U m_Value;
+            private readonly U m_Value;
 
             public NestedGType(U initialValue)
             {

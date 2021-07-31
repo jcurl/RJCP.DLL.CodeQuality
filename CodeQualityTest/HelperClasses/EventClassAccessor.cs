@@ -17,7 +17,7 @@
             }
         }
 
-        private Accessor m_Accessor;
+        private readonly Accessor m_Accessor;
 
         public MyPrivateEventArgsAccessor(PrivateObject obj)
         {

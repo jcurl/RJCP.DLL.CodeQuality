@@ -5,7 +5,7 @@
 
     internal class DelegateTargets
     {
-        private Dictionary<string, Dictionary<Delegate, DelegateTarget>> m_Events =
+        private readonly Dictionary<string, Dictionary<Delegate, DelegateTarget>> m_Events =
             new Dictionary<string, Dictionary<Delegate, DelegateTarget>>();
 
         /// <summary>

@@ -6,7 +6,7 @@
 
     internal class GenericMethodCache
     {
-        private Type m_ObjectType;
+        private readonly Type m_ObjectType;
 
         public GenericMethodCache(Type type)
         {

@@ -13,7 +13,7 @@
         }
 
 #pragma warning disable CS0414  // Assigned a value never used (obtained via reflection)
-        private static string s_MyStatic = "static";
+        private readonly static string s_MyStatic = "static";
 #pragma warning restore CS0414
 
         private static int MyStaticProperty { get; set; }

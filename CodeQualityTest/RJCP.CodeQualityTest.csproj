@@ -59,6 +59,7 @@
     <Compile Include="Config\IniSectionTest.cs" />
     <Compile Include="GenericPrivateObjectTest.cs" />
     <Compile Include="GenericPrivateTypeTest.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTest.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor.cs" />
     <Compile Include="HelperClasses\ClassExceptionCtorTestAccessor2.cs" />

@@ -28,7 +28,7 @@
 
         protected void AddItem()
         {
-            m_List.Add(default(T));
+            m_List.Add(default);
         }
 
         public event EventHandler<EventArgs> ItemAddedEvent;

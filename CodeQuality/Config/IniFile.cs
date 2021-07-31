@@ -187,7 +187,7 @@
             return true;
         }
 
-        private static Dictionary<string, IniFile> m_Files = new Dictionary<string, IniFile>();
+        private readonly static Dictionary<string, IniFile> m_Files = new Dictionary<string, IniFile>();
 
         private static string GetFullFileName(string fileName)
         {
