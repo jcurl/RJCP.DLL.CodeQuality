@@ -60,9 +60,9 @@ namespace RJCP.CodeQuality.NUnitExtensions.Trace
 
             string timeStamp;
             if (m_LogStart.HasValue) {
-                timeStamp = string.Format("{0}s", (DateTimeOffset.UtcNow - m_LogStart.Value).TotalSeconds.ToString("N3", CultureInfo.InvariantCulture));
+                timeStamp = string.Format("{0}s", (DateTimeOffset.UtcNow - m_LogStart.Value).TotalSeconds.ToString("###.000", CultureInfo.InvariantCulture));
             } else {
-                timeStamp = DateTimeOffset.UtcNow.ToString("s", CultureInfo.InvariantCulture);
+                timeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
             }
 
             string linePrefix = $"[{timeStamp}] {m_Category} {logLevel}: ";

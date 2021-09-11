@@ -97,6 +97,7 @@
     <Compile Include="NUnitExtensions\ScratchPad2ndTest.cs" />
     <Compile Include="NUnitExtensions\ScratchPadTest.cs" />
     <None Include="NUnitExtensions\Trace\NUnitLoggerTest.cs" />
+    <Compile Include="NUnitExtensions\Trace\NUnitTraceListenerTest.cs" />
     <Compile Include="PrivateObjectTest.cs" />
     <Compile Include="PrivateTypeTest.cs" />
   </ItemGroup>
