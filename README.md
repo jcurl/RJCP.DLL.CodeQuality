@@ -13,45 +13,58 @@ There is no direct reference from `CodeQuality.NUnitExtensions` to the
 `NUnit.Framework` itself, so it will use the version of the library you choose
 for your project.
 
-* 1.0 NUnit Extensions File Based Testing
-  * 1.1 The Test Directory and Work Directory
-    * 1.1.1 The TestDirectory
-    * 1.1.2 The WorkDirectory
-  * 1.2 Deployment for Integration Tests
-    * 1.2.1 Deploying Files for Reading Only
-    * 1.2.2 Deploy Files for Modification and Writing
-    * 1.2.3 Creating a New File
-    * 1.2.4 The Current Directory
-      * 1.2.4.1 The Current Directory for NUnit 2.7.1
-      * 1.2.4.2 The Current Directory for NUnit 3.x
-      * 1.2.4.3 Comparison between NUnit 2.7.1 and 3.x
-      * 1.2.4.4 NUnit 2.x GUI Workaround
-    * 1.2.5 Configuration of NUnitExtensions WorkDirectory
-      * 1.2.5.1 Setting a Different Work Directory to the Test Directory
-      * 1.2.5.2 Forcing a Different Work Directory
-      * 1.2.5.3 Setting the Work Directory to the Current Directory
-    * 1.2.6 Deploy Operations
-      * 1.2.6.1 Creating a New Directory
-      * 1.2.6.2 Deleting a Directory
-      * 1.2.6.3 Deleting a File
-    * 1.2.7 Deploy Context and some Internal Details
-    * 1.2.8 Tips and Check Lists in Porting NUnit 2 to NUnit 3
-      * 1.2.8.1 Use WorkDirectory as CurrentDirectory until Migration
-      * 1.2.8.2 Changes in Deploy for NUnitExtensions v0.4.0
-      * 1.2.8.3 Deploy.Item
-      * 1.2.8.4 Look for TestContext
-      * 1.2.8.5 TestDirectory should be Read Only, WorkDirectory is a RAM Disk
-      * 1.2.8.6 Change the Environment.CurrentDirectory
-  * 1.3 Differences Between .NET Framework and .NET Core
-* 2.0 Accessors
-* 3.0 INI Configuration Files
-  * 3.1 An Example of Multiple Configurations
+* 1.0 NUnit Extensions Library Compatibility
+* 2.0 NUnit Extensions File Based Testing
+  * 2.1 The Test Directory and Work Directory
+    * 2.1.1 The TestDirectory
+    * 2.1.2 The WorkDirectory
+  * 2.2 Deployment for Integration Tests
+    * 2.2.1 Deploying Files for Reading Only
+    * 2.2.2 Deploy Files for Modification and Writing
+    * 2.2.3 Creating a New File
+    * 2.2.4 The Current Directory
+      * 2.2.4.1 The Current Directory for NUnit 2.7.1
+      * 2.2.4.2 The Current Directory for NUnit 3.x
+      * 2.2.4.3 Comparison between NUnit 2.7.1 and 3.x
+      * 2.2.4.4 NUnit 2.x GUI Workaround
+    * 2.2.5 Configuration of NUnitExtensions WorkDirectory
+      * 2.2.5.1 Setting a Different Work Directory to the Test Directory
+      * 2.2.5.2 Forcing a Different Work Directory
+      * 2.2.5.3 Setting the Work Directory to the Current Directory
+    * 2.2.6 Deploy Operations
+      * 2.2.6.1 Creating a New Directory
+      * 2.2.6.2 Deleting a Directory
+      * 2.2.6.3 Deleting a File
+    * 2.2.7 Deploy Context and some Internal Details
+    * 2.2.8 Tips and Check Lists in Porting NUnit 2 to NUnit 3
+      * 2.2.8.1 Use WorkDirectory as CurrentDirectory until Migration
+      * 2.2.8.2 Changes in Deploy for NUnitExtensions v0.4.0
+      * 2.2.8.3 Deploy.Item
+      * 2.2.8.4 Look for TestContext
+      * 2.2.8.5 TestDirectory should be Read Only, WorkDirectory is a RAM Disk
+      * 2.2.8.6 Change the Environment.CurrentDirectory
+  * 2.3 Differences Between .NET Framework and .NET Core
+* 3.0 Accessors
+* 4.0 INI Configuration Files
+  * 4.1 An Example of Multiple Configurations
+* 5.0 Logging
+  * 5.1 .NET Core ILogger
+* 6.0 References
 
-## 1.0 NUnit Extensions File Based Testing
+## 1.0 NUnit Extensions Library Compatibility
 
-### 1.1 The Test Directory and Work Directory
+This library is intended to work with NUnit 2.6.x and NUnit 3.x. Even though the
+two libraries are incompatible with each other, there are many similarities that
+still make NUnitExtensions work.
 
-#### 1.1.1 The TestDirectory
+There is no compile time dependency from this library to NUnit. The dependencies
+are resolved at run time.
+
+## 2.0 NUnit Extensions File Based Testing
+
+### 2.1 The Test Directory and Work Directory
+
+#### 2.1.1 The TestDirectory
 
 NUnit has a `TestContext.CurrentContext.TestDirectory`. This is the location
 where the assembly being tested is stored.
@@ -61,7 +74,7 @@ which is similar. When determining the directory of the assembly being tested,
 use `Deploy.TestDirectory` instead. It's use will be apparent in conjunction
 with the `Deploy.WorkDirectory`.
 
-#### 1.1.2 The WorkDirectory
+#### 2.1.2 The WorkDirectory
 
 NUnit has a `TestContext.CurrentContext.WorkDirectory`. This is usually set by
 the runner. For example, NUnit 3.x Console Runner has the option `--work` that
@@ -73,7 +86,7 @@ may be different to the `CurrentContext.WorkDirectory` by `NUnit.Framework`, to
 support integration tests. It is the working directory where test cases should
 write to.
 
-### 1.2 Deployment for Integration Tests
+### 2.2 Deployment for Integration Tests
 
 Many test cases may need to test functions that read and write files. In your
 test assembly, you would include a file in to the project and specify it as:
@@ -88,7 +101,7 @@ files form inputs to your integration test cases.
 There are two scenarios where you would want to work on these files: to read; or
 to modify and write (including writing new files based on the inputs).
 
-#### 1.2.1 Deploying Files for Reading Only
+#### 2.2.1 Deploying Files for Reading Only
 
 When you want to test a function that only reads a file, there is no need to
 deploy it and copy it a second time. Just read it in place. Assuming that a file
@@ -105,7 +118,7 @@ public void MyTestFunction()
 }
 ```
 
-#### 1.2.2 Deploy Files for Modification and Writing
+#### 2.2.2 Deploy Files for Modification and Writing
 
 Some times it is necessary to test a function that reads a file, where it might
 modify it, or might create new files relative to the path of the original file
@@ -148,7 +161,7 @@ public void MyWriteTest()
 }
 ```
 
-#### 1.2.4 The Current Directory
+#### 2.2.4 The Current Directory
 
 Do not assume any current value for the current directory, as it changes
 depending on the test context.
@@ -181,7 +194,7 @@ namespace NUnitTest
 }
 ```
 
-##### 1.2.4.1 The Current Directory for NUnit 2.7.1
+##### 2.2.4.1 The Current Directory for NUnit 2.7.1
 
 When running in Visual Studio 2015 IDE:
 
@@ -229,7 +242,7 @@ You will also notice that the work directory is based on the directory where the
 console runner is started, except if the `/work` command line option is
 provided.
 
-##### 1.2.4.2 The Current Directory for NUnit 3.x
+##### 2.2.4.2 The Current Directory for NUnit 3.x
 
 When running in Visual Studio 2015 IDE:
 
@@ -275,7 +288,7 @@ Context Test Dir:  <mydocuments>\NUnit3Test\NUnit3Test\bin\Debug
 Context Work Dir:  <mydocuments>\NUnit3Test\packages\NUnit.ConsoleRunner.3.10.0\tools
 ```
 
-##### 1.2.4.3 Comparison between NUnit 2.7.1 and 3.x
+##### 2.2.4.3 Comparison between NUnit 2.7.1 and 3.x
 
 You will see that:
 
@@ -297,7 +310,7 @@ Thus, one can see clearly:
 * Use `Deploy.WorkDirectory` to get the path where the user wants to put results
   and temporary files.
 
-##### 1.2.4.4 NUnit 2.x GUI Workaround
+##### 2.2.4.4 NUnit 2.x GUI Workaround
 
 When starting the NUnit 2.x GUI from Windows, the
 `TestContext.CurrentContext.WorkDirectory` is set to be the current directory
@@ -330,7 +343,7 @@ An example of a useful RAM Disk driver is
 
 Or the `NUnit.exe` should be started from the command line.
 
-#### 1.2.5 Configuration of NUnitExtensions WorkDirectory
+#### 2.2.5 Configuration of NUnitExtensions WorkDirectory
 
 As seen earlier, running unit tests within the Visual Studio IDE has
 `TestDirectory` and `WorkDirectory` being the same, but when running on the
@@ -339,7 +352,7 @@ else. This may lead to a user inadvertently using `TestDirectory` as the base to
 read from a file after using `Deploy.Item`, where `WorkDirectory` is required
 instead.
 
-##### 1.2.5.1 Setting a Different Work Directory to the Test Directory
+##### 2.2.5.1 Setting a Different Work Directory to the Test Directory
 
 To capture these errors easier in the Visual Studio IDE, the NUnitExtensions
 supports a configuration:
@@ -365,7 +378,7 @@ Within the Visual Studio IDE, it could be easier detected through a
 `FileNotFoundException` if after deploying a file, it is read from the wrong
 location.
 
-##### 1.2.5.2 Forcing a Different Work Directory
+##### 2.2.5.2 Forcing a Different Work Directory
 
 In the case that you wish to enforce a different work directory always, you can
 provide the `force` attribute.
@@ -382,7 +395,7 @@ File: `app.config`
 </NUnitExtensions>
 ```
 
-##### 1.2.5.3 Setting the Work Directory to the Current Directory
+##### 2.2.5.3 Setting the Work Directory to the Current Directory
 
 In porting existing test cases written and working under NUnit 2 which rely on
 the current directory being the same as the test directory, it is possible to
@@ -402,14 +415,14 @@ File: `app.config`
 </NUnitExtensions>
 ```
 
-#### 1.2.6 Deploy Operations
+#### 2.2.6 Deploy Operations
 
-##### 1.2.6.1 Creating a New Directory
+##### 2.2.6.1 Creating a New Directory
 
 You can create a new directory relative to `Deploy.WorkDirectory` with the
 method `Deploy.CreateDirectory()`. This will create a directory for you.
 
-##### 1.2.6.2 Deleting a Directory
+##### 2.2.6.2 Deleting a Directory
 
 A test case might need to ensure that a directory doesn't exist. You can remove
 a directory relative to `Deploy.WorkDirectory` with the method
@@ -419,7 +432,7 @@ Windows, directories may not be deleted immediately if it there is a file open
 inside (such as a temporary option by a Virus Scanner or a Shell Extension), and
 so a retries are performed.
 
-##### 1.2.6.3 Deleting a File
+##### 2.2.6.3 Deleting a File
 
 It may be necessary to remove a file in a test case. You can remove a file
 relative to the `Deploy.WorkDirectory` with the method `Deploy.DeleteFile()`.
@@ -428,7 +441,7 @@ for its non-existence after deletion. On Windows, files may not be deleted
 immediately if it there is that file is open (such as a temporary option by a
 Virus Scanner or a Shell Extension), and so retries are performed.
 
-#### 1.2.7 Deploy Context and some Internal Details
+#### 2.2.7 Deploy Context and some Internal Details
 
 The `CodeQuality.NUnitExtensions` uses reflection to get the version of the
 `NUnit.Framework` which is in the class. This requires that the call stack where
@@ -457,9 +470,9 @@ better performance. Any changes to NUnit's `TestContext.CurrentContext` for
 `TestDirectory` or `WorkDirectory` after the first call to `Deploy` will likely
 not be noticed.
 
-#### 1.2.8 Tips and Check Lists in Porting NUnit 2 to NUnit 3
+#### 2.2.8 Tips and Check Lists in Porting NUnit 2 to NUnit 3
 
-##### 1.2.8.1 Use WorkDirectory as CurrentDirectory until Migration
+##### 2.2.8.1 Use WorkDirectory as CurrentDirectory until Migration
 
 For initial code when using `NUnitExtensions` v0.4.0, populate your
 configuration with:
@@ -474,7 +487,7 @@ configuration with:
 
 until you're ready to migrate.
 
-##### 1.2.8.2 Changes in Deploy for NUnitExtensions v0.4.0
+##### 2.2.8.2 Changes in Deploy for NUnitExtensions v0.4.0
 
 Do not assume the value of `Environment.CurrentDirectory` is equivalent to
 `TestContext.CurrentContext.TestDirectory`. Test cases that do this will likely
@@ -485,7 +498,7 @@ paths are from the current directory. This is no longer the case from v0.4.0 and
 later, source paths in `Deploy.Item()` are relative to `Deploy.TestDirectory`,
 and destination paths are relative to `Deploy.WorkDirectory`.
 
-##### 1.2.8.3 Deploy.Item
+##### 2.2.8.3 Deploy.Item
 
 Do a search in your code for `Deploy.Item()` and evaluate the logic that it
 doesn't depend on the current directory.
@@ -515,14 +528,14 @@ string inPath = Path.Combine(Deploy.WorkDirectory, "test2", "testConfig.xml");
 Framework.ParseFile(inPath);
 ```
 
-##### 1.2.8.4 Look for TestContext
+##### 2.2.8.4 Look for TestContext
 
 Search if your code already uses NUnit's `TestContext.CurrentContext` property,
 and change instances of `TestDirectory` and `WorkDirectory` to use the
 implementation provided by the `Deploy.TestDirectory` and
 `Deploy.WorkDirectory`.
 
-##### 1.2.8.5 TestDirectory should be Read Only, WorkDirectory is a RAM Disk
+##### 2.2.8.5 TestDirectory should be Read Only, WorkDirectory is a RAM Disk
 
 You might want run test cases where the `TestDirectory` is read only. Any
 attempt to write to the `TestDirectory` should cause your test cases to fail. As
@@ -546,7 +559,7 @@ When you run test cases, if they attempt to write to the `TestDirectory`,
 they'll generally fail with a `System.UnauthorizedException` as the file system
 is read only.
 
-##### 1.2.8.6 Change the Environment.CurrentDirectory
+##### 2.2.8.6 Change the Environment.CurrentDirectory
 
 If in doubt, modify the test case, at least temporarily, so that the current
 directory is something else (e.g. instead of it being the default value of
@@ -554,7 +567,7 @@ directory is something else (e.g. instead of it being the default value of
 cases might still read from the current directory, which would break when
 migrating to NUnit 3.
 
-### 1.3 Differences Between .NET Framework and .NET Core
+### 2.3 Differences Between .NET Framework and .NET Core
 
 The assembly supports reading the configuration file above from the test
 assemblies `app.config` file (e.g. if your assembly is called `MyTest.dll`, then
@@ -570,7 +583,7 @@ configuration for .NET Core projects, it will iterate through the call stack for
 the assemblies used and try to identify the configuration file. You should only
 have one configuration file for your test project.
 
-## 2.0 Accessors
+## 3.0 Accessors
 
 It is possible to use the `CodeQuality` library for implementing "accessors",
 which are classes to expose functionality otherwise private or internal of the
@@ -579,7 +592,7 @@ assembly being tested.
 There is a set of detailed instructions providing a cookbook on how to write
 accessors.
 
-## 3.0 INI Configuration Files
+## 4.0 INI Configuration Files
 
 The `CodeQuality` has a namespace called `Config` that has a simple
 implementation of reading configuration files based on Windows INI file format.
@@ -596,7 +609,7 @@ tests. It is much easier to deploy a new configuration file `testconfig.ini`
 than it is to clutter the application code `app.config` with all the various
 configurations.
 
-### 3.1 An Example of Multiple Configurations
+### 4.1 An Example of Multiple Configurations
 
 Let's take the example that a test assembly wishes to test a sockets
 implementation. A server is implemented which listens to a specific address
@@ -676,3 +689,74 @@ ListenPort=4082
 and thus allow the `nunit-console.exe` to run simultaneously for both assemblies
 without both test runs trying to create a listen server on the same port
 simultaneously (that would usually result in a failure).
+
+## 5.0 Logging
+
+### 5.1 .NET Core ILogger
+
+This library also provides an implementation of an `ILogger` that you can pass
+to your test cases. If you tried to use a `ConsoleLogger` from .NET Core, you'd
+find [1] that perhaps the first test case logged correctly, but subsequent
+logging was missing. The analysis of [1] also describes why it doesn't work.
+
+When you build your logger factory, use the extension method `AddNUnitLogger()`
+as in the following code sample:
+
+```csharp
+using Microsoft.Extensions.Logging;
+using RJCP.CodeQuality.NUnitExtensions.Trace;
+
+[TestFixture]
+public class NUnitLoggerTest {
+  private static ILoggerFactory s_LoggerFactory;
+  private static readonly object s_Lock = new object();
+
+  public static ILoggerFactory LoggerFactory {
+    get {
+      if (s_LoggerFactory == null) {
+        lock (s_Lock) {
+          if (s_LoggerFactory == null) {
+            s_LoggerFactory = LoggerFactory.Create(builder => {
+              builder.AddFilter("RJCP", LogLevel.Debug)
+                .AddNUnitLogger();
+            }); 
+          }
+        }
+      }
+    }
+  }
+
+  [Test]
+  public void LogSample1() {
+    ILogger logger = LoggerFactory.CreateLogger("RJCP.CodeQuality.NUnitExtensions");
+    logger.LogDebug("Debug Message");
+    logger.LogTrace("Trace Message");
+    logger.LogInformation("Info Message");
+    logger.LogWarning("Warning Message");
+    logger.LogError("Error Message");
+    logger.LogCritical("Critical Message");
+  }
+
+  [Test]
+  public void LogSample2() {
+    ILogger logger = LoggerFactory.CreateLogger("RJCP.CodeQuality.NUnitExtensions");
+    logger.LogDebug("Debug Message 2");
+    logger.LogTrace("Trace Message 2");
+    logger.LogInformation("Info Message 2");
+    logger.LogWarning("Warning Message 2");
+    logger.LogError("Error Message 2");
+    logger.LogCritical("Critical Message 2");
+  }
+}
+```
+
+If the `AddNUnitLogger` was replaced with `AddConsole`, only the first run test
+case would log, following test cases would not log. Further, depending on time,
+logging from one test case may be appended to the logging from a previous run
+test case.
+
+This implementation allows to fix this problem.
+
+## 6.0 References
+
+[1] [GitHub Issue #3919](https://github.com/nunit/nunit/issues/3919)

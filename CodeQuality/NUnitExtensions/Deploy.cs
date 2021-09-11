@@ -88,24 +88,6 @@
         private const int CopyWaitInterval = 250;
         private const int CopyWaitAttempts = 4;
 
-        private readonly static object s_TestContextLock = new object();
-        private static TestContextAccessor s_TestContextAccessor;
-
-        private static TestContextAccessor TestContext
-        {
-            get
-            {
-                if (s_TestContextAccessor == null) {
-                    lock (s_TestContextLock) {
-                        if (s_TestContextAccessor == null) {
-                            s_TestContextAccessor = TestContextAccessor.GetTestContext();
-                        }
-                    }
-                }
-                return s_TestContextAccessor;
-            }
-        }
-
         /// <summary>
         /// Gets the NUnit test directory.
         /// </summary>
@@ -124,7 +106,7 @@
         /// </exception>
         public static string TestDirectory
         {
-            get { return TestContext.TestDirectory ?? string.Empty; }
+            get { return TestContextAccessor.Instance.TestDirectory ?? string.Empty; }
         }
 
         /// <summary>
@@ -145,7 +127,7 @@
         /// </exception>
         public static string WorkDirectory
         {
-            get { return TestContext.WorkDirectory ?? string.Empty; }
+            get { return TestContextAccessor.Instance.WorkDirectory ?? string.Empty; }
         }
 
         private static string WorkDirectoryAbsolute
@@ -164,7 +146,7 @@
         /// <value>The name of the test.</value>
         public static string TestName
         {
-            get { return TestContext.TestName ?? string.Empty; }
+            get { return TestContextAccessor.Instance.TestName ?? string.Empty; }
         }
 
         /// <summary>
@@ -173,7 +155,7 @@
         /// <value>The full name of the test.</value>
         public static string TestFullName
         {
-            get { return TestContext.TestFullName ?? string.Empty; }
+            get { return TestContextAccessor.Instance.TestFullName ?? string.Empty; }
         }
 
         /// <summary>
