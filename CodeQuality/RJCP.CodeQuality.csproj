@@ -19,8 +19,8 @@
     <PackageId>RJCP.CodeQuality</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/jcurl/CodeQuality</PackageProjectUrl>
-    
+    <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.CodeQuality</PackageProjectUrl>
+
     <Description>Common functions to augment unit and integration testing, with some focus on the NUnit Test Framework.</Description>
     <Version>0.6.0</Version>
 
