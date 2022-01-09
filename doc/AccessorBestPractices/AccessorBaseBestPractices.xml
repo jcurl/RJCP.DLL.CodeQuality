@@ -11,7 +11,7 @@
       <surname>Curl</surname>
     </author>
 
-    <pubdate>2020-01-29</pubdate>
+    <pubdate>2022-01-09</pubdate>
   </articleinfo>
 
   <section>
@@ -604,6 +604,163 @@
   }
 }</programlisting>
       </example>
+    </section>
+
+    <section>
+      <title>Non-Public Class with Methods having ref Struct</title>
+
+      <para>The type <code>ref struct</code> was introduced in .NET C# 7.2,
+      and is an important feature in supporting
+      <code>ReadOnlySpan&lt;T&gt;</code> and <code>Span&lt;T&gt;</code> types.
+      A <code>ref struct</code> is an object that can only live on the stack.
+      This presents a new challenge to reflection and testing of internal
+      methods.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>A <code>ref struct</code> can only live on the execution
+          stack. It cannot be static or live as a member of an existing class
+          or <code>struct</code> as this would put the object on the
+          heap.</para>
+        </listitem>
+
+        <listitem>
+          <para>It cannot be a member of an <code>async</code> method or a
+          lambda (see <code>ReadOnlyMemory&lt;T&gt;</code> and
+          <code>Memory&lt;T&gt;</code> for example). This would cause the
+          <code>ref struct</code> to be boxed.</para>
+        </listitem>
+
+        <listitem>
+          <para>It cannot be used as a generic type argument, and cannot be
+          used as the type of an array element.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>It can be used as:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>A method parameter</para>
+        </listitem>
+
+        <listitem>
+          <para>A return type</para>
+        </listitem>
+
+        <listitem>
+          <para>A local variable</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>These challenges means that reflection cannot be used to provide
+      accessor methods.</para>
+
+      <example>
+        <title>Non-Public Class with ref struct Method Parameter</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyTest {
+    public int Append(ReadOnlySpan&lt;byte&gt; buffer) {
+      ...
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The accessor code using Linq expressions instead of reflection to
+      access the private methods:</para>
+
+      <example>
+        <title>Non-Public Class Accessor with ref struct Method
+        Parameter</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  using System;
+  using System.Linq.Expressions;
+  using RJCP.CodeQuality;
+
+  public class MyTestAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyTest";
+    public static readonly PrivateType AccType =
+      new PrivateType(AssemblyName, TypeName);
+
+    public MyTestAccessor() : base(AccType) { }
+
+    private delegate int AppendDelegate(ReadOnlySpan&lt;byte&gt; buffer);
+    public int Append(ReadOnlySpan&lt;byte&gt; buffer) {
+      var instance = Expression.Constant(PrivateTargetObject);
+      var method = AccType.ReferencedType.
+        GetMethod(nameof(Append), new Type[] { typeof(ReadOnlySpan&lt;byte&gt;) });
+      var parameter = Expression.
+        Parameter(typeof(ReadOnlySpan&lt;byte&gt;), nameof(buffer));
+      var call = Expression.Call(instance, method, parameter);
+      var expression = Expression.Lambda&lt;AppendDelegate&gt;(call, parameter);
+      var func = expression.Compile();
+      return func(buffer);
+    }
+  }
+}</programlisting>
+      </example>
+    </section>
+
+    <section>
+      <title>Non-Public Class with return type of ref struct</title>
+
+      <para>Similar to a <code>ref struct</code> as a method parameter, a
+      <code>ref struct</code> may be returned by a method, but cannot be
+      referenced using reflection.</para>
+
+      <example>
+        <title>Non-Public Class with ref struct return value</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyTest {
+    public ReadOnlySpan&lt;byte&gt; GetBuffer() {
+      ...
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The accessor code using Linq expressions to return the <code>ref
+      struct</code> type:</para>
+
+      <example>
+        <title>Non-Public Class Accessor with ref struct Method
+        Parameter</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  using System;
+  using System.Linq.Expressions;
+  using RJCP.CodeQuality;
+
+  public class MyTestAccessor {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyTest";
+    public static readonly PrivateType AccType =
+      new PrivateType(AssemblyName, TypeName);
+
+    public MyTestAccessor() : base(AccType) { }
+
+    private delegate ReadOnlySpan&lt;byte&gt; GetBufferDelegate();
+    public ReadOnlySpan&lt;byte&gt; GetBuffer() {
+      var instance = Expression.Constant(PrivateTargetObject);
+      var method = AccType.ReferencedType.
+        GetMethod(nameof(GetBuffer), Type.EmptyTypes);
+      var call = Expression.Call(instance, method, Array.Empty&lt;Expression&gt;());
+      var expression = Expression.
+        Lambda&lt;GetBufferDelegate&gt;(call, Array.Empty&lt;ParameterExpression&gt;());
+      var func = expression.Compile();
+      return func();
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The example above can be used as a basis for more complex
+      accessors by using Linq expressions.</para>
     </section>
 
     <section>
