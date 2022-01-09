@@ -1,8 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
-project(DocBook45Test NONE)
+cmake_minimum_required(VERSION 3.5)
+project(CodeQuality NONE)
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules/docbook ${CMAKE_MODULE_PATH})
-
-find_package(Docbook45)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/cmake-pandocology")
+include(pandocology)
 
 add_subdirectory(AccessorBestPractices)

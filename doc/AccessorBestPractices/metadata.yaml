@@ -1,0 +1,14 @@
+---
+title: "Accessor Base Best Practices"
+author: "Jason Curl"
+keywords: [".NET", "C#", "Test", "Accessor", "Reflection" ]
+lang: "en"
+documentclass: "book"
+colorlinks: "true"
+papersize: "a4"
+geometry:
+  - top=30mm
+  - left=35mm
+  - right=25mm
+  - bottom=30mm
+---

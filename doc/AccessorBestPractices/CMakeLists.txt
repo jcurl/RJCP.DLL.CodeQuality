@@ -1,16 +1,18 @@
-if(DOCBOOK45_FOUND)
-  include(DocbookGen)
+set(SOURCE_FILES AccessorBaseBestPractices.xml)
 
-  set(DOCBOOK_FILES
-    AccessorBaseBestPractices.xml)
-
-  add_docbook45_target(
-    FORMAT pdf
-    OUTPUT AccessorBaseBestPractices.pdf
-    INPUT ${DOCBOOK_FILES}
-    IMAGEDIR images
-    XSL docbookfo.xsl
-    OLINK olinkdb.xml
-    FILECOPY docbook.css)
-
-endif(DOCBOOK45_FOUND)
+add_document(
+  TARGET Accessor_PDF
+  OUTPUT_FILE AccessorBaseBestPractices.pdf
+  SOURCES ${SOURCE_FILES}
+  RESOURCE_FILES metadata.yaml rsrc/header.latex rsrc/syntaxhighlight.theme
+  RESOURCE_DIRS images
+  PANDOC_DIRECTIVES -t latex
+                    -f docbook
+                    --metadata-file metadata.yaml
+                    -H header.latex
+                    --highlight-style syntaxhighlight.theme
+                    --toc
+                    --number-sections
+                    --pdf-engine pdflatex
+                    --toc-depth 3
+)
