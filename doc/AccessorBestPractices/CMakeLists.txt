@@ -5,11 +5,11 @@ if(DOCBOOK45_FOUND)
     AccessorBaseBestPractices.xml)
 
   add_docbook45_target(
-    FORMAT html
-    OUTPUT AccessorBaseBestPractices.html
+    FORMAT pdf
+    OUTPUT AccessorBaseBestPractices.pdf
     INPUT ${DOCBOOK_FILES}
     IMAGEDIR images
-    XSL docbook.xsl
+    XSL docbookfo.xsl
     OLINK olinkdb.xml
     FILECOPY docbook.css)
 

@@ -11,7 +11,7 @@
       <surname>Curl</surname>
     </author>
 
-    <pubdate>2022-01-09</pubdate>
+    <pubdate>2022-01-10</pubdate>
   </articleinfo>
 
   <section>
@@ -2227,7 +2227,8 @@ public void RaisePrivateEvent() {
       <para>The main trick is now creating the delegate which can be passed to
       the non-public method expecting the non-public delegate:</para>
 
-      <programlisting language="csharp">Delegate d = Delegate.CreateDelegate(FdEventType.ReferencedType, cb.Target, cb.Method);</programlisting>
+      <programlisting language="csharp">Delegate d = Delegate.CreateDelegate(
+  FdEventType.ReferencedType, cb.Target, cb.Method);</programlisting>
 
       <para>Because the delegate has context (it is not static), creating the
       delegate requires the form where the callback target is required
@@ -2266,13 +2267,16 @@ public void RaisePrivateEvent() {
           <title>Non-Public Exception</title>
 
           <programlisting language="csharp">namespace RJCP.Assembly {
+  using System.Runtime.Serialization;
+
   [Serializable()]
   internal class MyException : System.Exception {
     public MyException() : base() { }
     public MyException(string message) : base(message) { }
-    public MyException(string message, System.Exception inner) : base(message, inner) { }
-    protected MyException(System.Runtime.Serialization.SerializationInfo info,
-      System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    public MyException(string message, System.Exception inner)
+      : base(message, inner) { }
+    protected MyException(SerializationInfo info, StreamingContext context)
+      : base(info, context) { }
   }
 
   internal class ClassException {
@@ -2296,7 +2300,8 @@ public void RaisePrivateEvent() {
   public class MyExceptionAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyException";
-    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType =
+      new PrivateType(AssemblyName, TypeName);
 
     public MyExceptionAccessor(PrivateObject obj) : base(obj) { }
   }
@@ -2304,7 +2309,8 @@ public void RaisePrivateEvent() {
   public class ClassExceptionAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.ClassException";
-    public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType =
+      new PrivateType(AssemblyName, TypeName);
 
     public ClassExceptionAccessor() : base(AccType) { }
 
