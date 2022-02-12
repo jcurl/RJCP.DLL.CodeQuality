@@ -26,7 +26,7 @@
         ///     if (object.ReferenceEquals(resourceMan, null)) {
         ///       global::System.Resources.ResourceManager
         ///         temp = new global::System.Resources.ResourceManager(
-        ///           "HBAS.App.DltDump.Resources.ApplicationResources",
+        ///           "RJCP.App.DltDump.Resources.ApplicationResources",
         ///           typeof(ApplicationResources).Assembly);
         ///       resourceMan = temp;
         ///     }
@@ -34,7 +34,7 @@
         ///   }
         /// }
         /// ]]></code>
-        /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
+        /// where the example above the base name is <c>RJCP.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the current UI culture.</para>
         /// </remarks>
         public static void Print(string baseName, Type assembly)
@@ -57,7 +57,7 @@
         ///     if (object.ReferenceEquals(resourceMan, null)) {
         ///       global::System.Resources.ResourceManager
         ///         temp = new global::System.Resources.ResourceManager(
-        ///           "HBAS.App.DltDump.Resources.ApplicationResources",
+        ///           "RJCP.App.DltDump.Resources.ApplicationResources",
         ///           typeof(ApplicationResources).Assembly);
         ///       resourceMan = temp;
         ///     }
@@ -65,7 +65,7 @@
         ///   }
         /// }
         /// ]]></code>
-        /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
+        /// where the example above the base name is <c>RJCP.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the specified culture.</para>
         /// </remarks>
         public static void Print(string baseName, Type assembly, CultureInfo culture)
@@ -87,7 +87,7 @@
         ///     if (object.ReferenceEquals(resourceMan, null)) {
         ///       global::System.Resources.ResourceManager
         ///         temp = new global::System.Resources.ResourceManager(
-        ///           "HBAS.App.DltDump.Resources.ApplicationResources",
+        ///           "RJCP.App.DltDump.Resources.ApplicationResources",
         ///           typeof(ApplicationResources).Assembly);
         ///       resourceMan = temp;
         ///     }
@@ -95,7 +95,7 @@
         ///   }
         /// }
         /// ]]></code>
-        /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
+        /// where the example above the base name is <c>RJCP.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the current UI culture.</para>
         /// </remarks>
         public static void Print(string baseName, Assembly assembly)
@@ -118,7 +118,7 @@
         ///     if (object.ReferenceEquals(resourceMan, null)) {
         ///       global::System.Resources.ResourceManager
         ///         temp = new global::System.Resources.ResourceManager(
-        ///           "HBAS.App.DltDump.Resources.ApplicationResources",
+        ///           "RJCP.App.DltDump.Resources.ApplicationResources",
         ///           typeof(ApplicationResources).Assembly);
         ///       resourceMan = temp;
         ///     }
@@ -126,7 +126,7 @@
         ///   }
         /// }
         /// ]]></code>
-        /// where the example above the base name is <c>HBAS.App.DltDump.Resources.ApplicationResources</c>.
+        /// where the example above the base name is <c>RJCP.App.DltDump.Resources.ApplicationResources</c>.
         /// <para>The resources are printed using the specified culture.</para>
         /// </remarks>
         public static void Print(string baseName, Assembly assembly, CultureInfo culture)
