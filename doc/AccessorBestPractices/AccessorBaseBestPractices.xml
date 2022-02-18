@@ -11,7 +11,7 @@
       <surname>Curl</surname>
     </author>
 
-    <pubdate>2022-01-10</pubdate>
+    <pubdate>2022-02-18</pubdate>
   </articleinfo>
 
   <section>
@@ -829,6 +829,140 @@
       <literal>PrivateType</literal> is used for construction, as well as for
       the static methods. Using <literal>AccType</literal> to start makes it
       easier as your classes grow in complexity.</para>
+    </section>
+
+    <section>
+      <title>Public Classes with Private Members</title>
+
+      <para>A public class can have an accessor just as a private class. The
+      difference is the Accessor may now expose methods and properties that
+      might be private for the class.</para>
+
+      <example>
+        <title>Public Classes with Private Members</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClass {
+    private int _field = 42;
+
+    public MyClass(int initialValue) {
+      _field = initialValue;
+    }
+
+    public SetValue(int newValue) {
+      _field = newValue;
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>One might have an instance already of an object which is of type
+      <code>MyClass</code>. To access the internal field, one could define an
+      accessor which exposes the field.</para>
+
+      <para><example>
+          <title>Public Classes with Private Members Exposed</title>
+
+          <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClassAccessor {
+    public MyClassAccessor(MyClass object)
+      : base(new PrivateObject(object)) {
+      BindingFlags |= BindingFlags.NonPublic;
+    }
+
+    public GetValue() {
+      return (int)GetFieldOrProperty("_field");
+    }
+  }
+}</programlisting>
+        </example>Overriding the property BindingFlags allows the reflection
+      system to find the private type. Usage would be as such:</para>
+
+      <example>
+        <title>Getting Exposed Private Property from Public Class</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  using System;
+
+  public static class Program {
+    public static class Main() {
+      MyClass c = new MyClass(42);
+      MyClassAccessor ca = new MyClassAccessor(c);
+
+      Console.WriteLine("Field is: {0}", ca.GetValue());
+      c.SetValue(102);
+      Console.WriteLine("Field is now: {0}", ca.GetValue());
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The example above shows that there are to objects, the original
+      object <literal>c</literal>, and a reference to the original object
+      which exposes the private fields which is <literal>ca</literal>.</para>
+    </section>
+
+    <section>
+      <title>Public Classes with Private Members in Base Class</title>
+
+      <para>You might be given a class that is instantiated from a derived
+      class. In this case, the example in the previous section to get the
+      private field will not work as the private field is not a member of the
+      derived class.</para>
+
+      <example>
+        <title>Public Derived Class with Private Member in Base</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClassDerived : MyClass {
+    public MyClassDerived(int initialValue)
+      : base(initialValue) { }
+  }
+}</programlisting>
+      </example>
+
+      <para>The accessor must explicitly reference the base class:</para>
+
+      <example>
+        <title>Public Classes with Private Members Exposed</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClassAccessor {
+    public MyClassAccessor(MyClass object)
+      : base(new PrivateObject(object,
+        new PrivateType(typeof(MyClass)))) {
+      BindingFlags |= BindingFlags.NonPublic;
+    }
+
+    public GetValue() {
+      return (int)GetFieldOrProperty("_field");
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>It works by specifying the type of the class that should be
+      casted, which is MyClass. Then the following code will also now
+      work:</para>
+
+      <example>
+        <title>Getting Exposed Private Property from Public Class</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  using System;
+
+  public static class Program {
+    public static class Main() {
+      MyClassDerived c = new MyClassDerived(42);
+      MyClassAccessor ca = new MyClassAccessor(c);
+
+      Console.WriteLine("Field is: {0}", ca.GetValue());
+      c.SetValue(102);
+      Console.WriteLine("Field is now: {0}", ca.GetValue());
+    }
+  }
+}</programlisting>
+      </example>
     </section>
 
     <section id="sec.Derived">
