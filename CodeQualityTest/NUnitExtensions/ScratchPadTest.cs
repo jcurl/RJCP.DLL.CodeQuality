@@ -187,5 +187,16 @@
                 }
             }
         }
+
+        [Test]
+        public void ScratchPadEmptyFile()
+        {
+            using (ScratchPad scratch = new ScratchPad()) {
+                scratch.DeployEmptyFile("test.txt");
+                Assert.That(File.Exists("test.txt"));
+                FileInfo info = new FileInfo("test.txt");
+                Assert.That(info.Length, Is.EqualTo(0));
+            }
+        }
     }
 }

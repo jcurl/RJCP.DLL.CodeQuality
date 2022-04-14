@@ -381,6 +381,21 @@
         }
 
         /// <summary>
+        /// Deploys the empty file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty.</exception>
+        public void DeployEmptyFile(string path)
+        {
+            if (path == null) throw new ArgumentNullException(nameof(path));
+            if (string.IsNullOrEmpty(path)) throw new ArgumentException("Empty file name", nameof(path));
+
+            string newPath = System.IO.Path.Combine(RelativePath, path);
+            Deploy.EmptyFile(newPath);
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting managed and unmanaged
         /// resources.
         /// </summary>

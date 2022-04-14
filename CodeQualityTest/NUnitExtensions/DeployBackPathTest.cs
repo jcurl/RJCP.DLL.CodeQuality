@@ -76,5 +76,13 @@
             string file = Path.Combine(subDirectory, "test1.txt");
             Assert.That(File.Exists(file), "File '{0}' not found", file);
         }
+
+        [Test]
+        [Repeat(100)]
+        public void DeployEmptyFile()
+        {
+            Deploy.EmptyFile("file.txt");
+            Assert.That(File.Exists(Path.Combine(Deploy.WorkDirectory, "file.txt")));
+        }
     }
 }

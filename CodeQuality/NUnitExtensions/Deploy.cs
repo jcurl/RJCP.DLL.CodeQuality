@@ -641,5 +641,24 @@
             string message = string.Format("Directory '{0}' couldn't be deleted", path);
             throw new IOException(message);
         }
+
+        /// <summary>
+        /// Creates an empty file
+        /// </summary>
+        /// <param name="path">The path.</param>
+        public static void EmptyFile(string path)
+        {
+            string fullPath = path;
+            if (!Path.IsPathRooted(path))
+                fullPath = Path.Combine(WorkDirectoryAbsolute, path);
+
+            if (Directory.Exists(fullPath))
+                throw new ArgumentException("Path is a directory");
+
+            CreateDirectory(WorkDirectoryAbsolute);
+            using (FileStream file = new FileStream(fullPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
+                /* Create an Empty File */
+            }
+        }
     }
 }
