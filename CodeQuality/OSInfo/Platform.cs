@@ -1,6 +1,9 @@
 ﻿namespace RJCP.CodeQuality.OSInfo
 {
     using System;
+#if NETSTANDARD
+    using System.Runtime.InteropServices;
+#endif
 
     /// <summary>
     /// Utility class providing OS specific functionality.
@@ -15,7 +18,11 @@
         /// </returns>
         public static bool IsWinNT()
         {
+#if NETSTANDARD
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#else
             return Environment.OSVersion.Platform == PlatformID.Win32NT;
+#endif
         }
 
         /// <summary>
@@ -31,8 +38,14 @@
         /// </remarks>
         public static bool IsUnix()
         {
+#if NETSTANDARD
+            return
+                RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+#else
             int platform = (int)Environment.OSVersion.Platform;
             return ((platform == 4) || (platform == 6) || (platform == 128));
+#endif
         }
     }
 }
