@@ -53,6 +53,9 @@ namespace RJCP.CodeQuality.NUnitExtensions.Trace
         /// <summary>
         /// Disposes this instance.
         /// </summary>
-        public void Dispose() { }
+        public void Dispose()
+        {
+            /* Nothing to dispose of */
+        }
     }
 }
