@@ -182,7 +182,6 @@
             return flag1 ? 2 : 1;
         }
 
-
         internal static bool CompareMethodSigAndName(MethodBase m1, MethodBase m2)
         {
             ParameterInfo[] parameters1 = m1.GetParameters();

@@ -187,7 +187,6 @@
             } finally {
                 privType.SetStaticFieldOrProperty("MyBaseStaticProp", setPropflags, 99);
             }
-
         }
 
         [Test]
