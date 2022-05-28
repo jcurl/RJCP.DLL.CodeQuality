@@ -57,6 +57,7 @@
     <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployProperties.cs" />
     <Compile Include="..\CodeQualityTest\NUnitExtensions\ScratchPad2ndTest.cs" />
     <Compile Include="..\CodeQualityTest\NUnitExtensions\ScratchPadTest.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
   </ItemGroup>
 
   <ItemGroup>
