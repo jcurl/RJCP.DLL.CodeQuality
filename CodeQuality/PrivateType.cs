@@ -112,9 +112,8 @@ namespace RJCP.CodeQuality
             if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
-            Type type = Assembly.Load(assemblyName).GetType(typeName, true);
-            if (type == null) throw new ArgumentNullException(nameof(typeName));
-
+            Type type = Assembly.Load(assemblyName).GetType(typeName, true)
+                ?? throw new ArgumentNullException(nameof(typeName));
             m_ObjectType = type.MakeGenericType(typeArguments);
         }
 
@@ -138,8 +137,8 @@ namespace RJCP.CodeQuality
         {
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
-            Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding);
-            if (nestedType == null) throw new ArgumentException("Type not found", nameof(typeName));
+            Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding)
+                ?? throw new ArgumentException("Type not found", nameof(typeName));
             return new PrivateType(nestedType);
         }
 
@@ -171,8 +170,8 @@ namespace RJCP.CodeQuality
         {
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
-            Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding);
-            if (nestedType == null) throw new ArgumentException("Type not found", nameof(typeName));
+            Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding)
+                ?? throw new ArgumentException("Type not found", nameof(typeName));
             Type genericType = nestedType.MakeGenericType(typeArguments);
             return new PrivateType(genericType);
         }

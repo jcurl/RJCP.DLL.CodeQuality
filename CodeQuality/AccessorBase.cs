@@ -331,9 +331,8 @@
             if (eventName == null) throw new ArgumentNullException(nameof(eventName));
 
             Type objectType = m_PrivateObject.Target.GetType();
-            EventInfo eventInfo = objectType.GetEvent(eventName);
-            if (eventInfo == null) throw new MissingMemberException(objectType.ToString(), eventName);
-
+            EventInfo eventInfo = objectType.GetEvent(eventName)
+                ?? throw new MissingMemberException(objectType.ToString(), eventName);
             Delegate delegateEventHandler = Delegate.CreateDelegate(eventInfo.EventHandlerType, handler.Target, handler.Method);
             try {
                 eventInfo.AddEventHandler(m_PrivateObject.Target, delegateEventHandler);
@@ -362,9 +361,8 @@
             if (eventName == null) throw new ArgumentNullException(nameof(handler));
 
             Type objectType = m_PrivateObject.Target.GetType();
-            EventInfo eventInfo = objectType.GetEvent(eventName);
-            if (eventInfo == null) throw new MissingMemberException(objectType.ToString(), eventName);
-
+            EventInfo eventInfo = objectType.GetEvent(eventName)
+                ?? throw new MissingMemberException(objectType.ToString(), eventName);
             Delegate delegateEventHandler = Delegate.CreateDelegate(eventInfo.EventHandlerType, handler.Target, handler.Method);
             try {
                 eventInfo.RemoveEventHandler(m_PrivateObject.Target, delegateEventHandler);

@@ -203,24 +203,20 @@
             m_WriteChar = GetDelegate<char>(currentContext.RealType, nameof(Write));
             m_WriteBool = GetDelegate<bool>(currentContext.RealType, nameof(Write));
 
-            MethodInfo methodInfoArgs1 = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object) });
-            if (methodInfoArgs1 == null)
-                methodInfoArgs1 = typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object) });
+            MethodInfo methodInfoArgs1 = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object) })
+                ?? typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object) });
             m_WriteFormat1 = (Action<string, object>)Delegate.CreateDelegate(typeof(Action<string, object>), methodInfoArgs1);
 
-            MethodInfo methodInfoArgs2 = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object) });
-            if (methodInfoArgs2 == null)
-                methodInfoArgs2 = typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object) });
+            MethodInfo methodInfoArgs2 = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object) })
+                ?? typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object) });
             m_WriteFormat2 = (Action<string, object, object>)Delegate.CreateDelegate(typeof(Action<string, object, object>), methodInfoArgs2);
 
-            MethodInfo methodInfoArgs3 = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) });
-            if (methodInfoArgs3 == null)
-                methodInfoArgs3 = typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) });
+            MethodInfo methodInfoArgs3 = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) })
+                ?? typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) });
             m_WriteFormat3 = (Action<string, object, object, object>)Delegate.CreateDelegate(typeof(Action<string, object, object, object>), methodInfoArgs3);
 
-            MethodInfo methodInfoArgsS = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object[]) });
-            if (methodInfoArgsS == null)
-                methodInfoArgsS = typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object[]) });
+            MethodInfo methodInfoArgsS = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object[]) })
+                ?? typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object[]) });
             m_WriteFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoArgs1);
 
             m_WriteLineUlong = GetDelegate<ulong>(currentContext.RealType, nameof(WriteLine));
@@ -236,44 +232,36 @@
             m_WriteLineChar = GetDelegate<char>(currentContext.RealType, nameof(WriteLine));
             m_WriteLineBool = GetDelegate<bool>(currentContext.RealType, nameof(WriteLine));
 
-            MethodInfo methodInfoLineArgs1 = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object) });
-            if (methodInfoLineArgs1 == null)
-                methodInfoLineArgs1 = typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object) });
+            MethodInfo methodInfoLineArgs1 = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object) })
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object) });
             m_WriteLineFormat1 = (Action<string, object>)Delegate.CreateDelegate(typeof(Action<string, object>), methodInfoLineArgs1);
 
-            MethodInfo methodInfoLineArgs2 = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object) });
-            if (methodInfoLineArgs2 == null)
-                methodInfoLineArgs2 = typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object) });
+            MethodInfo methodInfoLineArgs2 = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object) })
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object) });
             m_WriteLineFormat2 = (Action<string, object, object>)Delegate.CreateDelegate(typeof(Action<string, object, object>), methodInfoLineArgs2);
 
-            MethodInfo methodInfoLineArgs3 = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) });
-            if (methodInfoLineArgs3 == null)
-                methodInfoLineArgs3 = typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) });
+            MethodInfo methodInfoLineArgs3 = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) })
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object), typeof(object), typeof(object) });
             m_WriteLineFormat3 = (Action<string, object, object, object>)Delegate.CreateDelegate(typeof(Action<string, object, object, object>), methodInfoLineArgs3);
 
-            MethodInfo methodInfoLineArgsS = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) });
-            if (methodInfoLineArgsS == null)
-                methodInfoLineArgsS = typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) });
+            MethodInfo methodInfoLineArgsS = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) })
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) });
             m_WriteLineFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoLineArgs1);
 
 #if NETFRAMEWORK
-            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { });
-            if (methodInfoLine == null)
-                methodInfoLine = typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { });
+            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { })
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { });
 #else
-            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), Array.Empty<Type>());
-            if (methodInfoLine == null)
-                methodInfoLine = typeof(WriteConsole).GetMethod(nameof(WriteLine), Array.Empty<Type>());
+            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), Array.Empty<Type>())
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), Array.Empty<Type>());
 #endif
             m_WriteLine = (Action)Delegate.CreateDelegate(typeof(Action), methodInfoLine);
         }
 
         private static Action<T> GetDelegate<T>(Type type, string methodName)
         {
-            MethodInfo methodInfo = type.GetMethod(methodName, new Type[] { typeof(T) });
-            if (methodInfo == null)
-                methodInfo = typeof(WriteConsole).GetMethod(methodName, new Type[] { typeof(T) });
-
+            MethodInfo methodInfo = type.GetMethod(methodName, new Type[] { typeof(T) })
+                ?? typeof(WriteConsole).GetMethod(methodName, new Type[] { typeof(T) });
             return (Action<T>)Delegate.CreateDelegate(typeof(Action<T>), methodInfo);
         }
 

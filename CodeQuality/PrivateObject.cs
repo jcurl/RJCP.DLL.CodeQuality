@@ -176,10 +176,8 @@
 
             object obj;
             if (parameterTypes != null) {
-                ConstructorInfo constructor = type.GetConstructor(DefaultBindingFlags, null, parameterTypes, null);
-                if (constructor == null) {
-                    throw new ArgumentException("Constructor not found");
-                }
+                ConstructorInfo constructor = type.GetConstructor(DefaultBindingFlags, null, parameterTypes, null)
+                    ?? throw new ArgumentException("Constructor not found");
                 obj = constructor.Invoke(args);
             } else {
                 obj = Activator.CreateInstance(type, DefaultBindingFlags | BindingFlags.CreateInstance, null, args, null);
@@ -276,9 +274,8 @@
 
         private static Type GetGenericObjectType(string assemblyName, string typeName, Type[] genericTypes)
         {
-            Type type = GetObjectType(assemblyName, typeName);
-            if (type == null) throw new ArgumentNullException(nameof(typeName));
-
+            Type type = GetObjectType(assemblyName, typeName)
+                ?? throw new ArgumentNullException(nameof(typeName));
             return type.MakeGenericType(genericTypes);
         }
         #endregion
