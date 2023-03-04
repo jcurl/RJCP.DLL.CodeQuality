@@ -217,7 +217,7 @@
 
             MethodInfo methodInfoArgsS = currentContext.RealType.GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object[]) })
                 ?? typeof(WriteConsole).GetMethod(nameof(Write), new Type[] { typeof(string), typeof(object[]) });
-            m_WriteFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoArgs1);
+            m_WriteFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoArgsS);
 
             m_WriteLineUlong = GetDelegate<ulong>(currentContext.RealType, nameof(WriteLine));
             m_WriteLineUint = GetDelegate<uint>(currentContext.RealType, nameof(WriteLine));
@@ -246,7 +246,7 @@
 
             MethodInfo methodInfoLineArgsS = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) })
                 ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) });
-            m_WriteLineFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoLineArgs1);
+            m_WriteLineFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoLineArgsS);
 
 #if NETFRAMEWORK
             MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { })
