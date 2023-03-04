@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Threading;
+    using RJCP.Core.Environment;
 
     /// <summary>
     /// Methods for the deployment of test resources which NUnit doesn't do automatically.
@@ -320,7 +321,7 @@
             if (path == null) path = string.Empty;
 
             string systemNormalizedPath;
-            if (!OSInfo.Platform.IsUnix()) {
+            if (!Platform.IsUnix()) {
                 // Convert forward slashes to windows paths.
                 systemNormalizedPath = path.Replace("/", @"\");
             } else {
@@ -423,9 +424,9 @@
                 throw new UnauthorizedAccessException("Can't delete the file, it is a directory");
             if (!File.Exists(fullPath)) return;
 
-            if (OSInfo.Platform.IsWinNT()) {
+            if (Platform.IsWinNT()) {
                 DeleteFileWindows(fullPath);
-            } else if (OSInfo.Platform.IsUnix()) {
+            } else if (Platform.IsUnix()) {
                 DeleteFileUnix(fullPath);
             } else {
                 throw new PlatformNotSupportedException();
@@ -594,9 +595,9 @@
 
         private static void DeleteEmptyDirectory(string path)
         {
-            if (OSInfo.Platform.IsWinNT()) {
+            if (Platform.IsWinNT()) {
                 DeleteEmptyDirectoryWindows(path);
-            } else if (OSInfo.Platform.IsUnix()) {
+            } else if (Platform.IsUnix()) {
                 DeleteEmptyDirectoryUnix(path);
             } else {
                 throw new PlatformNotSupportedException();

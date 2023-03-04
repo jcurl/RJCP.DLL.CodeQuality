@@ -14,7 +14,7 @@
     <RootNamespace>RJCP.CodeQuality</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2016-2021, Jason Curl</Copyright>
+    <Copyright>(C) 2016-2023, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.CodeQuality</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -59,6 +59,7 @@
     <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <ProjectReference Include="..\..\environment\Environment\RJCP.Environment.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
@@ -89,7 +90,6 @@
     <None Include="NUnitExtensions\Trace\NUnitLoggerExtensions.cs" />
     <None Include="NUnitExtensions\Trace\NUnitLoggerProvider.cs" />
     <Compile Include="NUnitExtensions\Trace\NUnitTraceListener.cs" />
-    <Compile Include="OSInfo\Platform.cs" />
     <Compile Include="PrivateObject.cs" />
     <Compile Include="PrivateType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
