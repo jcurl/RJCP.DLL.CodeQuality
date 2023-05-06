@@ -9,7 +9,7 @@
 
     public class PrivateObjectTest
     {
-        private readonly BindingFlags m_BindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+        private readonly BindingFlags m_BindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         [Test]
         public void NullObject()
@@ -251,7 +251,7 @@
         }
 
         [Test]
-        public void InvokeNullName_Types()
+        public void Invoke_Types()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
             privateObject.Invoke("AddToProperty", new Type[] { typeof(int) }, new object[] { 3 });
@@ -343,6 +343,16 @@
 
             Assert.That(() => {
                 privateObject.Invoke("XYZ", m_BindingFlags);
+            }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
+        public void CallInexistentMethod_WithParameterTyeps()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+
+            Assert.That(() => {
+                privateObject.Invoke("XYZ", m_BindingFlags, new Type[] { typeof(int) }, new object[] { 42 });
             }, Throws.TypeOf<MissingMethodException>());
         }
 
@@ -474,6 +484,32 @@
             Assert.That(() => {
                 _ = privateObject.GetFieldOrProperty("PropWriteOnly");
             }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
+        public void SetAndGetPropertyNullName()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            Assert.That(() => {
+                _ = privateObject.GetFieldOrProperty(null);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetFieldOrProperty(null, 42);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void SetAndGetPropertyNullName_Bindings()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            Assert.That(() => {
+                _ = privateObject.GetFieldOrProperty(null, m_BindingFlags);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetFieldOrProperty(null, m_BindingFlags, 42);
+            }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

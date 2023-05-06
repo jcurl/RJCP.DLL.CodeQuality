@@ -447,7 +447,7 @@
         /// An object that represents the return value of a private member.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentException">Member <paramref name="name"/> not found.</exception>
+        /// <exception cref="MissingMethodException">Member <paramref name="name"/> not found.</exception>
         /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         /// <remarks>
         /// This method is a culture invariant form of the MS implementation
@@ -462,7 +462,6 @@
                 return InvokeHelper(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
 
-            bindingFlags |= DefaultBindingFlags;
             MethodInfo methodInfo = m_ObjectType.GetMethod(name, bindingFlags, null, parameterTypes, null);
             if (methodInfo == null && typeArguments != null) {
                 methodInfo = m_MethodCache.GetGenericMethodFromCache(name, parameterTypes, typeArguments, bindingFlags, null);
@@ -470,7 +469,7 @@
 
             if (methodInfo == null) {
                 string msg = string.Format("Member {0} not found", name);
-                throw new ArgumentException(msg);
+                throw new MissingMethodException(msg);
             }
 
             if (methodInfo.IsGenericMethodDefinition) {
