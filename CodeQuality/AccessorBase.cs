@@ -244,6 +244,144 @@
         }
 
         /// <summary>
+        /// Gets a value of a wrapped property identified by name.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="propertyName">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
+        protected T GetProperty<T>(string propertyName)
+        {
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            try {
+                return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value of a wrapped property identified by name.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="propertyName">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
+        protected T GetProperty<T>(string propertyName, params object[] args)
+        {
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            try {
+                return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value of a wrapped property identified by name.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="propertyName">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="parameterTypes">The parameter types for the arguments.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
+        protected T GetProperty<T>(string propertyName, Type[] parameterTypes, params object[] args)
+        {
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            try {
+                return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags, parameterTypes, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value of a wrapped property identified by name.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="propertyName">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
+        protected void SetProperty<T>(string propertyName, T value)
+        {
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            try {
+                m_PrivateObject.SetProperty(propertyName, BindingFlags, value);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value of a wrapped property identified by name.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="propertyName">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
+        protected void SetProperty<T>(string propertyName, T value, params object[] args)
+        {
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            try {
+                m_PrivateObject.SetProperty(propertyName, BindingFlags, value, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value of a wrapped property identified by name.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="propertyName">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="parameterTypes">The parameter types for the arguments.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
+        protected void SetProperty<T>(string propertyName, Type[] parameterTypes, T value, params object[] args)
+        {
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            try {
+                m_PrivateObject.SetProperty(propertyName, BindingFlags, parameterTypes, value, args);
+            } catch (TargetInvocationException ex) {
+                if (ex.InnerException == null) {
+                    throw;
+                } else {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
         /// Invokes the method on the <see cref="PrivateObject"/>.
         /// </summary>
         /// <param name="methodName">Name of the method.</param>

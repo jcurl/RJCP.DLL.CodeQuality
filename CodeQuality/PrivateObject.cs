@@ -552,6 +552,238 @@
             if (name == null) throw new ArgumentNullException(nameof(name));
             return InvokeHelper(name, bindingFlags | BindingFlags.GetField | BindingFlags.GetProperty, null);
         }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public T GetProperty<T>(string name)
+        {
+            return GetProperty<T>(name, DefaultBindingFlags, null, null);
+        }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="bindingFlags">
+        /// A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or
+        /// property is conducted. The type of lookup need not be specified.
+        /// </param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public T GetProperty<T>(string name, BindingFlags bindingFlags)
+        {
+            return GetProperty<T>(name, bindingFlags, null, null);
+        }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public T GetProperty<T>(string name, params object[] args)
+        {
+            return GetProperty<T>(name, DefaultBindingFlags, null, args);
+        }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="parameterTypes">The parameter types for the arguments.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public T GetProperty<T>(string name, Type[] parameterTypes, params object[] args)
+        {
+            return GetProperty<T>(name, DefaultBindingFlags, parameterTypes, args);
+        }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="bindingFlags">
+        /// A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or
+        /// property is conducted. The type of lookup need not be specified.
+        /// </param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public T GetProperty<T>(string name, BindingFlags bindingFlags, params object[] args)
+        {
+            return GetProperty<T>(name, bindingFlags, null, args);
+        }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="bindingFlags">
+        /// A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or
+        /// property is conducted. The type of lookup need not be specified.
+        /// </param>
+        /// <param name="parameterTypes">The parameter types for the arguments.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public T GetProperty<T>(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (parameterTypes == null)
+                return (T)InvokeHelper(name, bindingFlags | BindingFlags.GetProperty, args);
+
+            PropertyInfo propInfo = m_ObjectType.GetProperty(name, bindingFlags, null, typeof(T), parameterTypes, null);
+            if (propInfo == null) {
+                string msg = string.Format("Property {0} not found", name);
+                throw new MissingMethodException(msg);
+            }
+            return (T)propInfo.GetValue(m_Instance, args);
+        }
+
+        /// <summary>
+        /// Sets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public void SetProperty<T>(string name, T value)
+        {
+            SetProperty(name, DefaultBindingFlags, null, value, null);
+        }
+
+        /// <summary>
+        /// Sets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="bindingFlags">
+        /// A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or
+        /// property is conducted. The type of lookup need not be specified.
+        /// </param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public void SetProperty<T>(string name, BindingFlags bindingFlags, T value)
+        {
+            SetProperty(name, bindingFlags, null, value, null);
+        }
+
+        /// <summary>
+        /// Sets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public void SetProperty<T>(string name, T value, params object[] args)
+        {
+            SetProperty(name, DefaultBindingFlags, null, value, args);
+        }
+
+        /// <summary>
+        /// Sets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="bindingFlags">
+        /// A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or
+        /// property is conducted. The type of lookup need not be specified.
+        /// </param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public void SetProperty<T>(string name, BindingFlags bindingFlags, T value, params object[] args)
+        {
+            SetProperty(name, bindingFlags, null, value, args);
+        }
+
+        /// <summary>
+        /// Sets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="parameterTypes">The parameter types for the arguments.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public void SetProperty<T>(string name, Type[] parameterTypes, T value, params object[] args)
+        {
+            SetProperty(name, DefaultBindingFlags, parameterTypes, value, args);
+        }
+
+        /// <summary>
+        /// Sets the property.
+        /// </summary>
+        /// <typeparam name="T">The return type of the property.</typeparam>
+        /// <param name="name">The name of the property. Use <c>Item</c> for the indexer.</param>
+        /// <param name="bindingFlags">
+        /// A bitmask comprised of one or more <see cref="BindingFlags"/> that specifies how the search for the field or
+        /// property is conducted. The type of lookup need not be specified.
+        /// </param>
+        /// <param name="parameterTypes">The parameter types for the arguments.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="args">The arguments for indexing the property.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+        /// <exception cref="MissingMethodException">Property <paramref name="name"/> not found.</exception>
+        /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
+        public void SetProperty<T>(string name, BindingFlags bindingFlags, Type[] parameterTypes, T value, object[] args)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (parameterTypes == null) {
+                object[] invokeArgs;
+                if (args == null) {
+                    invokeArgs = new object[1] { value };
+                } else {
+                    invokeArgs = new object[args.Length + 1];
+                    args.CopyTo(invokeArgs, 0);
+                    invokeArgs[args.Length] = value;
+                }
+                InvokeHelper(name, bindingFlags | BindingFlags.SetProperty, invokeArgs);
+                return;
+            }
+
+            PropertyInfo propInfo = m_ObjectType.GetProperty(name, bindingFlags, null, typeof(T), parameterTypes, null);
+            if (propInfo == null) {
+                string msg = string.Format("Property {0} not found", name);
+                throw new MissingMethodException(msg);
+            }
+            propInfo.SetValue(m_Instance, value, args);
+        }
         #endregion
     }
 }

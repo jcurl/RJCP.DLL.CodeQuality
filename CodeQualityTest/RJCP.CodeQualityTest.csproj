@@ -70,6 +70,7 @@
     <Compile Include="HelperClasses\GenericClassTestAccessor.cs" />
     <Compile Include="HelperClasses\GenericClassTest.cs" />
     <Compile Include="HelperClasses\GenericStackAccessor.cs" />
+    <Compile Include="HelperClasses\IndexerClass.cs" />
     <Compile Include="HelperClasses\InternalSimpleBase1.cs" />
     <Compile Include="HelperClasses\InternalClassBase.cs" />
     <Compile Include="HelperClasses\InternalClassTest.cs" />

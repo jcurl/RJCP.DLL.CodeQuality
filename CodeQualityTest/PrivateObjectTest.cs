@@ -459,6 +459,24 @@
         }
 
         [Test]
+        public void SetReadOnlyProperty()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            Assert.That(() => {
+                privateObject.SetFieldOrProperty("PropReadOnly", 9);
+            }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
+        public void GetWriteOnlyProperty()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            Assert.That(() => {
+                _ = privateObject.GetFieldOrProperty("PropWriteOnly");
+            }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
         public void SetInexistentProperty()
         {
             PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
@@ -530,6 +548,195 @@
             Assert.That(() => {
                 _ = new PrivateObject(obj, new PrivateType(t));
             }, Throws.Nothing);
+        }
+
+        [Test]
+        public void PropertyGetSet()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            int value = privateObject.GetProperty<int>("Prop");
+            Assert.That(value, Is.EqualTo(0));
+
+            privateObject.SetProperty("Prop", 2);
+            value = privateObject.GetProperty<int>("Prop");
+            Assert.That(value, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void PropertyGetSetNullName()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<int>(null);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty(null, 42);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void ProeprtyGetSet_BindingFlags()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            int value = privateObject.GetProperty<int>("Prop", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.That(value, Is.EqualTo(0));
+
+            privateObject.SetProperty("Prop", BindingFlags.NonPublic | BindingFlags.Instance, 2);
+            value = privateObject.GetProperty<int>("Prop", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.That(value, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void PropertyGetSetNullName_BindingFlags()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<int>(null, BindingFlags.NonPublic | BindingFlags.Instance);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty(null, BindingFlags.NonPublic | BindingFlags.Instance, 2);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void PropertyGetSet_BindingFlags_Public()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<int>("Prop", BindingFlags.Public);
+            }, Throws.TypeOf<MissingMethodException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty<int>("Prop", BindingFlags.Public, 42);
+            }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
+        public void PropertyGetSetIndexed()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            bool set = privateObject.GetProperty<bool>("Item", 1);
+            Assert.That(set, Is.False);
+
+            privateObject.SetProperty("Item", true, 2);
+            set = privateObject.GetProperty<bool>("Item", 2);
+            Assert.That(set, Is.True);
+        }
+
+        [Test]
+        public void PropertyGetSetIndexedNullName()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<bool>(null, 1);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty(null, true, 2);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void PropertyGetSetIndexed_BindingFlags()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            bool set = privateObject.GetProperty<bool>("Item", BindingFlags.NonPublic | BindingFlags.Instance, 1);
+            Assert.That(set, Is.False);
+
+            privateObject.SetProperty("Item", BindingFlags.NonPublic | BindingFlags.Instance, true, 2);
+            set = privateObject.GetProperty<bool>("Item", BindingFlags.NonPublic | BindingFlags.Instance, 2);
+            Assert.That(set, Is.True);
+        }
+
+        [Test]
+        public void PropertyGetSetIndexedNullName_BindingFlags()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<bool>(null, BindingFlags.NonPublic | BindingFlags.Instance, 1);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty(null, BindingFlags.NonPublic | BindingFlags.Instance, true, 2);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void ProeprtyGetSetIndexed_BindingFlags_Public()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<int>("Item", BindingFlags.Public, 2);
+            }, Throws.TypeOf<MissingMethodException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty("Item", BindingFlags.Public, 42, 2);
+            }, Throws.TypeOf<MissingMethodException>());
+        }
+
+        [Test]
+        public void PropertyGetSetIndexed_WithTypes()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            bool set = privateObject.GetProperty<bool>("Item", new Type[] { typeof(int) }, 1);
+            Assert.That(set, Is.False);
+
+            privateObject.SetProperty("Item", new Type[] { typeof(int) }, true, 2);
+            set = privateObject.GetProperty<bool>("Item", new Type[] { typeof(int) }, 2);
+            Assert.That(set, Is.True);
+        }
+
+        [Test]
+        public void PropertyGetSetIndexedNullName_WithTypes()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<bool>(null, new Type[] { typeof(int) }, 1);
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty(null, new Type[] { typeof(int) }, true, 2);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void PropertyGetSetIndexed_WithTypes_BindingFlags()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            bool set = privateObject.GetProperty<bool>("Item", BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, new object[] { 1 });
+            Assert.That(set, Is.False);
+
+            privateObject.SetProperty("Item", BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, true, new object[] { 2 });
+            set = privateObject.GetProperty<bool>("Item", BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, new object[] { 2 });
+            Assert.That(set, Is.True);
+        }
+
+        [Test]
+        public void PropertyGetSetIndexedNullName_WithTypes_BindingFlags()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<bool>(null, BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, new object[] { 1 });
+            }, Throws.TypeOf<ArgumentNullException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty(null, BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, true, new object[] { 2 });
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void PropertyGetSetIndexed_WithTypes_BindingFlags_Public()
+        {
+            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            Assert.That(() => {
+                _ = privateObject.GetProperty<bool>("Item", BindingFlags.Public, new Type[] { typeof(int) }, new object[] { 1 });
+            }, Throws.TypeOf<MissingMethodException>());
+
+            Assert.That(() => {
+                privateObject.SetProperty("Item", BindingFlags.Public, new Type[] { typeof(int) }, true, new object[] { 2 });
+            }, Throws.TypeOf<MissingMethodException>());
         }
     }
 }

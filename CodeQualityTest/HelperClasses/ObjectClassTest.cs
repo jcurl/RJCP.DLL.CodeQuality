@@ -13,6 +13,10 @@
 
         private int Prop { get; set; }
 
+        private int PropReadOnly { get; }
+
+        private int PropWriteOnly { set { /* Do Nothing */ } }
+
         public int PubProp { get; set; }
 
         public int PubField;

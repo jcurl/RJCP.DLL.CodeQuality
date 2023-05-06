@@ -11,7 +11,7 @@
       <surname>Curl</surname>
     </author>
 
-    <pubdate>2022-02-18</pubdate>
+    <pubdate>2023-05-07</pubdate>
   </articleinfo>
 
   <section>
@@ -551,6 +551,67 @@
 
       <para>The second example makes instantiation explicit for which
       constructor should be used to give the initial value.</para>
+    </section>
+
+    <section>
+      <title>Non-Public Properties</title>
+
+      <para>As well as getting and setting fields/properties, a more robust
+      way of getting and setting properties (including indexers) are provided,
+      with return type checking in the full case.</para>
+
+      <example>
+        <title>Simple Non-Public Class</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  internal class MyClass {
+    public MyClass(int initialValue) {
+      Property = initialValue;
+    }
+
+    public int Property { get; set; }
+
+    private Dictionary&lt;int, int&gt; m_Values = new Dictionary&lt;int, int&gt;();
+    public int this[int index] {
+      get {
+        if (m_Values.TryGetValue(index, out int value))
+          return value;
+        return 0;
+      }
+      set { m_Values[index] = value; }
+    }
+  }
+}</programlisting>
+      </example>
+
+      <para>The Accessor class would look like:</para>
+
+      <example>
+        <title>Simple Non-Public Class Accessor</title>
+
+        <programlisting language="csharp">namespace RJCP.Assembly {
+  public class MyClassAccessor : AccessorBase {
+    private const string AssemblyName = "Assembly";
+    private const string TypeName = "RJCP.Assembly.MyClass";
+    public static readonly PrivateType AccType =
+      new PrivateType(AssemblyName, TypeName);
+
+    public MyClassAccessor(int initialValue)
+      : base(AccType, initialValue)
+    { }
+
+    public int Property {
+      get { return GetProperty&lt;int&gt;(nameof(Property)); }
+      set { SetProperty(nameof(Property), value); }
+    }
+
+    public int this[int index] {
+      get { return GetProperty&lt;int&gt;("Item", index); }
+      set { SetProperty("Item", value, index); }
+    }
+  }
+}</programlisting>
+      </example>
     </section>
 
     <section>
