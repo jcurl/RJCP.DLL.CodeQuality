@@ -12,40 +12,40 @@
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             IniFile iniFile = new IniFile(path);
-            Assert.That(iniFile.Count, Is.EqualTo(7));
+            Assert.That(iniFile, Has.Count.EqualTo(7));
 
             Assert.That(iniFile.ContainsKey("section"));
-            Assert.That(iniFile["section"].Count, Is.EqualTo(1));
+            Assert.That(iniFile["section"], Has.Count.EqualTo(1));
             Assert.That(iniFile["section"]["key"], Is.EqualTo("Value"));
 
             Assert.That(iniFile.ContainsKey("section2"));
-            Assert.That(iniFile["section2"].Count, Is.EqualTo(1));
+            Assert.That(iniFile["section2"], Has.Count.EqualTo(1));
             Assert.That(iniFile["section2"]["key"], Is.EqualTo("Value"));
 
             Assert.That(iniFile.ContainsKey("section3"));
-            Assert.That(iniFile["section3"].Count, Is.EqualTo(2));
+            Assert.That(iniFile["section3"], Has.Count.EqualTo(2));
             Assert.That(iniFile["section3"]["key1"], Is.EqualTo("Value1"));
             Assert.That(iniFile["section3"]["key2"], Is.EqualTo("Value2"));
 
             Assert.That(iniFile.ContainsKey("sectioncomment"));
-            Assert.That(iniFile["sectioncomment"].Count, Is.EqualTo(2));
+            Assert.That(iniFile["sectioncomment"], Has.Count.EqualTo(2));
             Assert.That(iniFile["sectioncomment"]["key"], Is.EqualTo("Value"));
             Assert.That(iniFile["sectioncomment"]["key2"], Is.EqualTo("value2"));
 
             Assert.That(iniFile.ContainsKey("sectioncomment2"));
-            Assert.That(iniFile["sectioncomment2"].Count, Is.EqualTo(4));
+            Assert.That(iniFile["sectioncomment2"], Has.Count.EqualTo(4));
             Assert.That(iniFile["sectioncomment2"]["key"], Is.EqualTo("Value2"));
             Assert.That(iniFile["sectioncomment2"]["key2"], Is.EqualTo("Value3"));
             Assert.That(iniFile["sectioncomment2"]["EmptyValueKey"], Is.Empty);
             Assert.That(iniFile["sectioncomment2"]["Key3"], Is.Empty);
 
             Assert.That(iniFile.ContainsKey("sectionquotes"));
-            Assert.That(iniFile["sectionquotes"].Count, Is.EqualTo(2));
+            Assert.That(iniFile["sectionquotes"], Has.Count.EqualTo(2));
             Assert.That(iniFile["sectionquotes"]["#key"], Is.EqualTo("#value"));
             Assert.That(iniFile["sectionquotes"]["key2"], Is.EqualTo("\"Value\""));
 
             Assert.That(iniFile.ContainsKey("SectionType"));
-            Assert.That(iniFile["SectionType"].Count, Is.EqualTo(11));
+            Assert.That(iniFile["SectionType"], Has.Count.EqualTo(11));
             Assert.That(iniFile["SectionType"]["int"], Is.EqualTo("1234"));
             Assert.That(iniFile["SectionType"]["intneg"], Is.EqualTo("-1234"));
             Assert.That(iniFile["SectionType"]["intrange"], Is.EqualTo("9999999999999999"));
@@ -93,7 +93,7 @@
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             IniSection section = IniFile.GetSection(path, "section");
             Assert.That(section, Is.Not.Null);
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
             Assert.That(section["key"], Is.EqualTo("Value"));
         }
 
@@ -103,7 +103,7 @@
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
             IniSection section = IniFile.GetSection(path, "sectionmissing");
             Assert.That(section, Is.Not.Null);
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -112,7 +112,7 @@
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestFooMissing.ini");
             IniSection section = IniFile.GetSection(path, "section");
             Assert.That(section, Is.Not.Null);
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -120,10 +120,10 @@
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestDuplicate.ini");
             IniFile iniFile = new IniFile(path);
-            Assert.That(iniFile.Count, Is.EqualTo(2));
+            Assert.That(iniFile, Has.Count.EqualTo(2));
 
             Assert.That(iniFile.ContainsKey("Section1"));
-            Assert.That(iniFile["Section1"].Count, Is.EqualTo(1));
+            Assert.That(iniFile["Section1"], Has.Count.EqualTo(1));
             Assert.That(iniFile["Section1"]["Key"], Is.EqualTo("Value"));
             Assert.That(iniFile["Section1"].ContainsKey("Key2"), Is.False);
 
@@ -135,10 +135,10 @@
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestDuplicate.ini");
             IniFile iniFile = new IniFile(path);
-            Assert.That(iniFile.Count, Is.EqualTo(2));
+            Assert.That(iniFile, Has.Count.EqualTo(2));
 
             Assert.That(iniFile.ContainsKey("Section2"));
-            Assert.That(iniFile["Section2"].Count, Is.EqualTo(2));
+            Assert.That(iniFile["Section2"], Has.Count.EqualTo(2));
             Assert.That(iniFile["Section2"]["Key1"], Is.EqualTo("Value1"));
             Assert.That(iniFile["Section2"].ContainsKey("Key2"), Is.True);
             Assert.That(iniFile["Section2"]["Key2"], Is.EqualTo("Value2"));
@@ -247,18 +247,18 @@
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestEmptySection.ini");
             IniFile iniFile = new IniFile(path);
-            Assert.That(iniFile.Count, Is.EqualTo(3));
+            Assert.That(iniFile, Has.Count.EqualTo(3));
 
             Assert.That(iniFile.ContainsKey("section"));
-            Assert.That(iniFile["section"].Count, Is.EqualTo(1));
+            Assert.That(iniFile["section"], Has.Count.EqualTo(1));
             Assert.That(iniFile["section"]["key"], Is.EqualTo("Value"));
 
             Assert.That(iniFile.ContainsKey(""));
-            Assert.That(iniFile[""].Count, Is.EqualTo(1));
+            Assert.That(iniFile[""], Has.Count.EqualTo(1));
             Assert.That(iniFile[""]["key"], Is.EqualTo("Value"));
 
             Assert.That(iniFile.ContainsKey("section3"));
-            Assert.That(iniFile["section3"].Count, Is.EqualTo(3));
+            Assert.That(iniFile["section3"], Has.Count.EqualTo(3));
             Assert.That(iniFile["section3"]["key1"], Is.EqualTo("Value1"));
             Assert.That(iniFile["section3"]["key2"], Is.EqualTo("Value2"));
             Assert.That(iniFile["section3"][""], Is.Empty);

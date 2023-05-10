@@ -12,7 +12,7 @@
         public void EmptyIniSection()
         {
             IniSection section = new IniSection("header");
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
             Assert.That(section.IsReadOnly, Is.False);
 
             int count = 0;
@@ -26,14 +26,14 @@
         public void EmptyIniSectionKeys()
         {
             IniSection section = new IniSection("header");
-            Assert.That(section.Keys.Count, Is.EqualTo(0));
+            Assert.That(section.Keys, Is.Empty);
         }
 
         [Test]
         public void EmptyIniSectionValues()
         {
             IniSection section = new IniSection("header");
-            Assert.That(section.Values.Count, Is.EqualTo(0));
+            Assert.That(section.Values, Is.Empty);
         }
 
         [Test]
@@ -41,7 +41,7 @@
         {
             IniSection section = new IniSection("header");
             Assert.That(() => { section.Add(null, "value"); }, Throws.TypeOf<ArgumentNullException>());
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -49,7 +49,7 @@
         {
             IniSection section = new IniSection("header");
             Assert.That(() => { section.Add("key", null); }, Throws.TypeOf<ArgumentNullException>());
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -60,7 +60,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>(null, null));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -71,7 +71,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>(null, "value"));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -82,7 +82,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", null));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -92,7 +92,7 @@
                 { "key", "value" }
             };
             Assert.That(section.ContainsKey("key"), Is.True);
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -105,7 +105,7 @@
                 () => {
                     section.Add("KEY", "value2");
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -118,7 +118,7 @@
                 () => {
                     section.Add("Key", "value2");
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -167,7 +167,7 @@
                 { "key", "value" }
             };
             Assert.That(() => { section.Add("key", "value2"); }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -176,7 +176,7 @@
             IniSection section = new IniSection("header");
             ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value"));
             Assert.That(section.ContainsKey("key"), Is.True);
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -201,7 +201,7 @@
                 () => {
                     section.Add("key", "value2");
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -213,7 +213,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value2"));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -226,7 +226,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value2"));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -239,7 +239,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("KEY", "value2"));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -252,7 +252,7 @@
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("Key", "value2"));
                 }, Throws.TypeOf<ArgumentException>());
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -262,7 +262,7 @@
                 { "key1", "value1" },
                 { "key2", "value2" }
             };
-            Assert.That(section.Count, Is.EqualTo(2));
+            Assert.That(section, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -272,7 +272,7 @@
                 { "key1", "value" },
                 { "key2", "value" }
             };
-            Assert.That(section.Count, Is.EqualTo(2));
+            Assert.That(section, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -282,7 +282,7 @@
                 { "key", "value" }
             };
             section.Clear();
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
 
             int count = 0;
             foreach (KeyValuePair<string, string> item in section) {
@@ -299,7 +299,7 @@
                 { "key2", "value2" }
             };
             section.Clear();
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
 
             int count = 0;
             foreach (KeyValuePair<string, string> item in section) {
@@ -322,7 +322,7 @@
                 { "key", "value" }
             };
             Assert.That(section.Remove("key"), Is.True);
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -333,7 +333,7 @@
                 { "key2", "value" }
             };
             Assert.That(section.Remove("key"), Is.True);
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
             Assert.That(section.ContainsKey("key2"), Is.True);
             Assert.That(section.ContainsKey("key"), Is.False);
         }
@@ -346,7 +346,7 @@
                 { "key2", "value" }
             };
             Assert.That(section.Remove("key2"), Is.True);
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
             Assert.That(section.ContainsKey("key"), Is.True);
             Assert.That(section.ContainsKey("key2"), Is.False);
         }
@@ -421,7 +421,7 @@
         public void EmptyKeyCollection()
         {
             IniSection section = new IniSection("header");
-            Assert.That(section.Keys.Count, Is.EqualTo(0));
+            Assert.That(section.Keys, Is.Empty);
 
             int count = 0;
             foreach (string key in section.Keys) {
@@ -639,7 +639,7 @@
         public void EmptyValueCollection()
         {
             IniSection section = new IniSection("header");
-            Assert.That(section.Values.Count, Is.EqualTo(0));
+            Assert.That(section.Values, Is.Empty);
 
             int count = 0;
             foreach (string value in section.Values) {
@@ -865,7 +865,7 @@
                 () => {
                     section["key"] = null;
                 }, Throws.TypeOf<ArgumentNullException>());
-            Assert.That(section.Count, Is.EqualTo(0));
+            Assert.That(section, Is.Empty);
         }
 
         [Test]
@@ -874,7 +874,7 @@
             IniSection section = new IniSection("header") {
                 ["key"] = "value"
             };
-            Assert.That(section.Count, Is.EqualTo(1));
+            Assert.That(section, Has.Count.EqualTo(1));
             Assert.That(section["key"], Is.EqualTo("value"));
         }
 
@@ -891,7 +891,7 @@
                 foundKeys.Add(item.Key);
             }
 
-            Assert.That(foundKeys.Count, Is.EqualTo(2));
+            Assert.That(foundKeys, Has.Count.EqualTo(2));
             Assert.That(foundKeys, Has.Member("key"));
             Assert.That(foundKeys, Has.Member("key2"));
         }
