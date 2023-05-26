@@ -3,6 +3,10 @@
     using System;
     using System.Reflection;
 
+#if NET45_OR_GREATER || NETSTANDARD
+    using System.Runtime.ExceptionServices;
+#endif
+
     /// <summary>
     /// Base class for private accessors that provide access to public and non-public members of a class.
     /// </summary>
@@ -60,6 +64,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -85,6 +92,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -112,6 +122,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -140,6 +153,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -188,6 +204,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -215,6 +234,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -238,6 +260,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -260,6 +285,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -283,6 +311,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -307,6 +338,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -329,6 +363,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -352,7 +389,11 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#else
                     throw ex.InnerException;
+#endif
                 }
             }
         }
@@ -376,6 +417,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -399,6 +443,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -423,6 +470,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -448,6 +498,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -478,6 +531,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -508,6 +564,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -592,6 +651,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -621,6 +683,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -651,6 +716,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -674,6 +742,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
@@ -697,6 +768,9 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
+#if NET45_OR_GREATER || NETSTANDARD
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
                     throw ex.InnerException;
                 }
             }
