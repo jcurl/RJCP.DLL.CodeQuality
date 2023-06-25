@@ -132,14 +132,14 @@
         [Test]
         public void NullClassName()
         {
-            Assert.That(() => { _ = new PrivateObject("RJCP.CodeQualityTest", null, new object[0]); },
+            Assert.That(() => { _ = new PrivateObject(AccessorTest.AssemblyName, null, new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void EmptyClassName()
         {
-            Assert.That(() => { _ = new PrivateObject("RJCP.CodeQualityTest", string.Empty, new object[0]); },
+            Assert.That(() => { _ = new PrivateObject(AccessorTest.AssemblyName, string.Empty, new object[0]); },
                 Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -153,14 +153,14 @@
         [Test]
         public void InstanceFromAssembly_WithTypeName()
         {
-            PrivateObject privateObject = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
+            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
             Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]
         public void PrivateCtorFromAssembly_WithType()
         {
-            PrivateObject privateObject = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", "ObjectName");
+            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", "ObjectName");
             Assert.That(privateObject.Target, Is.Not.Null);
         }
 
@@ -171,7 +171,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(
-                new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args),
+                new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args),
                 Is.Not.Null);
         }
 
@@ -193,7 +193,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                _ = new PrivateObject("RJCP.CodeQualityTest", null, parameterTypes, args);
+                _ = new PrivateObject(AccessorTest.AssemblyName, null, parameterTypes, args);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -204,7 +204,7 @@
             object[] args = new object[] { 7 };
 
             Assert.That(() => {
-                _ = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args);
+                _ = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", parameterTypes, args);
             }, Throws.TypeOf<ArgumentException>());
         }
 
@@ -307,7 +307,7 @@
         [Test]
         public void SetTargetNull()
         {
-            PrivateObject privateObject = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
+            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
             Assert.That(privateObject.Target, Is.Not.Null);
             Assert.That(() => { privateObject.Target = null; }, Throws.TypeOf<ArgumentNullException>());
         }
@@ -315,7 +315,7 @@
         [Test]
         public void SetAnotherTarget()
         {
-            PrivateObject privateObject = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
+            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
             Assert.That(privateObject.Target, Is.Not.Null);
             ObjectClassTest testInstance = new ObjectClassTest(33);
             privateObject.Target = testInstance;
@@ -553,7 +553,7 @@
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
             Assert.That(() => {
-                _ = new PrivateObject("RJCP.CodeQualityTest", genericType.GetGenericTypeDefinition().FullName,
+                _ = new PrivateObject(AccessorTest.AssemblyName, genericType.GetGenericTypeDefinition().FullName,
                     new[] { typeof(object), typeof(string) }, 9, "abc", 100);
             },
                 Throws.TypeOf<ArgumentException>());
@@ -563,7 +563,7 @@
         public void InvalidTypeName()
         {
             Assert.That(() => {
-                _ = new PrivateObject("RJCP.CodeQualityTest", "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
+                _ = new PrivateObject(AccessorTest.AssemblyName, "abc_xyz", new[] { typeof(object), typeof(string) }, 9, "xyz");
             }, Throws.TypeOf<ArgumentNullException>());
         }
 

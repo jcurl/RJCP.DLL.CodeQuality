@@ -7,6 +7,12 @@
     [TestFixture(Category = "RJCP.CodeQuality.Accessor")]
     public class AccessorTest
     {
+#if !NET40_LEGACY
+        public const string AssemblyName = "RJCP.CodeQualityTest";
+#else
+        public const string AssemblyName = "RJCP.CodeQualityTest40";
+#endif
+
         [Test]
         public void InitializeAccessorGeneric()
         {

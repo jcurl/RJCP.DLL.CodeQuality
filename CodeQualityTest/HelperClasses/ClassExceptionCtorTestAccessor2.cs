@@ -2,7 +2,7 @@
 {
     public class ClassExceptionCtorTestAccessor2 : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.ClassExceptionCtorTest";
         private readonly static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 

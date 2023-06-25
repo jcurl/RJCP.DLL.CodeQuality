@@ -4,7 +4,7 @@
 
     public class RelatedClassTestAccessor : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedClassTest";
 
         public RelatedClassTestAccessor(PrivateObject obj) : base(obj) { }
@@ -23,7 +23,7 @@
 
     public class RelatedClassTestFactoryAccessor : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedClassTestFactory";
 
         public RelatedClassTestFactoryAccessor()

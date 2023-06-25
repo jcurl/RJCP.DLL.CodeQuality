@@ -24,13 +24,13 @@
         [Test]
         public void NullClassName()
         {
-            Assert.That(() => { _ = new PrivateType("RJCP.CodeQualityTest", null); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType(AccessorTest.AssemblyName, null); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
         public void EmptyClassName()
         {
-            Assert.That(() => { _ = new PrivateType("RJCP.CodeQualityTest", string.Empty); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType(AccessorTest.AssemblyName, string.Empty); }, Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -42,28 +42,28 @@
         [Test]
         public void InvokeNullMethodName()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             Assert.That(() => { privType.InvokeStatic(null, 5); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void GetNullPropertyOrField()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             Assert.That(() => { privType.GetStaticFieldOrProperty(null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void SetNullPropertyOrField()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             Assert.That(() => { privType.SetStaticFieldOrProperty(null, 123); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void InvokeInexistentMethod()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             Assert.That(() => {
                 privType.InvokeStatic("IDoNotExist",
                 BindingFlags.NonPublic | BindingFlags.Static,
@@ -78,7 +78,7 @@
             try {
                 // Microsoft.VisualStudio.TestTools.UnitTesting v10.1.0.0 will fail (VS2015)
                 // Microsoft.VisualStudio.TestTools.UnitTesting v14.0.0.0 will pass (VS2017)
-                PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+                PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
                 Assert.That(() => { privType.InvokeStatic("ThrowEx", null); },
                     Throws.TypeOf<TargetInvocationException>().With.InnerException.TypeOf<InvalidOperationException>());
             } catch (AssertionException) {
@@ -91,7 +91,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             int result = (int)privType.InvokeStatic("TestStaticMethod", null);
 
             Assert.That(result, Is.EqualTo(1));
@@ -100,7 +100,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly_WithArg()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             int result = (int)privType.InvokeStatic("TestIncArg", 5);
 
             Assert.That(result, Is.EqualTo(6));
@@ -109,7 +109,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly_WithArgAndType()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             float result = (float)privType.InvokeStatic("TestIncArg", new Type[1] { typeof(float) }, new object[1] { 5.1f });
 
             Assert.That(result, Is.EqualTo(6.1f));
@@ -118,7 +118,7 @@
         [Test]
         public void InvokeStaticOnTypeFromAssembly_GenericMethod()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             string result = (string)privType.InvokeStatic("GetDescription",
                 new Type[1] { typeof(int) },
                 new object[1] { 100 },
@@ -130,7 +130,7 @@
         [Test]
         public void GetField_TypeFromAssembly()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             string result = (string)privType.GetStaticFieldOrProperty("s_MyStatic");
 
             Assert.That(result, Is.EqualTo("static"));
@@ -139,7 +139,7 @@
         [Test]
         public void GetProperty_TypeFromAssembly()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             int result = (int)privType.GetStaticFieldOrProperty("MyStaticProperty");
 
             Assert.That(result, Is.EqualTo(111));
@@ -148,7 +148,7 @@
         [Test]
         public void GetProperty_BindingFlags_TypeFromAssembly()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             int result = (int)privType.GetStaticFieldOrProperty("MyBaseStaticProp", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty);
 
             Assert.That(result, Is.EqualTo(99));
@@ -157,7 +157,7 @@
         [Test]
         public void SetField_TypeFromAssembly()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             string result = (string)privType.GetStaticFieldOrProperty("s_MyStatic");
             Assert.That(result, Is.EqualTo("static"));
 
@@ -176,7 +176,7 @@
             BindingFlags getPropflags = BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.GetProperty;
             BindingFlags setPropflags = BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.SetProperty;
 
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             int result = (int)privType.GetStaticFieldOrProperty("MyBaseStaticProp", getPropflags);
             Assert.That(result, Is.EqualTo(99));
 
@@ -192,7 +192,7 @@
         [Test]
         public void InvokeStatic_BaseTypeFromAssembly()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             int result = (int)privType.InvokeStatic("MyBaseStaticMethod",
                 BindingFlags.NonPublic | BindingFlags.Static,
                 null);
@@ -203,7 +203,7 @@
         [Test]
         public void InvokeStatic_BaseTypeFromAssembly_ParamType()
         {
-            PrivateType privType = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.InternalClassTest");
+            PrivateType privType = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.InternalClassTest");
             string result = (string)privType.InvokeStatic("MyBaseStaticIntMethod",
                 BindingFlags.NonPublic | BindingFlags.Static,
                 new Type[1] { typeof(int) },

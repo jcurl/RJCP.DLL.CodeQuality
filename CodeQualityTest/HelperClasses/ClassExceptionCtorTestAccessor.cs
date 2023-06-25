@@ -4,7 +4,7 @@
 
     public class ClassExceptionCtorTestAccessor : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.ClassExceptionCtorTest";
 
         public ClassExceptionCtorTestAccessor()
@@ -27,7 +27,7 @@
 
     public class ClassExceptionCtorTestAccessor<T> : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.ClassExceptionCtorTest`1";
 
         public ClassExceptionCtorTestAccessor()

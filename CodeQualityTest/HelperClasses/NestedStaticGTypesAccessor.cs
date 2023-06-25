@@ -4,7 +4,7 @@
 
     public class NestedStaticGTypes1Accessor
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes1";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 
@@ -22,7 +22,7 @@
 
     public class NestedStaticGTypes2Accessor<T>
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes2`1";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
 
@@ -40,7 +40,7 @@
 
     public class NestedStaticGTypes3Accessor
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes3";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 
@@ -58,7 +58,7 @@
 
     public class NestedStaticGTypes4Accessor<T>
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes4`1";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
 
@@ -76,7 +76,7 @@
 
     public class NestedStaticGTypes5Accessor<T>
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes5`1";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
 
@@ -95,7 +95,7 @@
 
     public static class NestedStaticGTypes6Accessor<T>
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes6`1";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
 
@@ -114,7 +114,7 @@
 
     public class NestedGTypes1Accessor<T> : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedGTypes1`1";
         private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
 

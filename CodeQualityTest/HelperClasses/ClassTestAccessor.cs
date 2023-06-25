@@ -10,7 +10,7 @@
         public int Capacity { get { return (int)GetFieldOrProperty(nameof(Capacity)); } }
 
         public ClassTestAccessor(int length)
-            : base("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ClassTest", new object[] { length })
+            : base(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ClassTest", new object[] { length })
         {
             BindingFlags |= BindingFlags.NonPublic;
         }

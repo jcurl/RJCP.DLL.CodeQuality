@@ -9,7 +9,7 @@
     public class GenericClassTestAccessor : AccessorBase
     {
         public GenericClassTestAccessor(int capacity)
-            : base("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.GenericClassTest`1",
+            : base(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.GenericClassTest`1",
                   new[] { typeof(int) },      // Constructor signature to use
                   new object[] { capacity },  // Values to the constructor
                   new[] { typeof(int) })      // Class type arguments

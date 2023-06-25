@@ -29,7 +29,7 @@
 
     public class EventClassAccessor : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.EventClass";
         public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 

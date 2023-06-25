@@ -16,12 +16,12 @@
             Assert.That((string)genericPrivateType.InvokeStatic("GenericTypeName"), Is.EqualTo(typeName));
         }
 
-        [TestCase("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(PrivateType), "RJCP.CodeQuality.PrivateType")]
-        [TestCase("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(int), "System.Int32")]
-        [TestCase("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(object), "System.Object")]
-        public void GenericType(string assemblyName, string typeName, Type typeArgument, string genericTypeName)
+        [TestCase("RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(PrivateType), "RJCP.CodeQuality.PrivateType")]
+        [TestCase("RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(int), "System.Int32")]
+        [TestCase("RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(object), "System.Object")]
+        public void GenericType(string typeName, Type typeArgument, string genericTypeName)
         {
-            PrivateType genericPrivateType = new PrivateType(assemblyName, typeName, new Type[] { typeArgument });
+            PrivateType genericPrivateType = new PrivateType(AccessorTest.AssemblyName, typeName, new Type[] { typeArgument });
             Assert.That((string)genericPrivateType.InvokeStatic("GenericTypeName"), Is.EqualTo(genericTypeName));
         }
 
@@ -35,7 +35,7 @@
         [Test]
         public void TypeNotFound()
         {
-            Assert.That(() => { _ = new PrivateType("RJCP.CodeQualityTest", "RJCP.CodeQuality.GenericPrivateType", new Type[] { typeof(int) }); },
+            Assert.That(() => { _ = new PrivateType(AccessorTest.AssemblyName, "RJCP.CodeQuality.GenericPrivateType", new Type[] { typeof(int) }); },
                 Throws.InstanceOf<TypeLoadException>());
         }
     }

@@ -4,7 +4,7 @@
 
     public class GenericStackAccessor<T> : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.GenericStack`1";
 
         public GenericStackAccessor()

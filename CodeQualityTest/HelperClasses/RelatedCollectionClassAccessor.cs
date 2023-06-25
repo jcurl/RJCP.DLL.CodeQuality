@@ -4,7 +4,7 @@
 
     public class RelatedItemClassAccessor : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedItemClass";
         public readonly static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 
@@ -22,7 +22,7 @@
 
     public class RelatedCollectionClassAccessor : AccessorBase
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedCollectionClass";
         public readonly static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
 

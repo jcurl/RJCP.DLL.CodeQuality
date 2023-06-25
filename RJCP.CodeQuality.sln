@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.CodeQuality", "CodeQuality\RJCP.CodeQuality.csproj", "{23248922-F083-445D-95F9-05E814EB533D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RJCP.CodeQuality", "CodeQuality\RJCP.CodeQuality.csproj", "{23248922-F083-445D-95F9-05E814EB533D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.CodeQualityTest", "CodeQualityTest\RJCP.CodeQualityTest.csproj", "{433C98E7-0BF9-4634-B7C7-A7B7F67F44A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BBEBC2BF-1AEA-475C-98DC-0AC52C018A9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RJCP.CodeQualityTest.NUnit2", "CodeQualityTest.NUnit2\RJCP.CodeQualityTest.NUnit2.csproj", "{0F59108F-BA70-4E92-8EEC-E97EEF22155E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RJCP.CodeQualityTest", "CodeQualityTest\RJCP.CodeQualityTest.csproj", "{433C98E7-0BF9-4634-B7C7-A7B7F67F44A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RJCP.CodeQualityTest.NUnit2", "CodeQualityTest.NUnit2\RJCP.CodeQualityTest.NUnit2.csproj", "{0F59108F-BA70-4E92-8EEC-E97EEF22155E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RJCP.CodeQualityTest.Legacy", "CodeQualityTest\RJCP.CodeQualityTest.Legacy.csproj", "{5305C955-E4F2-4B16-9962-8BAD036714DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +31,17 @@ Global
 		{0F59108F-BA70-4E92-8EEC-E97EEF22155E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F59108F-BA70-4E92-8EEC-E97EEF22155E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F59108F-BA70-4E92-8EEC-E97EEF22155E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5305C955-E4F2-4B16-9962-8BAD036714DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5305C955-E4F2-4B16-9962-8BAD036714DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5305C955-E4F2-4B16-9962-8BAD036714DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5305C955-E4F2-4B16-9962-8BAD036714DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{433C98E7-0BF9-4634-B7C7-A7B7F67F44A9} = {BBEBC2BF-1AEA-475C-98DC-0AC52C018A9F}
+		{0F59108F-BA70-4E92-8EEC-E97EEF22155E} = {BBEBC2BF-1AEA-475C-98DC-0AC52C018A9F}
+		{5305C955-E4F2-4B16-9962-8BAD036714DF} = {BBEBC2BF-1AEA-475C-98DC-0AC52C018A9F}
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,7 @@
 {
     internal class InternalSimpleDerived1Accessor : InternalSimpleBase1Accessor
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.InternalSimpleDerived1";
 
         public InternalSimpleDerived1Accessor(int value, string description)

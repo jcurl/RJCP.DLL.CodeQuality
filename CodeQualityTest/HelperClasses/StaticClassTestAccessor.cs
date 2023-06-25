@@ -2,7 +2,7 @@
 {
     public static class StaticClassTestAccessor
     {
-        private const string AssemblyName = "RJCP.CodeQualityTest";
+        private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.StaticClassTest";
         private static readonly PrivateType m_Type = new PrivateType(AssemblyName, TypeName);
 

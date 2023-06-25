@@ -11,7 +11,8 @@
         [Test]
         public void GenericTypes()
         {
-            PrivateObject privateObject = new PrivateObject("RJCP.CodeQualityTest", "RJCP.CodeQuality.HelperClasses.ObjectGenericClassTest`2",
+            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName,
+                "RJCP.CodeQuality.HelperClasses.ObjectGenericClassTest`2",
                 new Type[] { typeof(int), typeof(string) },   // Constructor signature
                 new object[] { 9, "abc" },                    // Values to the constructor
                 new Type[] { typeof(int), typeof(string) });  // Type arguments
@@ -27,7 +28,8 @@
         public void PrivateCtorFromGenericTypes()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
-            PrivateObject privateObject = new PrivateObject("RJCP.CodeQualityTest", genericType.GetGenericTypeDefinition().FullName,
+            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName,
+                genericType.GetGenericTypeDefinition().FullName,
                 new Type[] { typeof(string) },                // Constructor signature
                 new object[] { "abc" },                       // Values to the constructor
                 new[] { typeof(int), typeof(string) });       // Type arguments
@@ -50,7 +52,7 @@
         public void GenericTypesNullTypeName()
         {
             Assert.That(() => {
-                _ = new PrivateObject("RJCP.CodeQualityTest", null,
+                _ = new PrivateObject(AccessorTest.AssemblyName, null,
                     new[] { typeof(object), typeof(string) },
                     new object[] { 9, "xyz" },
                     new[] { typeof(object), typeof(string) });
