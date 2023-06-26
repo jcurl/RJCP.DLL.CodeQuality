@@ -248,12 +248,12 @@
                 ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) });
             m_WriteLineFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoLineArgsS);
 
-#if NETFRAMEWORK
-            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { })
-                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { });
-#else
+#if NET462_OR_GREATER || NETSTANDARD
             MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), Array.Empty<Type>())
                 ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), Array.Empty<Type>());
+#else
+            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { })
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { });
 #endif
             m_WriteLine = (Action)Delegate.CreateDelegate(typeof(Action), methodInfoLine);
         }
