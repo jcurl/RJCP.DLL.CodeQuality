@@ -5,7 +5,7 @@
     using HelperClasses;
     using NUnit.Framework;
 
-    [TestFixture(Category = "RJCP.CodeQuality.PrivateObject")]
+    [TestFixture]
     public class GenericPrivateObjectTest
     {
         [Test]

@@ -3,7 +3,7 @@
     using System.IO;
     using NUnit.Framework;
 
-    [TestFixture(Category = "RJCP.CodeQuality.NUnitExtensions")]
+    [TestFixture]
     public class DeployBackPathTest
     {
         [Test]

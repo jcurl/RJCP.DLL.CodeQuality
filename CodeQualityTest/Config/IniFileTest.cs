@@ -4,7 +4,7 @@
     using NUnit.Framework;
     using NUnitExtensions;
 
-    [TestFixture(Category = "RJCP.CodeQuality.Config.Ini")]
+    [TestFixture]
     public class IniFileTest
     {
         [Test]

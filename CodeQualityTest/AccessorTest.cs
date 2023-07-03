@@ -4,7 +4,7 @@
     using HelperClasses;
     using NUnit.Framework;
 
-    [TestFixture(Category = "RJCP.CodeQuality.Accessor")]
+    [TestFixture]
     public class AccessorTest
     {
 #if !NET40_LEGACY

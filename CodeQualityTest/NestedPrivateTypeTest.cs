@@ -4,7 +4,7 @@
     using HelperClasses;
     using NUnit.Framework;
 
-    [TestFixture(Category = "RJCP.CodeQuality.PrivateType")]
+    [TestFixture]
     public class NestedPrivateTypeTest
     {
         [Test]

@@ -5,7 +5,7 @@
     using System.Threading;
     using NUnit.Framework;
 
-    [TestFixture(Category = "RJCP.CodeQuality.NUnitExtensions")]
+    [TestFixture]
     public class DeployProperties
     {
         [Test]

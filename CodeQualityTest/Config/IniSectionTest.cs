@@ -5,7 +5,7 @@
     using System.Linq;
     using NUnit.Framework;
 
-    [TestFixture(Category = "RJCP.CodeQuality.Config.Ini")]
+    [TestFixture]
     public class IniSectionTest
     {
         [Test]
@@ -897,7 +897,7 @@
         }
 
         [Test]
-        [Category("Manual")]
+        [Category("ManualTest")]
         public void DictionaryTest()
         {
             // For information about this test, see
