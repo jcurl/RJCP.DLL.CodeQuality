@@ -1,6 +1,5 @@
 ﻿namespace RJCP.CodeQuality.HelperClasses
 {
-    using System;
     using System.Collections.Generic;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Test case uses reflection")]

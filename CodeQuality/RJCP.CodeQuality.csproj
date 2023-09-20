@@ -72,6 +72,7 @@
     <Compile Include="AccessorBase.cs" />
     <Compile Include="AppConfig\Deploy.cs" />
     <Compile Include="AppConfig\NUnitExtensionsSection.cs" />
+    <Compile Include="ArrayBufferExtensions.cs" />
     <Compile Include="Config\IniFile.cs" />
     <Compile Include="Config\IniKeyPair.cs" />
     <Compile Include="Config\IniSection.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="DelegateTargets.cs" />
     <Compile Include="GenericMethodCache.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IO\SparseStream.cs" />
     <Compile Include="NUnitExtensions\Deploy.cs" />
     <Compile Include="NUnitExtensions\ScratchOptions.cs" />
     <Compile Include="NUnitExtensions\ScratchPad.cs" />
