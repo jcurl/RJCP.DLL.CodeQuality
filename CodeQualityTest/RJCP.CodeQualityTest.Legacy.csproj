@@ -111,6 +111,7 @@
     <Compile Include="HelperClasses\RelatedCollectionClassAccessor.cs" />
     <Compile Include="HelperClasses\StaticClassTest.cs" />
     <Compile Include="HelperClasses\StaticClassTestAccessor.cs" />
+    <Compile Include="IO\SimpleStreamTest.cs" />
     <Compile Include="IO\SparseStreamTest.cs" />
     <Compile Include="NestedPrivateTypeTest.cs" />
     <Compile Include="NUnitExtensions\DeployBackPathTest.cs" />
