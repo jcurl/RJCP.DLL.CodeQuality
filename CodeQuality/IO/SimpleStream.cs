@@ -17,19 +17,19 @@
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <value><see langword="true"/> if this instance can read; otherwise, <see langword="false"/>.</value>
-        public override bool CanRead { get { return true; } }
+        public override bool CanRead { get { return !IsDisposed; } }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
         /// </summary>
         /// <value><see langword="true"/> if this instance can seek; otherwise, <see langword="false"/>.</value>
-        public override bool CanSeek { get { return true; } }
+        public override bool CanSeek { get { return !IsDisposed; } }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
         /// <value><see langword="true"/> if this instance can write; otherwise, <see langword="false"/>.</value>
-        public override bool CanWrite { get { return true; } }
+        public override bool CanWrite { get { return !IsDisposed; } }
 
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
@@ -38,7 +38,7 @@
         /// <remarks>
         /// This stream supports timeouts.
         /// </remarks>
-        public override bool CanTimeout { get { return true; } }
+        public override bool CanTimeout { get { return !IsDisposed; } }
 
         /// <summary>
         /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt to write before
@@ -79,6 +79,7 @@
             get { return m_Position; }
             set
             {
+                if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 m_Position = value;
@@ -92,6 +93,7 @@
         /// <remarks>Flushing the stream has no operation.</remarks>
         public override void Flush()
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             /* Nothing to do */
         }
 
@@ -106,6 +108,7 @@
         /// <returns>Task.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             return Task.CompletedTask;
         }
 #endif
@@ -135,6 +138,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -156,6 +160,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override int Read(Span<byte> buffer)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             return ReadInternal(buffer.Length);
         }
 #endif
@@ -208,6 +213,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -235,6 +241,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             cancellationToken.ThrowIfCancellationRequested();
 
             return new ValueTask<int>(ReadInternal(buffer.Length));
@@ -248,6 +255,7 @@
         /// <returns>The unsigned byte cast to an Int32, or -1 if at the end of the stream.</returns>
         public override int ReadByte()
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             int read = ReadInternal(1);
             return read == 0 ? -1 : 0;
         }
@@ -274,6 +282,7 @@
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -290,6 +299,7 @@
         /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
         public override int EndRead(IAsyncResult asyncResult)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
             if (!(asyncResult is CompletedAsync<int> readAsync))
                 throw new ArgumentException("Invalid async result", nameof(asyncResult));
@@ -311,6 +321,7 @@
         /// </remarks>
         public override void CopyTo(Stream destination, int bufferSize)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             byte[] buffer = new byte[bufferSize];
             int written = 0;
             while (written < m_Length) {
@@ -341,6 +352,7 @@
         /// </remarks>
         public override async Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             ReadOnlyMemory<byte> buffer = new byte[bufferSize];
             int written = 0;
             while (written < m_Length) {
@@ -363,6 +375,7 @@
         /// <remarks>Updates the position of the stream.</remarks>
         public override long Seek(long offset, SeekOrigin origin)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             switch (origin) {
             case SeekOrigin.Begin:
                 m_Position = offset;
@@ -394,6 +407,7 @@
         /// <remarks>Updates the length of the stream. If shortened, the <see cref="Position"/> is updated.</remarks>
         public override void SetLength(long value)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             m_Length = value;
             if (m_Position > m_Length) m_Position = m_Length;
         }
@@ -423,6 +437,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override void Write(byte[] buffer, int offset, int count)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -448,6 +463,7 @@
         /// <param name="buffer">Writes the bytes to the current stream.</param>
         public override void Write(ReadOnlySpan<byte> buffer)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             WriteInternal(buffer.Length);
         }
 #endif
@@ -484,6 +500,7 @@
         /// <returns>A task indicating when the write operation is complete.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -510,6 +527,7 @@
         /// <returns>A <see cref="ValueTask"/> indicating when the write operation is complete.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             cancellationToken.ThrowIfCancellationRequested();
             WriteInternal(buffer.Length);
             return new ValueTask();
@@ -522,6 +540,7 @@
         /// <param name="value">The byte to write to the stream.</param>
         public override void WriteByte(byte value)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             WriteInternal(1);
         }
 
@@ -547,6 +566,7 @@
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -563,6 +583,7 @@
         /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
         public override void EndWrite(IAsyncResult asyncResult)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
             CompletedAsync.End(asyncResult);
         }

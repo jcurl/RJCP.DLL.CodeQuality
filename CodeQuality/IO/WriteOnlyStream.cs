@@ -132,7 +132,12 @@
         /// </summary>
         public override void Flush()
         {
-            if (m_Stream != null) m_Stream.Flush();
+            if (m_Stream != null) {
+                m_Stream.Flush();
+                return;
+            }
+
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
         }
 
 #if NETSTANDARD || NET462_OR_GREATER
@@ -146,7 +151,10 @@
         /// <returns>Task.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            if (m_Stream != null) m_Stream.FlushAsync(cancellationToken);
+            if (m_Stream != null)
+                return m_Stream.FlushAsync(cancellationToken);
+
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             return Task.CompletedTask;
         }
 #endif
@@ -390,6 +398,7 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <remarks>If a stream is provided, then any exceptions are propagated.</remarks>
         public override void Write(byte[] buffer, int offset, int count)
         {
@@ -398,6 +407,7 @@
                 return;
             }
 
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -410,9 +420,15 @@
         /// number of bytes written.
         /// </summary>
         /// <param name="buffer">Writes the bytes to the current stream.</param>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void Write(ReadOnlySpan<byte> buffer)
         {
-            if (m_Stream != null) m_Stream.Write(buffer);
+            if (m_Stream != null) {
+                m_Stream.Write(buffer);
+                return;
+            }
+
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
         }
 #endif
 
@@ -445,11 +461,13 @@
         /// <exception cref="OperationCanceledException">
         /// The <paramref name="cancellationToken"/> was cancelled.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>A task indicating when the write operation is complete.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             if (m_Stream != null) return m_Stream.WriteAsync(buffer, offset, count, cancellationToken);
 
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -472,11 +490,13 @@
         /// <exception cref="OperationCanceledException">
         /// The <paramref name="cancellationToken"/> was cancelled.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>A <see cref="ValueTask"/> indicating when the write operation is complete.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
             if (m_Stream != null) return m_Stream.WriteAsync(buffer, cancellationToken);
 
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             cancellationToken.ThrowIfCancellationRequested();
             return new ValueTask();
         }
@@ -486,9 +506,15 @@
         /// Writes a byte to the current position in the stream and advances the position within the stream by one byte.
         /// </summary>
         /// <param name="value">The byte to write to the stream.</param>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void WriteByte(byte value)
         {
-            if (m_Stream != null) m_Stream.WriteByte(value);
+            if (m_Stream != null) {
+                m_Stream.WriteByte(value);
+                return;
+            }
+
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
         }
 
         /// <summary>
@@ -510,11 +536,13 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             if (m_Stream != null) return m_Stream.BeginWrite(buffer, offset, count, callback, state);
 
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -529,6 +557,7 @@
         /// Ends an asynchronous write operation.
         /// </summary>
         /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void EndWrite(IAsyncResult asyncResult)
         {
             if (m_Stream != null) {
@@ -536,11 +565,21 @@
                 return;
             }
 
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
             CompletedAsync.End(asyncResult);
         }
 
         private int m_IsDisposed = 0;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is disposed.
+        /// </summary>
+        /// <value><see langword="true"/> if this instance is disposed; otherwise, <see langword="false"/>.</value>
+        public bool IsDisposed
+        {
+            get { return m_IsDisposed != 0; }
+        }
 
         /// <summary>
         /// Releases the unmanaged resources used by the <see cref="Stream"/> and optionally releases the managed

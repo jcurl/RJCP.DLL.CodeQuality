@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
 
 #if NETSTANDARD || NET462_OR_GREATER
-    using System.Threading;
     using System.Threading.Tasks;
 #endif
 
@@ -156,15 +156,15 @@
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <value><see langword="true"/> if this instance can read; otherwise, <see langword="false"/>.</value>
-        /// <remarks>The stream is always readable.</remarks>
-        public override bool CanRead { get { return true; } }
+        /// <remarks>The stream is always readable unless disposed.</remarks>
+        public override bool CanRead { get { return !IsDisposed; } }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
         /// </summary>
         /// <value><see langword="true"/> if this instance can seek; otherwise, <see langword="false"/>.</value>
-        /// <remarks>The stream is always seekable.</remarks>
-        public override bool CanSeek { get { return true; } }
+        /// <remarks>The stream is always seekable unless disposed.</remarks>
+        public override bool CanSeek { get { return !IsDisposed; } }
 
         private bool m_CanWrite = true;
 
@@ -173,11 +173,11 @@
         /// </summary>
         /// <value><see langword="true"/> if this instance can write; otherwise, <see langword="false"/>.</value>
         /// <remarks>
-        /// By default the stream can write. To prevent this, call the method <see cref="SetReadOnly()"/>.
+        /// By default the stream can write unless disposed. To prevent this, call the method <see cref="SetReadOnly()"/>.
         /// </remarks>
         public override bool CanWrite
         {
-            get { return m_CanWrite; }
+            get { return m_CanWrite && !IsDisposed; }
         }
 
         /// <summary>
@@ -203,6 +203,7 @@
         /// <para>- or -</para>
         /// The stream is read only and the position exceeds the length.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <remarks>
         /// If the stream is writable, setting the position beyond the <see cref="Length"/> increases the length.
         /// </remarks>
@@ -211,6 +212,8 @@
             get { return m_Position; }
             set
             {
+                if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
                 if (value < 0 || (!m_CanWrite && value > m_Length)) {
                     string message = string.Format("Position must be positive and may not exceed length {0}", m_Length);
                     throw new ArgumentException(message, nameof(value));
@@ -223,10 +226,16 @@
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <remarks>
         /// Because this is an in-memory data structure, this does nothing.
         /// </remarks>
-        public override void Flush() { /* Nothing to do */ }
+        public override void Flush()
+        {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
+            /* Nothing to do */
+        }
 
 #if NETSTANDARD || NET462_OR_GREATER
         /// <summary>
@@ -236,9 +245,12 @@
         /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
         /// </param>
         /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>A task that is completed, as there is nothing to flush.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             return Task.CompletedTask;
         }
@@ -267,12 +279,14 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>
         /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that
         /// many bytes are not currently available, or zero (0) if the end of the stream has been reached.
         /// </returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -334,12 +348,15 @@
         /// <param name="buffer">
         /// The buffer. When this method returns, the buffer contains the specified bytes from the stream.
         /// </param>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>
         /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that
         /// many bytes are not currently available, or zero (0) if the end of the stream has been reached.
         /// </returns>
         public override int Read(Span<byte> buffer)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             int count = buffer.Length;
             int offset = 0;
 
@@ -418,9 +435,12 @@
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
         /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The function returns immediately with the number of bytes read.</returns>
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             int read = Read(buffer, offset, count);
             return Task.FromResult(read);
@@ -437,12 +457,15 @@
         /// </param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>
         /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that
         /// many bytes are not currently available, or zero (0) if the end of the stream has been reached.
         /// </returns>
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             int read = Read(buffer.Span);
             return new ValueTask<int>(read);
@@ -463,9 +486,12 @@
         /// <para>- or -</para>
         /// Unknown value for <paramref name="origin"/>.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position within the current stream.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             switch (origin) {
             case SeekOrigin.Begin:
                 if (offset < 0 || (!m_CanWrite && offset > m_Length)) {
@@ -498,8 +524,10 @@
         /// </summary>
         /// <param name="value">The desired length of the current stream in bytes.</param>
         /// <exception cref="InvalidOperationException">Stream is not writable.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void SetLength(long value)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!CanWrite) throw new InvalidOperationException();
 
             m_Length = value;
@@ -550,6 +578,7 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             long position = DirectWrite(m_Position, buffer, offset, count);
@@ -566,6 +595,7 @@
         /// An array of bytes. This method copies all of the bytes from <paramref name="buffer"/> to the current stream.
         /// </param>
         /// <exception cref="InvalidOperationException">The stream is read only.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void Write(ReadOnlySpan<byte> buffer)
         {
             long position = DirectWrite(m_Position, buffer);
@@ -604,9 +634,12 @@
         /// <exception cref="OperationCanceledException">
         /// The <paramref name="cancellationToken"/> was cancelled.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>Task that completes immediately.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             Write(buffer, offset, count);
             return Task.CompletedTask;
@@ -628,9 +661,12 @@
         /// <exception cref="OperationCanceledException">
         /// The <paramref name="cancellationToken"/> was cancelled.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>Task that completes immediately.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             Write(buffer.Span);
             return new ValueTask();
@@ -646,6 +682,7 @@
         /// </param>
         /// <exception cref="InvalidOperationException">The stream is read only.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position.</returns>
         public long DirectWrite(long position, byte[] buffer)
         {
@@ -675,9 +712,11 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position.</returns>
         public long DirectWrite(long position, byte[] buffer, int offset, int count)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!CanWrite) throw new InvalidOperationException();
 
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
@@ -748,9 +787,11 @@
         /// An array of bytes. This method copies bytes from <paramref name="buffer"/> to the current stream.
         /// </param>
         /// <exception cref="InvalidOperationException">The stream is read only.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position.</returns>
         public long DirectWrite(long position, ReadOnlySpan<byte> buffer)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!CanWrite) throw new InvalidOperationException();
 
             int count = buffer.Length;
@@ -819,6 +860,7 @@
         /// </param>
         /// <exception cref="InvalidOperationException">The stream is read only.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position. The method returns immediately.</returns>
         public Task<long> DirectWriteAsync(long position, byte[] buffer)
         {
@@ -837,9 +879,12 @@
         /// <exception cref="InvalidOperationException">The stream is read only.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position. The method returns immediately.</returns>
         public Task<long> DirectWriteAsync(long position, byte[] buffer, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             long write = DirectWrite(position, buffer);
             return Task.FromResult(write);
@@ -867,6 +912,7 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position. The method returns immediately.</returns>
         public Task<long> DirectWriteAsync(long position, byte[] buffer, int offset, int count)
         {
@@ -898,9 +944,12 @@
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
         /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled.</exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position. The method returns immediately.</returns>
         public Task<long> DirectWriteAsync(long position, byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             long write = DirectWrite(position, buffer, offset, count);
             return Task.FromResult(write);
@@ -915,15 +964,49 @@
         /// <param name="buffer">
         /// An array of bytes. This method copies all bytes from <paramref name="buffer"/> to the current stream.
         /// </param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled.</exception>
+        /// <param name="cancellationToken">
+        /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
+        /// </param>
+        /// <exception cref="OperationCanceledException">
+        /// The <paramref name="cancellationToken"/> was cancelled.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         /// <returns>The new position. The method returns immediately.</returns>
         public ValueTask<long> DirectWriteAsync(long position, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
+            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+
             cancellationToken.ThrowIfCancellationRequested();
             long write = DirectWrite(position, buffer.Span);
             return new ValueTask<long>(write);
         }
 #endif
+
+        private int m_IsDisposed = 0;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is disposed.
+        /// </summary>
+        /// <value><see langword="true"/> if this instance is disposed; otherwise, <see langword="false"/>.</value>
+        public bool IsDisposed
+        {
+            get { return m_IsDisposed != 0; }
+        }
+
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="Stream"/> and optionally releases the managed
+        /// resources.
+        /// </summary>
+        /// <param name="disposing">
+        /// <see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (Interlocked.CompareExchange(ref m_IsDisposed, 1, 0) != 0)
+                return;
+
+            base.Dispose(disposing);
+        }
     }
 }
