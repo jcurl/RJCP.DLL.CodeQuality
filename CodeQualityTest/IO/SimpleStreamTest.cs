@@ -1299,8 +1299,6 @@
         }
 #endif
 
-        // TODO: BeginWrite/EndWrite
-
         [Test]
         public void Dispose()
         {

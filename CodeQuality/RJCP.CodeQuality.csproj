@@ -81,6 +81,7 @@
     <Compile Include="GenericMethodCache.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IO\CompletedAsync.cs" />
+    <Compile Include="IO\ReadLimitStream.cs" />
     <Compile Include="IO\SimpleStream.cs" />
     <Compile Include="IO\SparseStream.cs" />
     <Compile Include="IO\StreamExtensions.cs" />

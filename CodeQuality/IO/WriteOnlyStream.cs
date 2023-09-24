@@ -79,7 +79,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value, in miliseconds, that determines how long the stream will attempt to write before
+        /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt to write before
         /// timing out.
         /// </summary>
         /// <value>The write timeout in milliseconds.</value>
