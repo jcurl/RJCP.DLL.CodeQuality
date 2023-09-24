@@ -83,6 +83,8 @@
     <Compile Include="IO\CompletedAsync.cs" />
     <Compile Include="IO\SimpleStream.cs" />
     <Compile Include="IO\SparseStream.cs" />
+    <Compile Include="IO\StreamExtensions.cs" />
+    <Compile Include="IO\StreamMode.cs" />
     <Compile Include="IO\WriteOnlyStream.cs" />
     <Compile Include="NUnitExtensions\Deploy.cs" />
     <Compile Include="NUnitExtensions\ScratchOptions.cs" />

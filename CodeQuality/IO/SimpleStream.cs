@@ -14,22 +14,36 @@
     public class SimpleStream : Stream
     {
         /// <summary>
+        /// Gets or sets the stream operating mode.
+        /// </summary>
+        /// <value>The stream operating mode.</value>
+        /// <remarks>
+        /// This is useful to simulate different types of streams.
+        /// </remarks>
+        public StreamMode Mode { get; set; } = StreamMode.All;
+
+        private bool IsMode(StreamMode mode)
+        {
+            return !IsDisposed && ((Mode & mode) != 0);
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <value><see langword="true"/> if this instance can read; otherwise, <see langword="false"/>.</value>
-        public override bool CanRead { get { return !IsDisposed; } }
+        public override bool CanRead { get { return IsMode(StreamMode.Read); } }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports seeking.
         /// </summary>
         /// <value><see langword="true"/> if this instance can seek; otherwise, <see langword="false"/>.</value>
-        public override bool CanSeek { get { return !IsDisposed; } }
+        public override bool CanSeek { get { return IsMode(StreamMode.Seek); } }
 
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
         /// <value><see langword="true"/> if this instance can write; otherwise, <see langword="false"/>.</value>
-        public override bool CanWrite { get { return !IsDisposed; } }
+        public override bool CanWrite { get { return IsMode(StreamMode.Write); } }
 
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
@@ -38,21 +52,55 @@
         /// <remarks>
         /// This stream supports timeouts.
         /// </remarks>
-        public override bool CanTimeout { get { return !IsDisposed; } }
+        public override bool CanTimeout { get { return IsMode(StreamMode.Timeout); } }
+
+        private int m_WriteTimeout = Timeout.Infinite;
 
         /// <summary>
         /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt to write before
         /// timing out.
         /// </summary>
         /// <value>The write timeout.</value>
-        public override int WriteTimeout { get; set; } = Timeout.Infinite;
+        /// <exception cref="InvalidOperationException">Write timeout is not supported.</exception>
+        public override int WriteTimeout
+        {
+            get
+            {
+                if (!IsMode(StreamMode.Timeout))
+                    throw new InvalidOperationException("Write timeout not supported");
+                return m_WriteTimeout;
+            }
+            set
+            {
+                if (!IsMode(StreamMode.Timeout))
+                    throw new InvalidOperationException("Write timeout not supported");
+                m_WriteTimeout = value;
+            }
+        }
+
+        private int m_ReadTimeout = Timeout.Infinite;
 
         /// <summary>
         /// Gets or sets a value, in milliseconds, that determines how long the stream will attempt to read before
         /// timing out.
         /// </summary>
         /// <value>The read timeout.</value>
-        public override int ReadTimeout { get; set; } = Timeout.Infinite;
+        /// <exception cref="InvalidOperationException">Read timeout is not supported.</exception>
+        public override int ReadTimeout
+        {
+            get
+            {
+                if (!IsMode(StreamMode.Timeout))
+                    throw new InvalidOperationException("Read timeout not supported");
+                return m_ReadTimeout;
+            }
+            set
+            {
+                if (!IsMode(StreamMode.Timeout))
+                    throw new InvalidOperationException("Read timeout not supported");
+                m_ReadTimeout = value;
+            }
+        }
 
         private long m_Length;
 
@@ -71,6 +119,8 @@
         /// <exception cref="ArgumentOutOfRangeException">
         /// Setting the position of the stream would exceed the length of the stream.
         /// </exception>
+        /// <exception cref="NotSupportedException">Seek is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>
         /// When updating the position, if it exceeds the current length, would extend the length of the stream.
         /// </remarks>
@@ -80,6 +130,8 @@
             set
             {
                 if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+                if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
+
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 m_Position = value;
@@ -90,10 +142,13 @@
         /// <summary>
         /// Flushes the stream.
         /// </summary>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Flushing the stream has no operation.</remarks>
         public override void Flush()
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             /* Nothing to do */
         }
 
@@ -105,10 +160,15 @@
         /// <param name="cancellationToken">
         /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
         /// </param>
+        /// <exception cref="OperationCanceledException">Operation has been cancelled.</exception>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>Task.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
+            cancellationToken.ThrowIfCancellationRequested();
             return Task.CompletedTask;
         }
 #endif
@@ -135,10 +195,13 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -153,6 +216,8 @@
         /// of bytes read.
         /// </summary>
         /// <param name="buffer">The buffer to read into.</param>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>
         /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that
         /// many bytes are not currently available, or zero (0) if the end of the stream has been reached.
@@ -161,6 +226,7 @@
         public override int Read(Span<byte> buffer)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             return ReadInternal(buffer.Length);
         }
 #endif
@@ -210,10 +276,13 @@
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
         /// <exception cref="OperationCanceledException">The Operation has been cancelled.</exception>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -238,10 +307,13 @@
         /// many bytes are not currently available, or zero (0) if the end of the stream has been reached.
         /// </returns>
         /// <exception cref="OperationCanceledException">The Operation has been cancelled.</exception>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             cancellationToken.ThrowIfCancellationRequested();
 
             return new ValueTask<int>(ReadInternal(buffer.Length));
@@ -252,10 +324,13 @@
         /// Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at
         /// the end of the stream.
         /// </summary>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>The unsigned byte cast to an Int32, or -1 if at the end of the stream.</returns>
         public override int ReadByte()
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             int read = ReadInternal(1);
             return read == 0 ? -1 : 0;
         }
@@ -279,10 +354,13 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -297,9 +375,18 @@
         /// Ends an asynchronous write operation.
         /// </summary>
         /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="asyncResult"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="asyncResult"/> is from a different operation.
+        /// </exception>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override int EndRead(IAsyncResult asyncResult)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
             if (!(asyncResult is CompletedAsync<int> readAsync))
                 throw new ArgumentException("Invalid async result", nameof(asyncResult));
@@ -316,12 +403,15 @@
         /// <param name="bufferSize">
         /// The size of the buffer. This value must be greater than zero. The default size is 4096.
         /// </param>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>
         /// Copies all zeroes to the <paramref name="destination"/> stream for the stream <see cref="Length"/>.
         /// </remarks>
         public override void CopyTo(Stream destination, int bufferSize)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             byte[] buffer = new byte[bufferSize];
             int written = 0;
             while (written < m_Length) {
@@ -342,6 +432,8 @@
         /// <param name="cancellationToken">
         /// The cancellation token that can be used by other objects or threads to receive notice of cancellation.
         /// </param>
+        /// <exception cref="NotSupportedException">Read is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>
         /// The number of bytes read from the stream, between zero (0) and the number of bytes you requested. Streams
         /// return zero (0) only at the end of the stream, otherwise, they should block until at least one byte is
@@ -353,6 +445,7 @@
         public override async Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ReadOnlyMemory<byte> buffer = new byte[bufferSize];
             int written = 0;
             while (written < m_Length) {
@@ -369,13 +462,17 @@
         /// <param name="offset">The offset.</param>
         /// <param name="origin">The origin.</param>
         /// <returns>The new position in the stream.</returns>
-        /// <exception cref="ArgumentException"><paramref name="offset"/> would exceed beyond end of file;</exception>
+        /// <exception cref="ArgumentException"><paramref name="offset"/> would exceed beyond end of file.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Unknown seek <paramref name="origin"/>.</exception>
-        /// <exception cref="IOException"><paramref name="offset"/> would exceed beyond beginning of file;</exception>
+        /// <exception cref="IOException"><paramref name="offset"/> would exceed beyond beginning of file.</exception>
+        /// <exception cref="NotSupportedException">Seek is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Updates the position of the stream.</remarks>
         public override long Seek(long offset, SeekOrigin origin)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
+
             switch (origin) {
             case SeekOrigin.Begin:
                 m_Position = offset;
@@ -404,10 +501,15 @@
         /// Sets the length of the stream.
         /// </summary>
         /// <param name="value">The new length of the stream.</param>
+        /// <exception cref="NotSupportedException">Write and Seek are not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Updates the length of the stream. If shortened, the <see cref="Position"/> is updated.</remarks>
         public override void SetLength(long value)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
+            if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
+
             m_Length = value;
             if (m_Position > m_Length) m_Position = m_Length;
         }
@@ -434,10 +536,13 @@
         /// <exception cref="IOException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -461,9 +566,12 @@
         /// number of bytes written.
         /// </summary>
         /// <param name="buffer">Writes the bytes to the current stream.</param>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override void Write(ReadOnlySpan<byte> buffer)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             WriteInternal(buffer.Length);
         }
 #endif
@@ -497,10 +605,13 @@
         /// <exception cref="OperationCanceledException">
         /// The <paramref name="cancellationToken"/> was cancelled.
         /// </exception>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>A task indicating when the write operation is complete.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -524,10 +635,13 @@
         /// <exception cref="OperationCanceledException">
         /// The <paramref name="cancellationToken"/> was cancelled.
         /// </exception>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>A <see cref="ValueTask"/> indicating when the write operation is complete.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             cancellationToken.ThrowIfCancellationRequested();
             WriteInternal(buffer.Length);
             return new ValueTask();
@@ -538,9 +652,12 @@
         /// Writes a byte to the current position in the stream and advances the position within the stream by one byte.
         /// </summary>
         /// <param name="value">The byte to write to the stream.</param>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override void WriteByte(byte value)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             WriteInternal(1);
         }
 
@@ -563,10 +680,13 @@
         /// <exception cref="ArgumentException">
         /// The <paramref name="offset"/> and <paramref name="count"/> would exceed the boundaries of the array.
         /// </exception>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
@@ -581,9 +701,18 @@
         /// Ends an asynchronous write operation.
         /// </summary>
         /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="asyncResult"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// The <paramref name="asyncResult"/> is from a different operation.
+        /// </exception>
+        /// <exception cref="NotSupportedException">Write is not supported.</exception>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override void EndWrite(IAsyncResult asyncResult)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
             CompletedAsync.End(asyncResult);
         }

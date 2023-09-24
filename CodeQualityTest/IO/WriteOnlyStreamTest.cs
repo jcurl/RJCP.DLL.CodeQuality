@@ -1,10 +1,10 @@
 ﻿namespace RJCP.CodeQuality.IO
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Threading;
     using NUnit.Framework;
-    using System.Diagnostics.CodeAnalysis;
 
 #if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
     using System.Threading.Tasks;
