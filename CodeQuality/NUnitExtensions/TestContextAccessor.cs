@@ -188,6 +188,10 @@
         private Action<string, object, object, object> m_WriteLineFormat3;
         private Action<string, object[]> m_WriteLineFormatS;
 
+#if NET40
+        private static readonly Type[] EmptyType = new Type[0];
+#endif
+
         private void InitWriteAccessor(PrivateObject currentContext)
         {
             m_WriteUlong = GetDelegate<ulong>(currentContext.RealType, nameof(Write));
@@ -252,8 +256,8 @@
             MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), Array.Empty<Type>())
                 ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), Array.Empty<Type>());
 #else
-            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), new Type[] { })
-                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { });
+            MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), EmptyType)
+                ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), EmptyType);
 #endif
             m_WriteLine = (Action)Delegate.CreateDelegate(typeof(Action), methodInfoLine);
         }

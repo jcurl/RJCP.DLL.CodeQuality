@@ -237,6 +237,8 @@
             m_MethodCache = new GenericMethodCache(m_ObjectType);
         }
 
+        private static readonly char[] InvalidWhiteSpaceAccessString = new char[3] { ' ', '\t', '\n' };
+
         // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private static void ValidateAccessString(string access)
         {
@@ -245,7 +247,7 @@
                 throw new ArgumentException("Invalid access member syntax");
             foreach (string member in access.Split('.')) {
                 if (member.Length != 0) {
-                    if (-1 == member.IndexOfAny(new char[3] { ' ', '\t', '\n' })) {
+                    if (member.IndexOfAny(InvalidWhiteSpaceAccessString) == -1) {
                         continue;
                     }
                 }
