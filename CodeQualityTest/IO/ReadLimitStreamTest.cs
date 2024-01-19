@@ -132,7 +132,7 @@
                     int expectedRead = Math.Min(buffer.Length, sourceLength - length);
                     Assert.That(read, Is.EqualTo(expectedRead));
                     length += read;
-                };
+                }
             }
         }
 

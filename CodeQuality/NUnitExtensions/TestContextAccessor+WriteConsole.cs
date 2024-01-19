@@ -30,11 +30,11 @@
 
             public static void Write(bool value) { Console.Write(value); }
 
-            public static void Write(string format, object arg1) { Console.Write(format, arg1); }
+            public static void Write(string format, object arg0) { Console.Write(format, arg0); }
 
-            public static void Write(string format, object arg1, object arg2) { Console.Write(format, arg1, arg2); }
+            public static void Write(string format, object arg0, object arg1) { Console.Write(format, arg0, arg1); }
 
-            public static void Write(string format, object arg1, object arg2, object arg3) { Console.Write(format, arg1, arg2, arg3); }
+            public static void Write(string format, object arg0, object arg1, object arg2) { Console.Write(format, arg0, arg1, arg2); }
 
             public static void Write(string format, params object[] args) { Console.Write(format, args); }
 
@@ -64,11 +64,11 @@
 
             public static void WriteLine(bool value) { Console.WriteLine(value); }
 
-            public static void WriteLine(string format, object arg1) { Console.WriteLine(format, arg1); }
+            public static void WriteLine(string format, object arg0) { Console.WriteLine(format, arg0); }
 
-            public static void WriteLine(string format, object arg1, object arg2) { Console.WriteLine(format, arg1, arg2); }
+            public static void WriteLine(string format, object arg0, object arg1) { Console.WriteLine(format, arg0, arg1); }
 
-            public static void WriteLine(string format, object arg1, object arg2, object arg3) { Console.WriteLine(format, arg1, arg2, arg3); }
+            public static void WriteLine(string format, object arg0, object arg1, object arg2) { Console.WriteLine(format, arg0, arg1, arg2); }
 
             public static void WriteLine(string format, params object[] args) { Console.WriteLine(format, args); }
         }

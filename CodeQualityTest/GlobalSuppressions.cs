@@ -11,3 +11,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0074:Use compound assignment", Justification = ".NET Core only feature")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Test Methods used for reflection")]
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = ".NET Core only feature")]
+[assembly: SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "Test Case Only")]

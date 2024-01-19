@@ -1667,6 +1667,7 @@
         }
 
         [Test]
+        [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False Positive to remove the next line")]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Must test specific method")]
         public async Task CancelledReadAsyncByteBuffer()
         {
@@ -1690,6 +1691,7 @@
         }
 
         [Test]
+        [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "False Positive to remove the next line")]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Must test specific method")]
         public async Task CancelledWriteAsyncByteBuffer()
         {

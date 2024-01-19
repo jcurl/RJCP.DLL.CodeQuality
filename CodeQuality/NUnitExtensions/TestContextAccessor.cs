@@ -289,11 +289,11 @@
 
         public void Write(bool value) { m_WriteBool(value); }
 
-        public void Write(string format, object arg1) { m_WriteFormat1(format, arg1); }
+        public void Write(string format, object arg0) { m_WriteFormat1(format, arg0); }
 
-        public void Write(string format, object arg1, object arg2) { m_WriteFormat2(format, arg1, arg2); }
+        public void Write(string format, object arg0, object arg1) { m_WriteFormat2(format, arg0, arg1); }
 
-        public void Write(string format, object arg1, object arg2, object arg3) { m_WriteFormat3(format, arg1, arg2, arg3); }
+        public void Write(string format, object arg0, object arg1, object arg2) { m_WriteFormat3(format, arg0, arg1, arg2); }
 
         public void Write(string format, params object[] args) { m_WriteFormatS(format, args); }
 
@@ -323,11 +323,11 @@
 
         public void WriteLine(bool value) { m_WriteLineBool(value); }
 
-        public void WriteLine(string format, object arg1) { m_WriteLineFormat1(format, arg1); }
+        public void WriteLine(string format, object arg0) { m_WriteLineFormat1(format, arg0); }
 
-        public void WriteLine(string format, object arg1, object arg2) { m_WriteLineFormat2(format, arg1, arg2); }
+        public void WriteLine(string format, object arg0, object arg1) { m_WriteLineFormat2(format, arg0, arg1); }
 
-        public void WriteLine(string format, object arg1, object arg2, object arg3) { m_WriteLineFormat3(format, arg1, arg2, arg3); }
+        public void WriteLine(string format, object arg0, object arg1, object arg2) { m_WriteLineFormat3(format, arg0, arg1, arg2); }
 
         public void WriteLine(string format, params object[] args) { m_WriteLineFormatS(format, args); }
         #endregion

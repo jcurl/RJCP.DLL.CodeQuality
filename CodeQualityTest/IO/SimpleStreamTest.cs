@@ -12,6 +12,7 @@
 
     [TestFixture]
     [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Suppressions needed for some frameworks")]
+    [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Needed to properly test all APIs")]
     public class SimpleStreamTest
     {
         [Test]
