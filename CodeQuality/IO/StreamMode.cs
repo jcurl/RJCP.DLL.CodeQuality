@@ -30,6 +30,11 @@
         Seek = 4,
 
         /// <summary>
+        /// All modes for reading and writing are active, but no timeouts.
+        /// </summary>
+        ReadWrite = Read + Write + Seek,
+
+        /// <summary>
         /// The stream is readable, so that <see cref="Stream.CanTimeout"/> is <see langword="true"/>.
         /// </summary>
         Timeout = 8,

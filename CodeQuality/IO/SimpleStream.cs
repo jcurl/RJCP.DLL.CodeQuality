@@ -14,13 +14,31 @@
     public class SimpleStream : Stream
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleStream"/> class with a default mode of
+        /// <see cref="StreamMode.All"/>.
+        /// </summary>
+        public SimpleStream()
+        {
+            Mode = StreamMode.All;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleStream"/> class.
+        /// </summary>
+        /// <param name="mode">The stream operating mode, which is the property <see cref="Mode"/>.</param>
+        public SimpleStream(StreamMode mode)
+        {
+            Mode = mode;
+        }
+
+        /// <summary>
         /// Gets or sets the stream operating mode.
         /// </summary>
         /// <value>The stream operating mode.</value>
         /// <remarks>
         /// This is useful to simulate different types of streams.
         /// </remarks>
-        public StreamMode Mode { get; set; } = StreamMode.All;
+        public StreamMode Mode { get; set; }
 
         private bool IsMode(StreamMode mode)
         {
