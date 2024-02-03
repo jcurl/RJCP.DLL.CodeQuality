@@ -4,7 +4,7 @@
     using System.IO;
     using System.Threading;
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -170,7 +170,7 @@
             /* Nothing to do */
         }
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Clears all buffers asynchronously for this stream and causes any buffered data to be written to the
         /// underlying device.
@@ -228,7 +228,7 @@
             return ReadInternal(count);
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number
         /// of bytes read.
@@ -262,7 +262,7 @@
             return maxRead;
         }
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes asynchronously from the current stream and advances the position within the stream
         /// by the number of bytes read.
@@ -311,7 +311,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes asynchronously from the current stream and advances the position within the stream
         /// by the number of bytes read.
@@ -412,7 +412,7 @@
             return readAsync.Result;
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads all the bytes from the current stream and writes them to a destination stream, using a specified
         /// buffer size.
@@ -578,7 +578,7 @@
             if (m_Position > m_Length) m_Length = m_Position;
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the
         /// number of bytes written.
@@ -594,7 +594,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes asynchronously to the current stream and advances the current position within
         /// this stream by the number of bytes written.
@@ -641,7 +641,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes asynchronously to the current stream and advances the current position within
         /// this stream by the number of bytes written.

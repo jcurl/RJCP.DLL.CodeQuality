@@ -11,7 +11,7 @@
         {
             TraceSource source = new TraceSource("RJCP.NUnitTraceListenerTest");
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
             // On .NET Core, tracing doesn't work because it doesn't read the configuration file. We have to instantiate
             // it explicitly.
             source.Listeners.Add(new NUnitTraceListener());

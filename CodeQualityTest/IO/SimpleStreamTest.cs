@@ -6,7 +6,7 @@
     using System.Threading;
     using NUnit.Framework;
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
     using System.Threading.Tasks;
 #endif
 
@@ -78,7 +78,7 @@
             }
         }
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public async Task FlushAsync()
         {
@@ -381,7 +381,7 @@
             }
         }
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public async Task ReadAsync()
         {
@@ -492,7 +492,7 @@
         }
 #endif
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void ReadSpan()
         {
@@ -633,7 +633,7 @@
             }
         }
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public async Task CopyToAsync([Values(100, 2097152)] int length)
         {
@@ -1083,7 +1083,7 @@
             }
         }
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public async Task WriteAsync()
         {
@@ -1189,7 +1189,7 @@
         }
 #endif
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void WriteSpan()
         {

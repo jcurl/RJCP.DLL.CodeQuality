@@ -5,7 +5,7 @@
     using System.Threading;
     using RJCP.Core.Environment;
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Runtime.ExceptionServices;
 #endif
 
@@ -451,7 +451,7 @@
             int tickCount = Environment.TickCount;
             int deletePollIntervalExp = 5;
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
             ExceptionDispatchInfo lastException;
 #else
             Exception lastException;
@@ -462,14 +462,14 @@
                     File.Delete(fileName);
                 } catch (UnauthorizedAccessException ex) {
                     // Occurs on Windows if the file is opened by a process.
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     lastException = ExceptionDispatchInfo.Capture(ex);
 #else
                     lastException = ex;
 #endif
                 } catch (IOException ex) {
                     // Occurs on Windows if the file is opened by a process.
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     lastException = ExceptionDispatchInfo.Capture(ex);
 #else
                     lastException = ex;
@@ -484,7 +484,7 @@
             } while (elapsed < DeleteMaxTime);
 
             if (lastException != null) {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                 lastException.Throw();
 #else
                 throw lastException;
@@ -633,7 +633,7 @@
             int tickCount = Environment.TickCount;
             int deletePollIntervalExp = 5;
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
             ExceptionDispatchInfo lastException;
 #else
             Exception lastException;
@@ -644,7 +644,7 @@
                     Directory.Delete(path);
                 } catch (UnauthorizedAccessException ex) {
                     // Occurs on Windows if a file in the directory is open.
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     lastException = ExceptionDispatchInfo.Capture(ex);
 #else
                     lastException = ex;
@@ -652,7 +652,7 @@
                 } catch (IOException ex) {
                     // Occurs on Windows if a file in the directory is open (or on Windows XP someone is enumerating the
                     // directory).
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     lastException = ExceptionDispatchInfo.Capture(ex);
 #else
                     lastException = ex;
@@ -667,7 +667,7 @@
             } while (elapsed < DeleteMaxTime);
 
             if (lastException != null) {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                 lastException.Throw();
 #else
                 throw lastException;

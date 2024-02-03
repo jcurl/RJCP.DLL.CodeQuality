@@ -5,7 +5,7 @@
     using System.IO;
     using System.Threading;
 
-#if NETSTANDARD || !NET40_LEGACY && NET452_OR_GREATER
+#if NET6_0_OR_GREATER || NET452_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -380,7 +380,7 @@
             m_Stream.Flush();
         }
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Clears all buffers for this stream asynchronously and causes any buffered data to be written to the
         /// underlying device.
@@ -418,7 +418,7 @@
             return m_Stream.Read(buffer, offset, GetCount(count));
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number
         /// of bytes read.
@@ -439,7 +439,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Asynchronously reads a sequence of bytes from the current stream, advances the position within the stream by
         /// the number of bytes read, and monitors cancellation requests.
@@ -465,7 +465,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Asynchronously reads a sequence of bytes from the current stream, advances the position within the stream by
         /// the number of bytes read, and monitors cancellation requests.
@@ -561,7 +561,7 @@
             m_Stream.Write(buffer, offset, count);
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the
         /// number of bytes written.
@@ -575,7 +575,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Asynchronously writes a sequence of bytes to the current stream, advances the current position within this
         /// stream by the number of bytes written, and monitors cancellation requests.
@@ -595,7 +595,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Asynchronously writes a sequence of bytes to the current stream, advances the current position within this
         /// stream by the number of bytes written, and monitors cancellation requests.

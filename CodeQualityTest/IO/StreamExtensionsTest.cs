@@ -4,7 +4,7 @@
     using System.IO;
     using NUnit.Framework;
 
-#if NETCOREAPP || !NET40_LEGACY && NET462_OR_GREATER
+#if NET6_0_OR_GREATER || !NET40_LEGACY && NET462_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -72,7 +72,7 @@
             }
         }
 
-#if NETCOREAPP || !NET40_LEGACY && NET462_OR_GREATER
+#if NET6_0_OR_GREATER || !NET40_LEGACY && NET462_OR_GREATER
         [Test]
         public async Task ReadMemoryStreamAsync()
         {

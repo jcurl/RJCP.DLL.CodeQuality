@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project>
   <!-- Implicit top import required explicitly to change build output path -->
   <PropertyGroup>
@@ -23,18 +22,16 @@
     <RootNamespace>RJCP.CodeQuality</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2016-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2016-2024, Jason Curl</Copyright>
     <Company></Company>
     <Description>NUnit Test Harness for RJCP.CodeQuality.</Description>
     <Version>1.0.0</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
-
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
@@ -51,15 +48,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="legacy\**" />
-    <EmbeddedResource Remove="obj\**" />
-    <EmbeddedResource Remove="TestResults\**" />
-    <None Remove="legacy\**" />
-    <None Remove="obj\**" />
-    <None Remove="TestResults\**" />
   </ItemGroup>
 
   <ItemGroup>

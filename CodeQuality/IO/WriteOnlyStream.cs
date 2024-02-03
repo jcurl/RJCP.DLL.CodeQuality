@@ -140,7 +140,7 @@
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
         }
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Clears all buffers asynchronously for this stream and causes any buffered data to be written to the
         /// underlying device.
@@ -184,7 +184,7 @@
             throw new NotSupportedException();
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number
         /// of bytes read.
@@ -202,7 +202,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes asynchronously from the current stream and advances the position within the stream
         /// by the number of bytes read.
@@ -232,7 +232,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes asynchronously from the current stream and advances the position within the stream
         /// by the number of bytes read.
@@ -303,7 +303,7 @@
             throw new NotSupportedException();
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads all the bytes from the current stream and writes them to a destination stream, using a specified
         /// buffer size.
@@ -414,7 +414,7 @@
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the
         /// number of bytes written.
@@ -432,7 +432,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes asynchronously to the current stream and advances the current position within
         /// this stream by the number of bytes written.
@@ -478,7 +478,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes asynchronously to the current stream and advances the current position within
         /// this stream by the number of bytes written.

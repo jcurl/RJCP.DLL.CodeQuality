@@ -5,7 +5,7 @@
     using NUnit.Framework;
     using RJCP.CodeQuality;
 
-#if !NET40_LEGACY && (NETCOREAPP || NET462_OR_GREATER)
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using System.Threading;
@@ -39,7 +39,7 @@
             }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void InitNegativeSparseDataBlockSpan()
         {
@@ -137,7 +137,7 @@
                 s.Write(new byte[] { 0 }, 0, 1);
             }, Throws.TypeOf<InvalidOperationException>());
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
             Assert.That(() => {
                 Span<byte> data = stackalloc byte[5];
                 s.Write(data);
@@ -1096,7 +1096,7 @@
             Assert.That(s.Length, Is.EqualTo(100));
         }
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void ZeroFileReadFullSpan()
         {
@@ -1644,7 +1644,7 @@
         }
 #endif
 
-#if !NET40_LEGACY && (NETCOREAPP || NET462_OR_GREATER)
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public async Task CancelledFlushAsync()
         {
@@ -1759,7 +1759,7 @@
         }
 #endif
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public async Task CancelledReadAsyncByteMemory()
         {

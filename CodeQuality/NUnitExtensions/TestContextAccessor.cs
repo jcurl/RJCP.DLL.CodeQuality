@@ -252,7 +252,7 @@
                 ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), new Type[] { typeof(string), typeof(object[]) });
             m_WriteLineFormatS = (Action<string, object[]>)Delegate.CreateDelegate(typeof(Action<string, object[]>), methodInfoLineArgsS);
 
-#if NET462_OR_GREATER || NETSTANDARD
+#if NET462_OR_GREATER || NET6_0_OR_GREATER
             MethodInfo methodInfoLine = currentContext.RealType.GetMethod(nameof(WriteLine), Array.Empty<Type>())
                 ?? typeof(WriteConsole).GetMethod(nameof(WriteLine), Array.Empty<Type>());
 #else

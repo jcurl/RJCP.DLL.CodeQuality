@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
 
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
     using System.Runtime.ExceptionServices;
 #endif
 
@@ -64,7 +64,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -92,7 +92,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -122,7 +122,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -153,7 +153,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -204,7 +204,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -234,7 +234,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -260,7 +260,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -285,7 +285,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -311,7 +311,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -338,7 +338,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -363,7 +363,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -389,7 +389,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #else
                     throw ex.InnerException;
@@ -417,7 +417,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -443,7 +443,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -470,7 +470,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -498,7 +498,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -531,7 +531,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -564,7 +564,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -651,7 +651,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -683,7 +683,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -716,7 +716,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -742,7 +742,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;
@@ -768,7 +768,7 @@
                 if (ex.InnerException == null) {
                     throw;
                 } else {
-#if NET45_OR_GREATER || NETSTANDARD
+#if NET45_OR_GREATER || NET6_0_OR_GREATER
                     ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                     throw ex.InnerException;

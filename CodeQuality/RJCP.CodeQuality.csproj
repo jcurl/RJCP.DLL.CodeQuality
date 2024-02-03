@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>net40;net462;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net40;net462;net60</TargetFrameworks>
     <OutputType>Library</OutputType>
     <Configurations>Debug;Release</Configurations>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -14,58 +12,55 @@
     <RootNamespace>RJCP.CodeQuality</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2016-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2016-2024, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.CodeQuality</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.CodeQuality</PackageProjectUrl>
-
     <Description>Common functions to augment unit and integration testing, with some focus on the NUnit Test Framework.</Description>
     <Version>0.6.1</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
-
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <RevisionControl>git</RevisionControl>
     <RevisionControlLabel>release/v$(Version)</RevisionControlLabel>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <RevisionControlStrict>true</RevisionControlStrict>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+    <!-- For loading the app.config file, as in .NET 4.x -->
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.4" PrivateAssets="all" />
     <ProjectReference Include="..\..\environment\Environment\RJCP.Environment.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <!-- For loading the app.config file, as in .NET 4.x -->
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -107,10 +102,9 @@
     <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <Compile Include="NUnitExtensions\Trace\NUnitLogger.cs" />
     <Compile Include="NUnitExtensions\Trace\NUnitLoggerExtensions.cs" />
     <Compile Include="NUnitExtensions\Trace\NUnitLoggerProvider.cs" />
   </ItemGroup>
-
 </Project>

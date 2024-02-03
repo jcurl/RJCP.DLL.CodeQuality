@@ -1,6 +1,6 @@
 ﻿namespace RJCP.CodeQuality
 {
-#if !NETSTANDARD && !NETCOREAPP
+#if NETFRAMEWORK
     using System.Linq;
 #endif
 
@@ -20,7 +20,7 @@
         /// <remarks>This should only be used for testing. On .NET Core, should use array ranges and Spans.</remarks>
         public static T[] Slice<T>(this T[] array, int offset, int length)
         {
-#if NETSTANDARD || NETCOREAPP
+#if NET6_0_OR_GREATER
             return array[offset..(offset + length)];
 #else
             return array.Skip(offset).Take(length).ToArray();

@@ -6,7 +6,7 @@
     using System.IO;
     using System.Threading;
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -31,7 +31,7 @@
             Data = data;
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the <see cref="SparseBlock"/> struct.
         /// </summary>
@@ -237,7 +237,7 @@
             /* Nothing to do */
         }
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Flushes the asynchronous.
         /// </summary>
@@ -292,7 +292,7 @@
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
             return Read(buffer.AsSpan(offset, count));
 #else
             int read = 0;
@@ -341,7 +341,7 @@
 #endif
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number
         /// </summary>
@@ -405,7 +405,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Reads asynchronously a sequence of bytes from the current stream and advances the position within the stream by the number
         /// of bytes read.
@@ -447,7 +447,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Reads asynchronously a sequence of bytes from the current stream and advances the position within the stream by the number
         /// of bytes read.
@@ -539,7 +539,7 @@
                     // Section is no longer needed.
                     m_Data.RemoveAt(i);
                 } else if (m_Data[i].Offset + m_Data[i].Data.Length > m_Length) {
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
                     int length = (int)(m_Length - m_Data[i].Offset);
                     m_Data[i] = new SparseBlock(m_Data[i].Offset, m_Data[i].Data[0..length]);
 #else
@@ -586,7 +586,7 @@
             if (m_Position > m_Length) m_Length = m_Position;
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the
         /// number of bytes written.
@@ -604,7 +604,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes asynchronously to the current stream and advances the current position within
         /// this stream by the number of bytes written.
@@ -646,7 +646,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes a sequence of bytes asynchronously to the current stream and advances the current position within
         /// this stream by the number of bytes written.
@@ -724,7 +724,7 @@
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
             return DirectWrite(position, buffer.AsSpan(offset, count));
 #else
             int write = 0;
@@ -778,7 +778,7 @@
 #endif
         }
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes directly to the position given. The <see cref="Position"/> is not updated.
         /// </summary>
@@ -850,7 +850,7 @@
         }
 #endif
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Writes directly to the position given. The <see cref="Position"/> is not updated.
         /// </summary>
@@ -956,7 +956,7 @@
         }
 #endif
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Writes directly to the position given. The <see cref="Position"/> is not updated.
         /// </summary>

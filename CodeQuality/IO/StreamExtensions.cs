@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
     using System.Threading.Tasks;
 #endif
 
@@ -48,7 +48,7 @@
             stream.Seek(0, SeekOrigin.Begin);
             int pos = 0;
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
             Span<byte> memBuff = buffer.AsSpan();
             while (pos < streamLen) {
                 int read = stream.Read(memBuff[pos..]);
@@ -65,7 +65,7 @@
             return buffer;
         }
 
-#if NETSTANDARD || NET462_OR_GREATER
+#if NET6_0_OR_GREATER || NET462_OR_GREATER
         /// <summary>
         /// Reads the stream contents into an array.
         /// </summary>
@@ -98,7 +98,7 @@
             stream.Seek(0, SeekOrigin.Begin);
             int pos = 0;
 
-#if NETSTANDARD
+#if NET6_0_OR_GREATER
             Memory<byte> memBuff = buffer.AsMemory();
             while (pos < streamLen) {
                 int read = await stream.ReadAsync(memBuff[pos..]);

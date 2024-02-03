@@ -6,7 +6,7 @@
     using System.Threading;
     using NUnit.Framework;
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
     using System.Threading.Tasks;
 #endif
 
@@ -151,7 +151,7 @@
             }
         }
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public void StreamFlushAsync([Values(false, true)] bool withStream)
         {
@@ -174,7 +174,7 @@
             }
         }
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void StreamReadSpan([Values(false, true)] bool withStream)
         {
@@ -187,7 +187,7 @@
         }
 #endif
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
         public void StreamReadAsync([Values(false, true)] bool withStream)
@@ -202,7 +202,7 @@
         }
 #endif
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void StreamReadAsyncMemory([Values(false, true)] bool withStream)
         {
@@ -258,7 +258,7 @@
             }
         }
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         public void StreamCopyToAsync([Values(false, true)] bool withStream)
         {
@@ -369,7 +369,7 @@
             }
         }
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public void StreamWriteSpan([Values(false, true)] bool withStream)
         {
@@ -389,7 +389,7 @@
         }
 #endif
 
-#if NETCOREAPP || NET462_OR_GREATER && !NET40_LEGACY
+#if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
         public async Task StreamWriteAsync([Values(false, true)] bool withStream)
@@ -476,7 +476,7 @@
         }
 #endif
 
-#if NETCOREAPP
+#if NET6_0_OR_GREATER
         [Test]
         public async Task StreamWriteAsyncMemory([Values(false, true)] bool withStream)
         {
