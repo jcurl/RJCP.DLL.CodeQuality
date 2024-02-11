@@ -1,7 +1,6 @@
 ﻿namespace RJCP.CodeQuality.IO
 {
     using System;
-    using System.IO;
     using System.Threading;
     using NUnit.Framework;
 
