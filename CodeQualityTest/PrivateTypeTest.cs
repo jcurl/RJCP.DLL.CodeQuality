@@ -12,7 +12,7 @@
         [Test]
         public void NullAssemblyName()
         {
-            Assert.That(() => { _ = new PrivateType(null, "RJCP.CodeQuality.InternalClassTest"); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType(null, "RJCP.CodeQuality.InternalClassTest"); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -24,7 +24,7 @@
         [Test]
         public void NullClassName()
         {
-            Assert.That(() => { _ = new PrivateType(AccessorTest.AssemblyName, null); }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => { _ = new PrivateType(AccessorTest.AssemblyName, null); }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

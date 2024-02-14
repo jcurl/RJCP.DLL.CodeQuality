@@ -26,7 +26,7 @@
         public SparseBlock(long offset, byte[] data)
         {
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Offset may not be negative");
-            if (data == null) throw new ArgumentNullException(nameof(data));
+            ThrowHelper.ThrowIfNull(data);
             Offset = offset;
             Data = data;
         }
@@ -107,7 +107,7 @@
         /// </remarks>
         public SparseStream(IEnumerable<SparseBlock> data, long length)
         {
-            if (data == null) throw new ArgumentNullException(nameof(data));
+            ThrowHelper.ThrowIfNull(data);
             if (length < 0) throw new ArgumentOutOfRangeException(nameof(length), "Length may not be negative");
 
             foreach (SparseBlock block in data) {
@@ -287,7 +287,7 @@
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -719,7 +719,7 @@
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!CanWrite) throw new InvalidOperationException();
 
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");

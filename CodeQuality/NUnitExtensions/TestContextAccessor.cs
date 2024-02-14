@@ -93,7 +93,7 @@
 
         private TestContextAccessor(Assembly nUnitAssembly)
         {
-            if (nUnitAssembly == null) throw new ArgumentNullException(nameof(nUnitAssembly));
+            ThrowHelper.ThrowIfNull(nUnitAssembly);
             m_NUnitAssembly = nUnitAssembly;
 
             PrivateObject currentContext = GetCurrentContext(nUnitAssembly);

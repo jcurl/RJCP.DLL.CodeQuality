@@ -126,7 +126,7 @@
         public void EmptyAssemblyName()
         {
             Assert.That(() => { _ = new PrivateObject(string.Empty, "NUnit.Framework.HelperClasses.InternalClassTest", new object[0]); },
-                Throws.TypeOf<ArgumentNullException>());
+                Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
@@ -140,7 +140,7 @@
         public void EmptyClassName()
         {
             Assert.That(() => { _ = new PrivateObject(AccessorTest.AssemblyName, string.Empty, new object[0]); },
-                Throws.TypeOf<ArgumentNullException>());
+                Throws.TypeOf<ArgumentException>());
         }
 
         [Test]

@@ -24,13 +24,13 @@
         {
             get
             {
-                if (key == null) throw new ArgumentNullException(nameof(key));
+                ThrowHelper.ThrowIfNull(key);
                 return m_Database[key];
             }
             set
             {
-                if (key == null) throw new ArgumentNullException(nameof(key));
-                if (value == null) throw new ArgumentNullException(nameof(value));
+                ThrowHelper.ThrowIfNull(key);
+                ThrowHelper.ThrowIfNull(value);
                 m_Database[key] = value;
             }
         }
@@ -99,8 +99,8 @@
         /// <exception cref="ArgumentException">An item with the same <paramref name="key"/> has already been added.</exception>
         public void Add(string key, T value)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            ThrowHelper.ThrowIfNull(key);
+            ThrowHelper.ThrowIfNull(value);
             m_Database.Add(key, value);
         }
 

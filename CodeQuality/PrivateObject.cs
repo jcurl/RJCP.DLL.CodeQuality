@@ -33,7 +33,7 @@
         /// </remarks>
         public PrivateObject(object obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            ThrowHelper.ThrowIfNull(obj);
             ConstructFrom(obj);
         }
 
@@ -54,7 +54,7 @@
         /// </remarks>
         public PrivateObject(object obj, string memberToAccess)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            ThrowHelper.ThrowIfNull(obj);
             ValidateAccessString(memberToAccess);
 
             if (!(obj is PrivateObject privateObject))
@@ -83,7 +83,7 @@
         /// </remarks>
         public PrivateObject(object obj, PrivateType type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull(type);
 
             m_Instance = obj;
             m_ObjectType = type.ReferencedType;
@@ -172,7 +172,7 @@
         /// </remarks>
         public PrivateObject(Type type, Type[] parameterTypes, object[] args)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull(type);
 
             object obj;
             if (parameterTypes != null) {
@@ -231,7 +231,7 @@
         // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private void ConstructFrom(object obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            ThrowHelper.ThrowIfNull(obj);
             m_Instance = obj;
             m_ObjectType = obj.GetType();
             m_MethodCache = new GenericMethodCache(m_ObjectType);
@@ -242,7 +242,7 @@
         // decompiled from v14.0.0.0 of Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.
         private static void ValidateAccessString(string access)
         {
-            if (access == null) throw new ArgumentNullException(nameof(access));
+            ThrowHelper.ThrowIfNull(access);
             if (access.Length == 0)
                 throw new ArgumentException("Invalid access member syntax");
             foreach (string member in access.Split('.')) {
@@ -257,27 +257,27 @@
 
         private static Type GetObjectType(string assemblyName, string typeName)
         {
-            if (assemblyName == null) throw new ArgumentNullException(nameof(assemblyName));
-            if (typeName == null) throw new ArgumentNullException(nameof(typeName));
+            ThrowHelper.ThrowIfNull(assemblyName);
+            ThrowHelper.ThrowIfNull(typeName);
 
             Assembly assembly;
             try {
                 assembly = Assembly.Load(assemblyName);
             } catch (ArgumentException) {
-                throw new ArgumentNullException(nameof(assemblyName));
+                throw new ArgumentException("Assembly cannot be loaded", nameof(assemblyName));
             }
 
             try {
                 return assembly.GetType(typeName);
             } catch (ArgumentException) {
-                throw new ArgumentNullException(nameof(typeName));
+                throw new ArgumentException("typeName is invalid", nameof(typeName));
             }
         }
 
         private static Type GetGenericObjectType(string assemblyName, string typeName, Type[] genericTypes)
         {
             Type type = GetObjectType(assemblyName, typeName)
-                ?? throw new ArgumentNullException(nameof(typeName));
+                ?? throw new ArgumentException("typeName is invalid", nameof(typeName));
             return type.MakeGenericType(genericTypes);
         }
         #endregion
@@ -296,7 +296,7 @@
             get { return m_Instance; }
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(value));
+                ThrowHelper.ThrowIfNull(value);
                 m_Instance = value;
                 m_ObjectType = value.GetType();
             }
@@ -459,7 +459,7 @@
         /// </remarks>
         public object Invoke(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (parameterTypes == null) {
                 return InvokeHelper(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
@@ -514,7 +514,7 @@
         /// </remarks>
         public void SetFieldOrProperty(string name, BindingFlags bindingFlags, object value)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             InvokeHelper(name, bindingFlags | BindingFlags.SetField | BindingFlags.SetProperty, new object[1] { value });
         }
 
@@ -550,7 +550,7 @@
         /// </remarks>
         public object GetFieldOrProperty(string name, BindingFlags bindingFlags)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             return InvokeHelper(name, bindingFlags | BindingFlags.GetField | BindingFlags.GetProperty, null);
         }
 
@@ -653,7 +653,7 @@
         /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         public T GetProperty<T>(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (parameterTypes == null)
                 return (T)InvokeHelper(name, bindingFlags | BindingFlags.GetProperty, args);
 
@@ -764,7 +764,7 @@
         /// <exception cref="TargetInvocationException">Invoking method resulted in an exception in that method.</exception>
         public void SetProperty<T>(string name, BindingFlags bindingFlags, Type[] parameterTypes, T value, object[] args)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             if (parameterTypes == null) {
                 object[] invokeArgs;
                 if (args == null) {

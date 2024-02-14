@@ -45,7 +45,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="pObject"/> is <see langword="null"/>.</exception>
         protected AccessorBase(PrivateObject pObject)
         {
-            if (pObject == null) throw new ArgumentNullException(nameof(pObject));
+            ThrowHelper.ThrowIfNull(pObject);
             m_PrivateObject = pObject;
         }
 
@@ -57,7 +57,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="type"/> is <see langword="null"/>.</exception>
         protected AccessorBase(PrivateType type, params object[] args)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull(type);
             try {
                 m_PrivateObject = new PrivateObject(type.ReferencedType, args);
             } catch (TargetInvocationException ex) {
@@ -85,7 +85,7 @@
         /// <para>constructor cannot be found to match the parameters specified in <see cref="PrivateObject"/>.</para></exception>
         protected AccessorBase(PrivateType type, Type[] parameterTypes, object[] args)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull(type);
             try {
                 m_PrivateObject = new PrivateObject(type.ReferencedType, parameterTypes, args);
             } catch (TargetInvocationException ex) {
@@ -227,7 +227,7 @@
         /// <exception cref="MissingMethodException">The given <paramref name="propertyName"/> doesn't exist.</exception>
         protected object GetFieldOrProperty(string propertyName)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 return m_PrivateObject.GetFieldOrProperty(propertyName, BindingFlags);
             } catch (TargetInvocationException ex) {
@@ -251,8 +251,8 @@
         /// <exception cref="MissingMethodException">The given <paramref name="propertyName"/> doesn't exist.</exception>
         protected void SetFieldOrProperty(string propertyName, object value)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            ThrowHelper.ThrowIfNull(propertyName);
+            ThrowHelper.ThrowIfNull(value);
 
             try {
                 m_PrivateObject.SetFieldOrProperty(propertyName, BindingFlags, value);
@@ -278,7 +278,7 @@
         /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
         protected T GetProperty<T>(string propertyName)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags);
             } catch (TargetInvocationException ex) {
@@ -304,7 +304,7 @@
         /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
         protected T GetProperty<T>(string propertyName, params object[] args)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags, args);
             } catch (TargetInvocationException ex) {
@@ -331,7 +331,7 @@
         /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
         protected T GetProperty<T>(string propertyName, Type[] parameterTypes, params object[] args)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags, parameterTypes, args);
             } catch (TargetInvocationException ex) {
@@ -356,7 +356,7 @@
         /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
         protected void SetProperty<T>(string propertyName, T value)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 m_PrivateObject.SetProperty(propertyName, BindingFlags, value);
             } catch (TargetInvocationException ex) {
@@ -382,7 +382,7 @@
         /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
         protected void SetProperty<T>(string propertyName, T value, params object[] args)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 m_PrivateObject.SetProperty(propertyName, BindingFlags, value, args);
             } catch (TargetInvocationException ex) {
@@ -410,7 +410,7 @@
         /// <exception cref="MissingMethodException">Property <paramref name="propertyName"/> not found.</exception>
         protected void SetProperty<T>(string propertyName, Type[] parameterTypes, T value, params object[] args)
         {
-            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            ThrowHelper.ThrowIfNull(propertyName);
             try {
                 m_PrivateObject.SetProperty(propertyName, BindingFlags, parameterTypes, value, args);
             } catch (TargetInvocationException ex) {
@@ -435,7 +435,7 @@
         /// <exception cref="MissingMethodException">The given <paramref name="methodName"/> doesn't exist.</exception>
         protected object Invoke(string methodName, params object[] args)
         {
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            ThrowHelper.ThrowIfNull(methodName);
 
             try {
                 return m_PrivateObject.Invoke(methodName, BindingFlags, args);
@@ -462,7 +462,7 @@
         /// <exception cref="MissingMethodException">The given <paramref name="methodName"/> doesn't exist.</exception>
         protected object Invoke(string methodName, Type[] parameterTypes, object[] args)
         {
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            ThrowHelper.ThrowIfNull(methodName);
 
             try {
                 return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args);
@@ -490,7 +490,7 @@
         /// <exception cref="MissingMethodException">The given <paramref name="methodName"/> doesn't exist.</exception>
         protected object Invoke(string methodName, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            ThrowHelper.ThrowIfNull(methodName);
 
             try {
                 return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args, typeArguments);
@@ -518,8 +518,8 @@
         /// </remarks>
         protected void AddEventHandler(string eventName, Delegate handler)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            if (eventName == null) throw new ArgumentNullException(nameof(eventName));
+            ThrowHelper.ThrowIfNull(handler);
+            ThrowHelper.ThrowIfNull(eventName);
 
             Type objectType = m_PrivateObject.Target.GetType();
             EventInfo eventInfo = objectType.GetEvent(eventName)
@@ -551,8 +551,8 @@
         /// </remarks>
         protected void RemoveEventHandler(string eventName, Delegate handler)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            if (eventName == null) throw new ArgumentNullException(nameof(handler));
+            ThrowHelper.ThrowIfNull(handler);
+            ThrowHelper.ThrowIfNull(eventName);
 
             Type objectType = m_PrivateObject.Target.GetType();
             EventInfo eventInfo = objectType.GetEvent(eventName)
@@ -600,8 +600,8 @@
         /// </remarks>
         protected void AddIndirectEventHandler(string eventName, Delegate userSource, Delegate handler)
         {
-            if (userSource == null) throw new ArgumentNullException(nameof(userSource));
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            ThrowHelper.ThrowIfNull(userSource);
+            ThrowHelper.ThrowIfNull(handler);
             if (handler.Method.ReturnType != typeof(void)) throw new ArgumentException("handler has non-void return type", nameof(handler));
             AddEventHandler(eventName, handler);
 
@@ -624,8 +624,8 @@
         /// </remarks>
         protected void RemoveIndirectEventHandler(string eventName, Delegate userSource)
         {
-            if (userSource == null) throw new ArgumentNullException(nameof(userSource));
-            if (eventName == null) throw new ArgumentNullException(nameof(eventName));
+            ThrowHelper.ThrowIfNull(userSource);
+            ThrowHelper.ThrowIfNull(eventName);
 
             // Look up the dynamic handler we registered internally and unregister it
             Delegate handler = m_EventTargets.RemoveTarget(eventName, userSource);
@@ -643,8 +643,8 @@
         /// <exception cref="ArgumentException">Private accessor <paramref name="methodName"/> can't be found.</exception>
         public static object InvokeStatic(PrivateType type, string methodName, params object[] args)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            ThrowHelper.ThrowIfNull(type);
+            ThrowHelper.ThrowIfNull(methodName);
             try {
                 return type.InvokeStatic(methodName, args);
             } catch (TargetInvocationException ex) {
@@ -675,8 +675,8 @@
         /// <exception cref="ArgumentException">Private accessor <paramref name="methodName"/> can't be found.</exception>
         public static object InvokeStatic(PrivateType type, string methodName, Type[] parameterTypes, object[] args)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            ThrowHelper.ThrowIfNull(type);
+            ThrowHelper.ThrowIfNull(methodName);
             try {
                 return type.InvokeStatic(methodName, parameterTypes, args);
             } catch (TargetInvocationException ex) {
@@ -708,8 +708,8 @@
         /// <exception cref="ArgumentException">Private accessor <paramref name="methodName"/> can't be found.</exception>
         public static object InvokeStatic(PrivateType type, string methodName, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (methodName == null) throw new ArgumentNullException(nameof(methodName));
+            ThrowHelper.ThrowIfNull(type);
+            ThrowHelper.ThrowIfNull(methodName);
             try {
                 return type.InvokeStatic(methodName, parameterTypes, args, typeArguments);
             } catch (TargetInvocationException ex) {
@@ -734,8 +734,8 @@
         /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         public static object GetStaticFieldOrProperty(PrivateType type, string name)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(type);
+            ThrowHelper.ThrowIfNull(name);
             try {
                 return type.GetStaticFieldOrProperty(name);
             } catch (TargetInvocationException ex) {
@@ -760,8 +760,8 @@
         /// <exception cref="ArgumentException">Private accessor <paramref name="name"/> can't be found.</exception>
         public static void SetStaticFieldOrProperty(PrivateType type, string name, object value)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(type);
+            ThrowHelper.ThrowIfNull(name);
             try {
                 type.SetStaticFieldOrProperty(name, value);
             } catch (TargetInvocationException ex) {

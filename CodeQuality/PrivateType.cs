@@ -28,7 +28,7 @@ namespace RJCP.CodeQuality
         /// </remarks>
         public PrivateType(Type type)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            ThrowHelper.ThrowIfNull(type);
             m_ObjectType = type;
         }
 
@@ -37,23 +37,33 @@ namespace RJCP.CodeQuality
         /// </summary>
         /// <param name="assemblyName">The assembly name.</param>
         /// <param name="typeName">Fully qualified name of the type.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <see langword="null"/>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <see langword="null"/> or empty.
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is empty.
         /// </exception>
         /// <exception cref="TypeLoadException">The type cannot be found.</exception>
-        /// <exception cref="System.IO.FileNotFoundException"><paramref name="typeName"/> requires a dependent
-        /// assembly that could not be found.</exception>
-        /// <exception cref="System.IO.FileLoadException"><para><paramref name="typeName"/> requires a dependent
-        /// assembly that was found, but could not be loaded.</para>
-        /// - or -
-        /// <para>The current assembly was loaded into the reflection-only context, and name requires a dependent
-        /// assembly that was not preloaded.</para>
+        /// <exception cref="System.IO.FileNotFoundException">
+        /// <paramref name="typeName"/> requires a dependent assembly that could not be found.
         /// </exception>
-        /// <exception cref="BadImageFormatException"><para><paramref name="typeName"/> requires a dependent
-        /// assembly, but the file is not a valid assembly.</para>
+        /// <exception cref="System.IO.FileLoadException">
+        /// <para>
+        /// <paramref name="typeName"/> requires a dependent assembly that was found, but could not be loaded.
+        /// </para>
         /// - or -
-        /// <para><paramref name="typeName"/> requires a dependent assembly which was compiled for a version
-        /// of the runtime later than the currently loaded version.</para>
+        /// <para>
+        /// The current assembly was loaded into the reflection-only context, and name requires a dependent assembly
+        /// that was not preloaded.
+        /// </para>
+        /// </exception>
+        /// <exception cref="BadImageFormatException">
+        /// <para><paramref name="typeName"/> requires a dependent assembly, but the file is not a valid assembly.</para>
+        /// - or -
+        /// <para>
+        /// <paramref name="typeName"/> requires a dependent assembly which was compiled for a version of the runtime
+        /// later than the currently loaded version.
+        /// </para>
         /// </exception>
         /// <remarks>
         /// This method is intended to provide the same functionality as
@@ -61,61 +71,93 @@ namespace RJCP.CodeQuality
         /// </remarks>
         public PrivateType(string assemblyName, string typeName)
         {
+            ThrowHelper.ThrowIfNull(assemblyName);
+            ThrowHelper.ThrowIfNull(typeName);
             if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
-            m_ObjectType = Assembly.Load(assemblyName).GetType(typeName, true);
+            m_ObjectType = GetPrivateType(assemblyName, typeName);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrivateType"/> class providing type arguments for a generic type.
+        /// Initializes a new instance of the <see cref="PrivateType"/> class providing type arguments for a generic
+        /// type.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <param name="typeName">Name of the type.</param>
         /// <param name="typeArguments">The generic argument types.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <see langword="null"/>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is <see langword="null"/> or empty.
+        /// <paramref name="assemblyName"/> or <paramref name="typeName"/> is empty.
         /// - or -
         /// <para><paramref name=" typeName"/> not found.</para>
         /// - or -
-        /// <para>The number of elements in <paramref name="typeArguments"/> is not the same as
-        /// the number of type parameters in the current generic type definition.</para>
+        /// <para>
+        /// The number of elements in <paramref name="typeArguments"/> is not the same as the number of type parameters
+        /// in the current generic type definition.
+        /// </para>
         /// - or -
-        /// <para>Any element of <paramref name="typeArguments"/> does not satisfy the constraints
-        /// specified for the corresponding type parameter of the current generic type.</para>
+        /// <para>
+        /// Any element of <paramref name="typeArguments"/> does not satisfy the constraints specified for the
+        /// corresponding type parameter of the current generic type.
+        /// </para>
         /// - or -
-        /// <para><paramref name="typeArguments"/> contains an element that is a pointer type,
-        /// a by-ref type, or void.</para>
+        /// <para>
+        /// <paramref name="typeArguments"/> contains an element that is a pointer type, a by-ref type, or void.
+        /// </para>
         /// </exception>
         /// <exception cref="TypeLoadException">The type cannot be found.</exception>
-        /// <exception cref="System.IO.FileNotFoundException"><paramref name="typeName"/> requires a dependent
-        /// assembly that could not be found.</exception>
-        /// <exception cref="System.IO.FileLoadException"><para><paramref name="typeName"/> requires a dependent
-        /// assembly that was found, but could not be loaded.</para>
-        /// - or -
-        /// <para>The current assembly was loaded into the reflection-only context, and name requires a dependent
-        /// assembly that was not preloaded.</para>
+        /// <exception cref="System.IO.FileNotFoundException">
+        /// <paramref name="typeName"/> requires a dependent assembly that could not be found.
         /// </exception>
-        /// <exception cref="BadImageFormatException"><para><paramref name="typeName"/> requires a dependent
-        /// assembly, but the file is not a valid assembly.</para>
+        /// <exception cref="System.IO.FileLoadException">
+        /// <para>
+        /// <paramref name="typeName"/> requires a dependent assembly that was found, but could not be loaded.
+        /// </para>
         /// - or -
-        /// <para><paramref name="typeName"/> requires a dependent assembly which was compiled for a version
-        /// of the runtime later than the currently loaded version.</para>
+        /// <para>
+        /// The current assembly was loaded into the reflection-only context, and name requires a dependent assembly
+        /// that was not preloaded.
+        /// </para>
         /// </exception>
-        /// <exception cref="NotSupportedException">The invoked method is not supported in the base class.
-        /// Derived classes must provide an implementation.</exception>
-        /// <remarks>
-        /// This constructor is used to obtain a well defined type from a generic type.
-        /// </remarks>
+        /// <exception cref="BadImageFormatException">
+        /// <para><paramref name="typeName"/> requires a dependent assembly, but the file is not a valid assembly.</para>
+        /// - or -
+        /// <para>
+        /// <paramref name="typeName"/> requires a dependent assembly which was compiled for a version of the runtime
+        /// later than the currently loaded version.
+        /// </para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// The invoked method is not supported in the base class. Derived classes must provide an implementation.
+        /// </exception>
+        /// <remarks>This constructor is used to obtain a well defined type from a generic type.</remarks>
         public PrivateType(string assemblyName, string typeName, Type[] typeArguments)
         {
+            ThrowHelper.ThrowIfNull(assemblyName);
+            ThrowHelper.ThrowIfNull(typeName);
             if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
-            Type type = Assembly.Load(assemblyName).GetType(typeName, true)
-                ?? throw new ArgumentNullException(nameof(typeName));
+            Type type = GetPrivateType(assemblyName, typeName)
+                ?? throw new ArgumentException("typeName is invalid", nameof(typeName));
             m_ObjectType = type.MakeGenericType(typeArguments);
         }
+
+        private static Type GetPrivateType(string assemblyName, string typeName)
+        {
+            Assembly assembly;
+            try {
+                assembly = Assembly.Load(assemblyName);
+            } catch (ArgumentException) {
+                throw new ArgumentException("Assembly cannot be loaded", nameof(assemblyName));
+            }
+
+            return assembly.GetType(typeName, true);
+        }
+
 
         /// <summary>
         /// Gets the <see cref="Type"/>  representing the <see cref="PrivateType"/> .
@@ -128,13 +170,15 @@ namespace RJCP.CodeQuality
         /// </summary>
         /// <param name="typeName">Name of the nested type.</param>
         /// <returns>A new <see cref="PrivateType"/> instance representing the nested type.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="typeName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">
-        /// <para><paramref name="typeName"/> is <see langword="null"/> or empty.</para>
-        /// or
+        /// <para><paramref name="typeName"/> is empty.</para>
+        /// - or -
         /// <para><paramref name=" typeName"/> not found.</para>
         /// </exception>
         public PrivateType GetNestedType(string typeName)
         {
+            ThrowHelper.ThrowIfNull(typeName);
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
             Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding)
@@ -148,26 +192,37 @@ namespace RJCP.CodeQuality
         /// <param name="typeName">Name of the nested type.</param>
         /// <param name="typeArguments">The type arguments for creating the generic type.</param>
         /// <returns>A new <see cref="PrivateType"/> instance representing the nested type.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="typeArguments"/> is <see langword="null"/>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <para><paramref name="typeName"/> is <see langword="null"/> or empty.</para>
+        /// <para><paramref name="typeName"/> is empty.</para>
         /// or
         /// <para><paramref name=" typeName"/> not found.</para>
         /// or
-        /// <para>The number of elements in <paramref name="typeArguments"/> is not the same as
-        /// the number of type parameters in the current generic type definition.</para>
+        /// <para>
+        /// The number of elements in <paramref name="typeArguments"/> is not the same as the number of type parameters
+        /// in the current generic type definition.
+        /// </para>
         /// or
-        /// <para>Any element of <paramref name="typeArguments"/> does not satisfy the constraints
-        /// specified for the corresponding type parameter of the current generic type.</para>
+        /// <para>
+        /// Any element of <paramref name="typeArguments"/> does not satisfy the constraints specified for the
+        /// corresponding type parameter of the current generic type.
+        /// </para>
         /// or
-        /// <para><paramref name="typeArguments"/> contains an element that is a pointer type,
-        /// a by-ref type, or void.</para>
+        /// <para>
+        /// <paramref name="typeArguments"/> contains an element that is a pointer type, a by-ref type, or void.
+        /// </para>
         /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="typeArguments"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">The type does not represent a generic type definition.</exception>
-        /// <exception cref="NotSupportedException">The invoked method is not supported in the base class.
-        /// Derived classes must provide an implementation.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// The type does not represent a generic type definition.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// The invoked method is not supported in the base class. Derived classes must provide an implementation.
+        /// </exception>
         public PrivateType GetNestedType(string typeName, Type[] typeArguments)
         {
+            ThrowHelper.ThrowIfNull(typeName);
             if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
 
             Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding)
@@ -178,7 +233,7 @@ namespace RJCP.CodeQuality
 
         private object InvokeHelperStatic(string name, BindingFlags bindingFlags, object[] args)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             return m_ObjectType.InvokeMember(name, bindingFlags | MemberDefaultBinding, null, null, args, CultureInfo.InvariantCulture);
         }
 
@@ -323,7 +378,7 @@ namespace RJCP.CodeQuality
                 return InvokeHelperStatic(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
 
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            ThrowHelper.ThrowIfNull(name);
             MethodInfo method = m_ObjectType.GetMethod(name, bindingFlags | MemberDefaultBinding, null, parameterTypes, null);
             if (method == null) {
                 string msg = string.Format("Private accessor member {0} not found", name);

@@ -220,7 +220,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -301,7 +301,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -379,7 +379,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -405,7 +405,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            ThrowHelper.ThrowIfNull(asyncResult);
             if (!(asyncResult is CompletedAsync<int> readAsync))
                 throw new ArgumentException("Invalid async result", nameof(asyncResult));
             CompletedAsync.End(asyncResult);
@@ -561,7 +561,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -630,7 +630,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -705,7 +705,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -731,7 +731,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            ThrowHelper.ThrowIfNull(asyncResult);
             CompletedAsync.End(asyncResult);
         }
 

@@ -15,7 +15,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Decompiled from MS Sources")]
         internal static MethodBase SelectMethod(BindingFlags bindingAttr, MethodBase[] match, Type[] types, ParameterModifier[] modifiers)
         {
-            if (match == null) throw new ArgumentNullException(nameof(match));
+            ThrowHelper.ThrowIfNull(match);
             Type[] typeArray = new Type[types.Length];
 
             for (int i = 0; i < types.Length; i++) {

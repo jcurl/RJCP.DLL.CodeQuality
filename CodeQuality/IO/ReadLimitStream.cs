@@ -197,7 +197,7 @@
         /// </remarks>
         public ReadLimitStream(Stream stream, int minReadLength, int maxReadLength, bool ownsStream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            ThrowHelper.ThrowIfNull(stream);
             if (minReadLength < 1) throw new ArgumentOutOfRangeException(nameof(minReadLength), "Must be 1 or greater");
             if (maxReadLength < minReadLength) throw new ArgumentOutOfRangeException(nameof(maxReadLength), $"Must be {minReadLength} or greater");
 
@@ -258,8 +258,8 @@
         /// </remarks>
         public ReadLimitStream(Stream stream, IEnumerable<int> sequenceLength, bool ownsStream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (sequenceLength == null) throw new ArgumentNullException(nameof(sequenceLength));
+            ThrowHelper.ThrowIfNull(stream);
+            ThrowHelper.ThrowIfNull(sequenceLength);
 
             if (stream is MemoryStream memStream) {
                 // A small optimization for reading tests, we set the beginning of the stream.

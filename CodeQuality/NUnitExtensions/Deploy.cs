@@ -193,7 +193,7 @@
         /// </exception>
         public static void Item(string path)
         {
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            ThrowHelper.ThrowIfNull(path);
             Item(path, null);
         }
 
@@ -237,7 +237,7 @@
         /// </exception>
         public static void Item(string path, string outputDirectory)
         {
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            ThrowHelper.ThrowIfNull(path);
             string itemPath = GetFullPath(path, TestDirectory);
 
             // Get the target-path where to copy the deployment item to

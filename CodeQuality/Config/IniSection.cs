@@ -14,7 +14,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="header"/> is <see langword="null"/>.</exception>
         public IniSection(string header)
         {
-            if (header == null) throw new ArgumentNullException(nameof(header));
+            ThrowHelper.ThrowIfNull(header);
             Header = header;
         }
 

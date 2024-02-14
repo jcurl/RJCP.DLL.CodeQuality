@@ -35,7 +35,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public WriteOnlyStream(Stream stream, bool ownsStream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            ThrowHelper.ThrowIfNull(stream);
             m_Stream = stream;
             m_OwnsStream = ownsStream;
         }
@@ -408,7 +408,7 @@
             }
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -468,7 +468,7 @@
             if (m_Stream != null) return m_Stream.WriteAsync(buffer, offset, count, cancellationToken);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -543,7 +543,7 @@
             if (m_Stream != null) return m_Stream.BeginWrite(buffer, offset, count, callback, state);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            ThrowHelper.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
@@ -566,7 +566,7 @@
             }
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            ThrowHelper.ThrowIfNull(asyncResult);
             CompletedAsync.End(asyncResult);
         }
 
