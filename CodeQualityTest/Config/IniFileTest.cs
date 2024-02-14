@@ -11,7 +11,7 @@
         public void LoadValidIniFile()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
-            IniFile iniFile = new IniFile(path);
+            IniFile iniFile = new(path);
             Assert.That(iniFile, Has.Count.EqualTo(7));
 
             Assert.That(iniFile.ContainsKey("section"));
@@ -119,7 +119,7 @@
         public void DuplicateSection()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestDuplicate.ini");
-            IniFile iniFile = new IniFile(path);
+            IniFile iniFile = new(path);
             Assert.That(iniFile, Has.Count.EqualTo(2));
 
             Assert.That(iniFile.ContainsKey("Section1"));
@@ -134,7 +134,7 @@
         public void DuplicateKeys()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestDuplicate.ini");
-            IniFile iniFile = new IniFile(path);
+            IniFile iniFile = new(path);
             Assert.That(iniFile, Has.Count.EqualTo(2));
 
             Assert.That(iniFile.ContainsKey("Section2"));
@@ -246,7 +246,7 @@
         public void EmptySection()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "TestEmptySection.ini");
-            IniFile iniFile = new IniFile(path);
+            IniFile iniFile = new(path);
             Assert.That(iniFile, Has.Count.EqualTo(3));
 
             Assert.That(iniFile.ContainsKey("section"));

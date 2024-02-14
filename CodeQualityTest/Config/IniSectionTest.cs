@@ -11,7 +11,7 @@
         [Test]
         public void EmptyIniSection()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section, Is.Empty);
             Assert.That(section.IsReadOnly, Is.False);
 
@@ -25,21 +25,21 @@
         [Test]
         public void EmptyIniSectionKeys()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section.Keys, Is.Empty);
         }
 
         [Test]
         public void EmptyIniSectionValues()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section.Values, Is.Empty);
         }
 
         [Test]
         public void AddNullKey()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(() => { section.Add(null, "value"); }, Throws.TypeOf<ArgumentNullException>());
             Assert.That(section, Is.Empty);
         }
@@ -47,7 +47,7 @@
         [Test]
         public void AddNullValue()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(() => { section.Add("key", null); }, Throws.TypeOf<ArgumentNullException>());
             Assert.That(section, Is.Empty);
         }
@@ -55,7 +55,7 @@
         [Test]
         public void AddNull()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>(null, null));
@@ -66,7 +66,7 @@
         [Test]
         public void AddPrivateNullKey()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>(null, "value"));
@@ -77,7 +77,7 @@
         [Test]
         public void AddPrivateNullValue()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(
                 () => {
                     ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", null));
@@ -88,7 +88,7 @@
         [Test]
         public void AddKeyValuePair()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(section.ContainsKey("key"), Is.True);
@@ -98,7 +98,7 @@
         [Test]
         public void AddKeyValuePairInsensitive1()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(
@@ -111,7 +111,7 @@
         [Test]
         public void AddKeyValuePairInsensitive2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(
@@ -124,7 +124,7 @@
         [Test]
         public void KeyValuePairContainsCaseInsensitive()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(section.ContainsKey("KEY"), Is.True);
@@ -138,7 +138,7 @@
         [Test]
         public void KeyValuePairPrivateContains()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(((IDictionary<string, string>)section).Contains(new KeyValuePair<string, string>("KEY", "value")), Is.True);
@@ -163,7 +163,7 @@
         [Test]
         public void AddKeyValuePairTwice()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(() => { section.Add("key", "value2"); }, Throws.TypeOf<ArgumentException>());
@@ -173,7 +173,7 @@
         [Test]
         public void AddPrivateKeyValuePair()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value"));
             Assert.That(section.ContainsKey("key"), Is.True);
             Assert.That(section, Has.Count.EqualTo(1));
@@ -182,7 +182,7 @@
         [Test]
         public void AddPrivateKeyValuePairContainsCaseInsensitive()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value"));
             Assert.That(section.ContainsKey("KEY"), Is.True);
             Assert.That(section.ContainsKey("keY"), Is.True);
@@ -195,7 +195,7 @@
         [Test]
         public void AddPrivateKeyValuePairTwice1()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value"));
             Assert.That(
                 () => {
@@ -207,7 +207,7 @@
         [Test]
         public void AddPrivateKeyValuePairTwice2()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             ((IDictionary<string, string>)section).Add(new KeyValuePair<string, string>("key", "value"));
             Assert.That(
                 () => {
@@ -219,7 +219,7 @@
         [Test]
         public void AddPrivateKeyValuePairTwice3()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(
@@ -232,7 +232,7 @@
         [Test]
         public void AddPrivateKeyValuePairInsensitive1()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(
@@ -245,7 +245,7 @@
         [Test]
         public void AddPrivateKeyValuePairInsensitive2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(
@@ -258,7 +258,7 @@
         [Test]
         public void AddMultipleKeys1()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key1", "value1" },
                 { "key2", "value2" }
             };
@@ -268,7 +268,7 @@
         [Test]
         public void AddMultipleKeys2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key1", "value" },
                 { "key2", "value" }
             };
@@ -278,7 +278,7 @@
         [Test]
         public void ClearKeys1()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             section.Clear();
@@ -294,7 +294,7 @@
         [Test]
         public void ClearKeys2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -311,14 +311,14 @@
         [Test]
         public void RemoveKeyFromEmpty()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section.Remove("key"), Is.False);
         }
 
         [Test]
         public void RemoveKeyLastItem()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(section.Remove("key"), Is.True);
@@ -328,7 +328,7 @@
         [Test]
         public void RemoveSingleKeyItem1()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value" }
             };
@@ -341,7 +341,7 @@
         [Test]
         public void RemoveSingleKeyItem2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value" }
             };
@@ -354,14 +354,14 @@
         [Test]
         public void TryGetKeyValuePairEmpty()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section.TryGetValue("key", out _), Is.False);
         }
 
         [Test]
         public void TryGetKeyValuePairSingleCorrect()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(section.TryGetValue("key", out string value), Is.True);
@@ -371,7 +371,7 @@
         [Test]
         public void TryGetKeyValuePairSingleIncorrect()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
             Assert.That(section.TryGetValue("key2", out _), Is.False);
@@ -380,7 +380,7 @@
         [Test]
         public void TryGetKeyValuePairSingleCorrectCaseInsensitive()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
 
@@ -394,7 +394,7 @@
         [Test]
         public void TryGetKeyValuePairMultiIncorrect()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -405,7 +405,7 @@
         [Test]
         public void TryGetKeyValuePairMultiCorrect1()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -420,7 +420,7 @@
         [Test]
         public void EmptyKeyCollection()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section.Keys, Is.Empty);
 
             int count = 0;
@@ -433,7 +433,7 @@
         [Test]
         public void SingleKeyInCollection()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
 
@@ -451,7 +451,7 @@
         [Test]
         public void SingleKeyInCollectionCaseSensitive()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "KEY", "value" }
             };
 
@@ -469,7 +469,7 @@
         [Test]
         public void KeyCollectionReadOnly()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -485,7 +485,7 @@
         [Test]
         public void KeyCollectionContains()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -506,12 +506,12 @@
         [Test]
         public void KeyCollectionEnumerator()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
 
-            HashSet<string> foundKeys = new HashSet<string>();
+            HashSet<string> foundKeys = new();
             ICollection<string> keys = section.Keys;
             foreach (string key in keys) {
                 foundKeys.Add(key);
@@ -524,7 +524,7 @@
         [Test]
         public void KeyCollectionCopyToEmpty1()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             string[] keys = new string[1];
             keys[0] = "foo";
 
@@ -535,7 +535,7 @@
         [Test]
         public void KeyCollectionCopyToEmpty2()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             string[] keys = new string[1];
 
             Assert.That(() => {
@@ -548,7 +548,7 @@
         [Test]
         public void KeyCollectionCopyTo()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -565,7 +565,7 @@
         [Test]
         public void KeyCollectionCopyTo2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -590,7 +590,7 @@
         [Test]
         public void KeyCollectionCopyToBoundaries()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -605,7 +605,7 @@
         [Test]
         public void KeyCollectionCopyToArrayBoundaries()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -624,7 +624,7 @@
         [Test]
         public void KeyCollectionCopyToNull()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -638,7 +638,7 @@
         [Test]
         public void EmptyValueCollection()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(section.Values, Is.Empty);
 
             int count = 0;
@@ -651,7 +651,7 @@
         [Test]
         public void SingleKeyValueInCollection()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" }
             };
 
@@ -669,7 +669,7 @@
         [Test]
         public void ValueCollectionCopyToBoundaries()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -684,7 +684,7 @@
         [Test]
         public void ValueCollectionCopyToArrayBoundaries()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -703,7 +703,7 @@
         [Test]
         public void ValueCollectionCopyToNull()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -717,7 +717,7 @@
         [Test]
         public void KeyValuePrivateCopyTo()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -733,7 +733,7 @@
         [Test]
         public void KeyValuePrivateCopyTo2()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -749,7 +749,7 @@
         [Test]
         public void KeyValuePrivateCopyTo3()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -765,7 +765,7 @@
         [Test]
         public void KeyValuePrivateCopyToBoundaries()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -780,7 +780,7 @@
         [Test]
         public void KeyValuePrivateCopyToArrayBoundaries()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -799,7 +799,7 @@
         [Test]
         public void KeyValuePrivateCopyToNull()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -813,7 +813,7 @@
         [Test]
         public void ItemGetter()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -826,7 +826,7 @@
         [Test]
         public void ItemGetterMissing()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
@@ -840,7 +840,7 @@
         [Test]
         public void ItemGetterNullKey()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(
                 () => {
                     _ = section[null];
@@ -850,7 +850,7 @@
         [Test]
         public void ItemSetterNullKey()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(
                 () => {
                     section[null] = "value";
@@ -860,7 +860,7 @@
         [Test]
         public void ItemSetterNullValue()
         {
-            IniSection section = new IniSection("header");
+            IniSection section = new("header");
             Assert.That(
                 () => {
                     section["key"] = null;
@@ -871,7 +871,7 @@
         [Test]
         public void ItemSetterNewKey()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 ["key"] = "value"
             };
             Assert.That(section, Has.Count.EqualTo(1));
@@ -881,12 +881,12 @@
         [Test]
         public void PrivateEnumerator()
         {
-            IniSection section = new IniSection("header") {
+            IniSection section = new("header") {
                 { "key", "value" },
                 { "key2", "value2" }
             };
 
-            HashSet<string> foundKeys = new HashSet<string>();
+            HashSet<string> foundKeys = new();
             foreach (KeyValuePair<string, string> item in section) {
                 foundKeys.Add(item.Key);
             }
@@ -916,7 +916,7 @@
 
             Console.WriteLine(result.ToString());
 
-            IniSection dic = new IniSection("new");
+            IniSection dic = new("new");
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
             for (var i = 0; i < 100000000; i++) {

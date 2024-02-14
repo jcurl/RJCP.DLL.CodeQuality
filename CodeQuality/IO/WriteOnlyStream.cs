@@ -58,13 +58,13 @@
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
         /// <value><see langword="true"/> if this instance can write; otherwise, <see langword="false"/>.</value>
-        public override bool CanWrite { get { return m_Stream == null || m_Stream.CanWrite; } }
+        public override bool CanWrite { get { return m_Stream is null || m_Stream.CanWrite; } }
 
         /// <summary>
         /// Gets a value that determines whether the current stream can time out.
         /// </summary>
         /// <value><see langword="true"/> if this instance can timeout; otherwise, <see langword="false"/>.</value>
-        public override bool CanTimeout { get { return m_Stream != null && m_Stream.CanTimeout; } }
+        public override bool CanTimeout { get { return m_Stream is not null && m_Stream.CanTimeout; } }
 
         /// <summary>
         /// Gets or sets a value, in miliseconds, that determines how long the stream will attempt to read before timing
@@ -87,13 +87,13 @@
         {
             get
             {
-                if (m_Stream != null) return m_Stream.WriteTimeout;
+                if (m_Stream is not null) return m_Stream.WriteTimeout;
                 throw new InvalidOperationException();
             }
 
             set
             {
-                if (m_Stream != null) {
+                if (m_Stream is not null) {
                     m_Stream.WriteTimeout = value;
                 } else {
                     throw new InvalidOperationException();
@@ -105,7 +105,7 @@
         /// Gets the length in bytes of the stream.
         /// </summary>
         /// <value>The length of the stream, or zero if no stream was provided in the constructor.</value>
-        public override long Length { get { return m_Stream == null ? 0 : m_Stream.Length; } }
+        public override long Length { get { return m_Stream is null ? 0 : m_Stream.Length; } }
 
         /// <summary>
         /// Gets or sets the position within the current stream.
@@ -114,7 +114,7 @@
         /// <exception cref="NotSupportedException">Setting the position in the stream is not supported.</exception>
         public override long Position
         {
-            get { return m_Stream == null ? 0 : m_Stream.Position; }
+            get { return m_Stream is null ? 0 : m_Stream.Position; }
             set { throw new NotSupportedException(); }
         }
 
@@ -132,7 +132,7 @@
         /// </summary>
         public override void Flush()
         {
-            if (m_Stream != null) {
+            if (m_Stream is not null) {
                 m_Stream.Flush();
                 return;
             }
@@ -151,7 +151,7 @@
         /// <returns>Task.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            if (m_Stream != null)
+            if (m_Stream is not null)
                 return m_Stream.FlushAsync(cancellationToken);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
@@ -402,7 +402,7 @@
         /// <remarks>If a stream is provided, then any exceptions are propagated.</remarks>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (m_Stream != null) {
+            if (m_Stream is not null) {
                 m_Stream.Write(buffer, offset, count);
                 return;
             }
@@ -423,7 +423,7 @@
         /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void Write(ReadOnlySpan<byte> buffer)
         {
-            if (m_Stream != null) {
+            if (m_Stream is not null) {
                 m_Stream.Write(buffer);
                 return;
             }
@@ -465,7 +465,7 @@
         /// <returns>A task indicating when the write operation is complete.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (m_Stream != null) return m_Stream.WriteAsync(buffer, offset, count, cancellationToken);
+            if (m_Stream is not null) return m_Stream.WriteAsync(buffer, offset, count, cancellationToken);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             ThrowHelper.ThrowIfNull(buffer);
@@ -494,7 +494,7 @@
         /// <returns>A <see cref="ValueTask"/> indicating when the write operation is complete.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (m_Stream != null) return m_Stream.WriteAsync(buffer, cancellationToken);
+            if (m_Stream is not null) return m_Stream.WriteAsync(buffer, cancellationToken);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             cancellationToken.ThrowIfCancellationRequested();
@@ -509,7 +509,7 @@
         /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void WriteByte(byte value)
         {
-            if (m_Stream != null) {
+            if (m_Stream is not null) {
                 m_Stream.WriteByte(value);
                 return;
             }
@@ -540,7 +540,7 @@
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
-            if (m_Stream != null) return m_Stream.BeginWrite(buffer, offset, count, callback, state);
+            if (m_Stream is not null) return m_Stream.BeginWrite(buffer, offset, count, callback, state);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             ThrowHelper.ThrowIfNull(buffer);
@@ -549,7 +549,7 @@
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
 
             IAsyncResult result = new CompletedAsync(state);
-            if (callback != null) callback(result);
+            if (callback is not null) callback(result);
             return result;
         }
 
@@ -560,7 +560,7 @@
         /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void EndWrite(IAsyncResult asyncResult)
         {
-            if (m_Stream != null) {
+            if (m_Stream is not null) {
                 m_Stream.EndWrite(asyncResult);
                 return;
             }
@@ -594,7 +594,7 @@
             if (Interlocked.CompareExchange(ref m_IsDisposed, 1, 0) != 0)
                 return;
 
-            if (disposing && m_Stream != null && m_OwnsStream) {
+            if (disposing && m_Stream is not null && m_OwnsStream) {
                 m_Stream.Dispose();
             }
             base.Dispose(disposing);

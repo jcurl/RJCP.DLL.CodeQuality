@@ -284,8 +284,8 @@
         private int GetCount(int maxCount)
         {
             int count;
-            if (m_LengthSequence != null) {
-                if (m_LengthEnumerator == null) {
+            if (m_LengthSequence is not null) {
+                if (m_LengthEnumerator is null) {
                     m_LengthEnumerator = m_LengthSequence.GetEnumerator();
                     if (!m_LengthEnumerator.MoveNext()) {
                         // The sequence is empty, so we ignore it.
@@ -294,7 +294,7 @@
                     }
                 }
 
-                if (m_LengthEnumerator != null) {
+                if (m_LengthEnumerator is not null) {
                     count = m_LengthEnumerator.Current;
                     if (!m_LengthEnumerator.MoveNext()) {
                         m_LengthEnumerator = null;
@@ -662,7 +662,7 @@
             if (Interlocked.CompareExchange(ref m_IsDisposed, 1, 0) != 0)
                 return;
 
-            if (disposing && m_Stream != null && m_OwnsStream) {
+            if (disposing && m_Stream is not null && m_OwnsStream) {
                 m_Stream.Dispose();
             }
             base.Dispose(disposing);

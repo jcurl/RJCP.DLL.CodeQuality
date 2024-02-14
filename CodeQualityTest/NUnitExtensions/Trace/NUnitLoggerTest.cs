@@ -34,20 +34,18 @@
         }
 
         private static ILoggerFactory s_LogFactory;
-        private static readonly object s_Lock = new object();
+        private static readonly object s_Lock = new();
 
         private static ILoggerFactory LoggerInstance
         {
             get
             {
-                if (s_LogFactory == null) {
+                if (s_LogFactory is null) {
                     lock (s_Lock) {
-                        if (s_LogFactory == null) {
-                            s_LogFactory = LoggerFactory.Create(builder => {
-                                builder.AddFilter("RJCP", LogLevel.Debug)
-                                    .AddNUnitLogger();
-                            });
-                        }
+                        s_LogFactory ??= LoggerFactory.Create(builder => {
+                            builder.AddFilter("RJCP", LogLevel.Debug)
+                                .AddNUnitLogger();
+                        });
                     }
                 }
                 return s_LogFactory;

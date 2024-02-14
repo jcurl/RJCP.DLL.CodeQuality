@@ -64,7 +64,7 @@
     /// </summary>
     public class SparseStream : Stream
     {
-        private readonly List<SparseBlock> m_Data = new List<SparseBlock>();
+        private readonly List<SparseBlock> m_Data = new();
         private long m_Length;
         private long m_Position;
 

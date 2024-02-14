@@ -98,8 +98,8 @@
         private const ScratchOptions ScratchChDirMask = (ScratchOptions)0x0F;
         private const ScratchOptions ScratchMkDirMask = (ScratchOptions)0x70;
 
-        private static readonly Dictionary<string, string> s_NameMapping = new Dictionary<string, string>();
-        private static readonly HashSet<string> s_NamesUsed = new HashSet<string>();
+        private static readonly Dictionary<string, string> s_NameMapping = new();
+        private static readonly HashSet<string> s_NamesUsed = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScratchPad"/> class.
@@ -182,7 +182,7 @@
 
         private static string SanitizeName(string name)
         {
-            if (name == null) return string.Empty;
+            if (name is null) return string.Empty;
 
             int nameLength = name.Length;
             StringBuilder sb = null;
@@ -191,7 +191,7 @@
             int endPos = -1;
             for (int i = 0; i < nameLength; i++) {
                 if (IsValidChar(name[i])) continue;
-                if (sb == null) sb = new StringBuilder(nameLength);
+                sb ??= new StringBuilder(nameLength);
                 int l = i - pos;
                 if (l > 0) {
                     sb.Append(name, pos, l);
@@ -200,7 +200,7 @@
                 }
                 pos = i + 1;
             }
-            if (sb == null) return name;
+            if (sb is null) return name;
 
             if (endPos != -1) return sb.ToString(0, endPos);
             return sb.ToString();
@@ -208,11 +208,11 @@
 
         private static bool IsValidChar(char ch)
         {
-            return (ch >= 'a' && ch <= 'z' ||
-                ch >= 'A' && ch <= 'Z' ||
-                ch >= '0' && ch <= '9' ||
-                ch == '_' ||
-                ch == '.');
+            return (ch is >= 'a' and <= 'z' or
+                >= 'A' and <= 'Z' or
+                >= '0' and <= '9' or
+                '_' or
+                '.');
         }
 
         private string m_OriginalCurrentDir;

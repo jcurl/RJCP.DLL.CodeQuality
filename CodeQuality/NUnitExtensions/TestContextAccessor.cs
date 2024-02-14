@@ -7,18 +7,16 @@
 
     internal partial class TestContextAccessor
     {
-        private static readonly object s_Lock = new object();
+        private static readonly object s_Lock = new();
         private static TestContextAccessor s_TestContext;
 
         public static TestContextAccessor Instance
         {
             get
             {
-                if (s_TestContext == null) {
+                if (s_TestContext is null) {
                     lock (s_Lock) {
-                        if (s_TestContext == null) {
-                            s_TestContext = Create();
-                        }
+                        s_TestContext ??= Create();
                     }
                 }
                 return s_TestContext;
@@ -30,19 +28,19 @@
             Assembly nUnitAssembly;
 
             nUnitAssembly = GetNUnitFromStackTrace();
-            if (nUnitAssembly != null) return new TestContextAccessor(nUnitAssembly);
+            if (nUnitAssembly is not null) return new TestContextAccessor(nUnitAssembly);
             nUnitAssembly = GetNUnitFromAssemblyList();
-            if (nUnitAssembly != null) return new TestContextAccessor(nUnitAssembly);
+            if (nUnitAssembly is not null) return new TestContextAccessor(nUnitAssembly);
 
             throw new InvalidOperationException("Can't determine NUnit Test Context. Missing Test attribute or running on a thread?");
         }
 
         private static Assembly GetNUnitFromStackTrace()
         {
-            StackTrace stackTrace = new StackTrace();
+            StackTrace stackTrace = new();
             foreach (StackFrame frame in stackTrace.GetFrames()) {
                 Type nunitType = FindTestAttribute(frame.GetMethod());
-                if (nunitType != null) {
+                if (nunitType is not null) {
                     return Assembly.GetAssembly(nunitType);
                 }
             }
@@ -54,7 +52,7 @@
             AppDomain domain = AppDomain.CurrentDomain;
             foreach (Assembly assembly in domain.GetAssemblies()) {
                 Type attrType = assembly.GetType("NUnit.Framework.TestAttribute");
-                if (attrType != null) return assembly;
+                if (attrType is not null) return assembly;
             }
             return null;
         }
@@ -105,12 +103,12 @@
             // - if the Test/Work directory are the same (default), then use a custom path; or
             // - if the user specified force, then use a custom path
             AppConfig.NUnitExtensionsSection settings = AppConfig.NUnitExtensionsSection.Settings;
-            if (settings != null) {
+            if (settings is not null) {
                 if (settings.Deploy.UseCurrentDirectory) {
                     m_WorkDirectory = Environment.CurrentDirectory;
                 } else if (!settings.Deploy.DeployWorkDirectory.Equals(string.Empty)) {
                     if (settings.Deploy.Force ||
-                        m_WorkDirectory != null && m_WorkDirectory.Equals(m_TestDirectory)) {
+                        m_WorkDirectory is not null && m_WorkDirectory.Equals(m_TestDirectory)) {
 
                         if (Path.IsPathRooted(settings.Deploy.DeployWorkDirectory)) {
                             m_WorkDirectory = settings.Deploy.DeployWorkDirectory;
@@ -126,7 +124,7 @@
 
         private static PrivateObject GetCurrentContext(Assembly nUnitAssembly)
         {
-            PrivateType testContextType = new PrivateType(nUnitAssembly.GetType("NUnit.Framework.TestContext"));
+            PrivateType testContextType = new(nUnitAssembly.GetType("NUnit.Framework.TestContext"));
             object currentContext = AccessorBase.GetStaticFieldOrProperty(testContextType, "CurrentContext");
             return new PrivateObject(currentContext);
         }
@@ -138,7 +136,7 @@
                 // The value changes on every test, so we need to get the name on every call.
                 PrivateObject currentContext = GetCurrentContext(m_NUnitAssembly);
                 object testProperty = currentContext.GetFieldOrProperty("Test");
-                if (testProperty == null) return null;
+                if (testProperty is null) return null;
 
                 return new TestAccessor(testProperty);
             }

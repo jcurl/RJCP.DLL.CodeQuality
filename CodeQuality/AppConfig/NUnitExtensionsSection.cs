@@ -8,7 +8,7 @@
 
     internal class NUnitExtensionsSection : ConfigurationSection
     {
-        private static readonly object s_SettingsLock = new object();
+        private static readonly object s_SettingsLock = new();
         private static NUnitExtensionsSection s_Settings;
 
 #if NETFRAMEWORK
@@ -16,11 +16,9 @@
         {
             get
             {
-                if (s_Settings == null) {
+                if (s_Settings is null) {
                     lock (s_SettingsLock) {
-                        if (s_Settings == null) {
-                            s_Settings = ConfigurationManager.GetSection("NUnitExtensions") as NUnitExtensionsSection;
-                        }
+                        s_Settings ??= ConfigurationManager.GetSection("NUnitExtensions") as NUnitExtensionsSection;
                     }
                 }
                 return s_Settings;
@@ -31,9 +29,9 @@
         {
             get
             {
-                if (s_Settings == null) {
+                if (s_Settings is null) {
                     lock (s_SettingsLock) {
-                        if (s_Settings == null) {
+                        if (s_Settings is null) {
                             // NetStandard / .NET Core doesn't support loading configurations automatically. Further,
                             // when running test cases often the assembly name is the TestHost, which is not the same
                             // as the app configuration path, e.g. MyLibraryTest.dll.config.
@@ -43,11 +41,11 @@
                             // multiple configuration files, the first (deepest) in the call stack is used for this and
                             // all subsequent calls. Normally there should be only one configuration file.
 
-                            StackTrace stackTrace = new StackTrace();
+                            StackTrace stackTrace = new();
                             string workingAssembly = null;
                             foreach (StackFrame frame in stackTrace.GetFrames()) {
                                 string frameAssembly = frame.GetMethod().ReflectedType.Assembly.Location;
-                                if (frameAssembly != null && frameAssembly != workingAssembly) {
+                                if (frameAssembly is not null && frameAssembly != workingAssembly) {
                                     string configFileName = string.Format("{0}.config", frameAssembly);
                                     if (System.IO.File.Exists(configFileName)) {
                                         Configuration appConfig = ConfigurationManager.OpenExeConfiguration(frameAssembly);

@@ -36,7 +36,7 @@
         protected virtual void OnItemAdded(EventArgs args)
         {
             EventHandler<EventArgs> handler = ItemAddedEvent;
-            if (handler != null) handler(this, args);
+            if (handler is not null) handler(this, args);
         }
 
         protected int GetCount()

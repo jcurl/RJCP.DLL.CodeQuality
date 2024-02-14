@@ -32,7 +32,7 @@
         public RelatedClassTestAccessor Create()
         {
             object obj = Invoke(nameof(Create));
-            return obj == null ? null : new RelatedClassTestAccessor(new PrivateObject(obj));
+            return obj is null ? null : new RelatedClassTestAccessor(new PrivateObject(obj));
         }
 
         public RelatedClassTestAccessor Create_PrivateObjectNull()

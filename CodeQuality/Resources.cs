@@ -131,9 +131,9 @@
         /// </remarks>
         public static void Print(string baseName, Assembly assembly, CultureInfo culture)
         {
-            ResourceManager rsrc = new ResourceManager(baseName, assembly);
+            ResourceManager rsrc = new(baseName, assembly);
             ResourceSet set = rsrc.GetResourceSet(culture, true, true);
-            SortedDictionary<string, string> sorted = new SortedDictionary<string, string>();
+            SortedDictionary<string, string> sorted = new();
             foreach (DictionaryEntry entry in set) {
                 string key = entry.Key.ToString();
 

@@ -6,7 +6,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedItemClass";
-        public readonly static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        public readonly static PrivateType AccType = new(AssemblyName, TypeName);
 
         public RelatedItemClassAccessor(string value)
             : base(AccType, new Type[] { typeof(string) }, new object[] { value }) { }
@@ -24,7 +24,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.RelatedCollectionClass";
-        public readonly static PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        public readonly static PrivateType AccType = new(AssemblyName, TypeName);
 
         public RelatedCollectionClassAccessor() : base(AccType) { }
 

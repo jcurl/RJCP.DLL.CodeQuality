@@ -385,7 +385,7 @@
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
 
             IAsyncResult result = new CompletedAsync<int>(state, ReadInternal(count));
-            if (callback != null) callback(result);
+            if (callback is not null) callback(result);
             return result;
         }
 
@@ -406,7 +406,7 @@
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ThrowHelper.ThrowIfNull(asyncResult);
-            if (!(asyncResult is CompletedAsync<int> readAsync))
+            if (asyncResult is not CompletedAsync<int> readAsync)
                 throw new ArgumentException("Invalid async result", nameof(asyncResult));
             CompletedAsync.End(asyncResult);
             return readAsync.Result;
@@ -711,7 +711,7 @@
             if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
 
             IAsyncResult result = new CompletedAsync(state);
-            if (callback != null) callback(result);
+            if (callback is not null) callback(result);
             return result;
         }
 

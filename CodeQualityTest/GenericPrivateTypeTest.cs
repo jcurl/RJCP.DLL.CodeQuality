@@ -12,7 +12,7 @@
         [TestCase(typeof(GenericClassTest<PrivateType>), "RJCP.CodeQuality.PrivateType")]
         public void GenericType(Type type, string typeName)
         {
-            PrivateType genericPrivateType = new PrivateType(type);
+            PrivateType genericPrivateType = new(type);
             Assert.That((string)genericPrivateType.InvokeStatic("GenericTypeName"), Is.EqualTo(typeName));
         }
 
@@ -21,7 +21,7 @@
         [TestCase("RJCP.CodeQuality.HelperClasses.GenericClassTest`1", typeof(object), "System.Object")]
         public void GenericType(string typeName, Type typeArgument, string genericTypeName)
         {
-            PrivateType genericPrivateType = new PrivateType(AccessorTest.AssemblyName, typeName, new Type[] { typeArgument });
+            PrivateType genericPrivateType = new(AccessorTest.AssemblyName, typeName, new Type[] { typeArgument });
             Assert.That((string)genericPrivateType.InvokeStatic("GenericTypeName"), Is.EqualTo(genericTypeName));
         }
 

@@ -39,7 +39,7 @@
         [Test]
         public void PrivateObject_MemberToAccess_NullMember()
         {
-            object obj = new object();
+            object obj = new();
             string member = null;
 
             Assert.That(() => {
@@ -58,7 +58,7 @@
         [Test]
         public void PrivateObject_MemberToAccess()
         {
-            PrivateObject privateObj = new PrivateObject(new ClassTest(7), "Capacity");
+            PrivateObject privateObj = new(new ClassTest(7), "Capacity");
             Assert.That(privateObj.Target, Is.EqualTo(7));
         }
 
@@ -74,7 +74,7 @@
         [Test]
         public void InstanceFromType()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(privateObject.Target, Is.Not.Null);
         }
 
@@ -82,7 +82,7 @@
         public void PrivateCtorFromType()
         {
             object[] args = new object[] { "ObjectName" };
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), args);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), args);
 
             Assert.That(privateObject.Target, Is.Not.Null);
         }
@@ -98,7 +98,7 @@
         [Test]
         public void PrivateObject_PrivateType_NullType()
         {
-            object obj = new object();
+            object obj = new();
             Type type = null;
 
             Assert.That(() => {
@@ -109,7 +109,7 @@
         [Test]
         public void PrivateObject_PrivateType()
         {
-            object obj = new object();
+            object obj = new();
             Type type = typeof(ObjectClassTest);
 
             Assert.That(new PrivateObject(obj, new PrivateType(type)), Is.Not.Null);
@@ -153,14 +153,14 @@
         [Test]
         public void InstanceFromAssembly_WithTypeName()
         {
-            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
+            PrivateObject privateObject = new(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
             Assert.That(privateObject.Target, Is.Not.Null);
         }
 
         [Test]
         public void PrivateCtorFromAssembly_WithType()
         {
-            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", "ObjectName");
+            PrivateObject privateObject = new(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", "ObjectName");
             Assert.That(privateObject.Target, Is.Not.Null);
         }
 
@@ -244,7 +244,7 @@
         [Test]
         public void InvokeNullName()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.Invoke(null);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -253,7 +253,7 @@
         [Test]
         public void Invoke_Types()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             privateObject.Invoke("AddToProperty", new Type[] { typeof(int) }, new object[] { 3 });
 
             int value = (int)privateObject.GetFieldOrProperty("m_Value", m_BindingFlags);
@@ -263,7 +263,7 @@
         [Test]
         public void Invoke_Types_Generic()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 3);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 3);
             privateObject.Invoke("AddCount",
                 new Type[] { typeof(object), typeof(string) },
                 new object[] { 7, "ABC" },
@@ -279,7 +279,7 @@
         [Test]
         public void Invoke_BindingFlags_Types()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             privateObject.Invoke("AddToProperty",
                 m_BindingFlags,
                 new Type[] { typeof(int) },
@@ -292,7 +292,7 @@
         [Test]
         public void Invoke_BindingFlags_Types_Arguments()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             privateObject.Invoke("AddToProperty",
                 m_BindingFlags,
                 new Type[] { typeof(int) },
@@ -307,7 +307,7 @@
         [Test]
         public void SetTargetNull()
         {
-            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
+            PrivateObject privateObject = new(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
             Assert.That(privateObject.Target, Is.Not.Null);
             Assert.That(() => { privateObject.Target = null; }, Throws.TypeOf<ArgumentNullException>());
         }
@@ -315,9 +315,9 @@
         [Test]
         public void SetAnotherTarget()
         {
-            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
+            PrivateObject privateObject = new(AccessorTest.AssemblyName, "RJCP.CodeQuality.HelperClasses.ObjectClassTest", 7);
             Assert.That(privateObject.Target, Is.Not.Null);
-            ObjectClassTest testInstance = new ObjectClassTest(33);
+            ObjectClassTest testInstance = new(33);
             privateObject.Target = testInstance;
             Assert.That(privateObject.Target, Is.SameAs(testInstance));
         }
@@ -325,7 +325,7 @@
         [Test]
         public void CallPrivateMethod()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int value = (int)privateObject.GetFieldOrProperty("m_Value", m_BindingFlags);
             Assert.That(value, Is.EqualTo(7));
@@ -339,7 +339,7 @@
         [Test]
         public void CallInexistentMethod()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             Assert.That(() => {
                 privateObject.Invoke("XYZ", m_BindingFlags);
@@ -349,7 +349,7 @@
         [Test]
         public void CallInexistentMethod_WithParameterTyeps()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             Assert.That(() => {
                 privateObject.Invoke("XYZ", m_BindingFlags, new Type[] { typeof(int) }, new object[] { 42 });
@@ -359,7 +359,7 @@
         [Test]
         public void CallPublicMethod()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int value = (int)privateObject.GetFieldOrProperty("m_Value", m_BindingFlags);
             Assert.That(value, Is.EqualTo(7));
@@ -373,7 +373,7 @@
         [Test]
         public void CallPublicMethodWithoutInstance()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             // Need to provide the BindingFlags.Instance for it to work.
             Assert.That(() => { privateObject.GetFieldOrProperty("m_Value", BindingFlags.NonPublic); },
@@ -383,7 +383,7 @@
         [Test]
         public void CallPublicMethodWithFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int value = (int)privateObject.GetFieldOrProperty("m_Value", m_BindingFlags);
             Assert.That(value, Is.EqualTo(7));
@@ -397,7 +397,7 @@
         [Test]
         public void CallOverloadedMethod()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int result = (int)privateObject.Invoke("Method", new Type[0], new object[0]);
             Assert.That(result, Is.EqualTo(2));
@@ -409,7 +409,7 @@
         [Test]
         public void CallOverloadedMethodWithFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int result = (int)privateObject.Invoke("Method", BindingFlags.Public | BindingFlags.Instance, new Type[0], new object[0]);
             Assert.That(result, Is.EqualTo(2));
@@ -421,7 +421,7 @@
         [Test]
         public void SetAndGetPublicField()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int value = (int)privateObject.GetFieldOrProperty("PubField");
             Assert.That(value, Is.EqualTo(7));
@@ -435,7 +435,7 @@
         [Test]
         public void SetAndGetPrivateField()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             int value = (int)privateObject.GetFieldOrProperty("m_Value", m_BindingFlags);
             Assert.That(value, Is.EqualTo(7));
@@ -449,7 +449,7 @@
         [Test]
         public void SetAndGetPublicProperty()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             privateObject.SetFieldOrProperty("PubProp", 9);
 
@@ -460,7 +460,7 @@
         [Test]
         public void SetAndGetPrivateProperty()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
 
             privateObject.SetFieldOrProperty("Prop", m_BindingFlags, 9);
 
@@ -471,7 +471,7 @@
         [Test]
         public void SetReadOnlyProperty()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("PropReadOnly", 9);
             }, Throws.TypeOf<MissingMethodException>());
@@ -480,7 +480,7 @@
         [Test]
         public void GetWriteOnlyProperty()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 _ = privateObject.GetFieldOrProperty("PropWriteOnly");
             }, Throws.TypeOf<MissingMethodException>());
@@ -489,7 +489,7 @@
         [Test]
         public void SetAndGetPropertyNullName()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 _ = privateObject.GetFieldOrProperty(null);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -502,7 +502,7 @@
         [Test]
         public void SetAndGetPropertyNullName_Bindings()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 _ = privateObject.GetFieldOrProperty(null, m_BindingFlags);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -515,7 +515,7 @@
         [Test]
         public void SetInexistentProperty()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("InexistentProp", m_BindingFlags, 9);
             }, Throws.TypeOf<MissingMethodException>());
@@ -524,7 +524,7 @@
         [Test]
         public void GetInexistentProperty()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.GetFieldOrProperty("InexistentProp", m_BindingFlags);
             }, Throws.TypeOf<MissingMethodException>());
@@ -533,7 +533,7 @@
         [Test]
         public void SetInexistentField()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.SetFieldOrProperty("m_InexistentField", m_BindingFlags, 9);
             }, Throws.TypeOf<MissingMethodException>());
@@ -542,7 +542,7 @@
         [Test]
         public void GetInexistentField()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(ObjectClassTest), 7);
+            PrivateObject privateObject = new(typeof(ObjectClassTest), 7);
             Assert.That(() => {
                 privateObject.GetFieldOrProperty("m_InexistentField", m_BindingFlags);
             }, Throws.TypeOf<MissingMethodException>());
@@ -570,7 +570,7 @@
         [Test]
         public void ObjectWithNullType()
         {
-            object obj = new object();
+            object obj = new();
             Assert.That(() => {
                 _ = new PrivateObject(obj, new PrivateType(null));
             }, Throws.TypeOf<ArgumentNullException>());
@@ -589,7 +589,7 @@
         [Test]
         public void PropertyGetSet()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             int value = privateObject.GetProperty<int>("Prop");
             Assert.That(value, Is.EqualTo(0));
 
@@ -601,7 +601,7 @@
         [Test]
         public void PropertyGetSetNullName()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<int>(null);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -614,7 +614,7 @@
         [Test]
         public void ProeprtyGetSet_BindingFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             int value = privateObject.GetProperty<int>("Prop", BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.That(value, Is.EqualTo(0));
 
@@ -626,7 +626,7 @@
         [Test]
         public void PropertyGetSetNullName_BindingFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<int>(null, BindingFlags.NonPublic | BindingFlags.Instance);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -639,7 +639,7 @@
         [Test]
         public void PropertyGetSet_BindingFlags_Public()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<int>("Prop", BindingFlags.Public);
             }, Throws.TypeOf<MissingMethodException>());
@@ -652,7 +652,7 @@
         [Test]
         public void PropertyGetSetIndexed()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             bool set = privateObject.GetProperty<bool>("Item", 1);
             Assert.That(set, Is.False);
 
@@ -664,7 +664,7 @@
         [Test]
         public void PropertyGetSetIndexedNullName()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<bool>(null, 1);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -677,7 +677,7 @@
         [Test]
         public void PropertyGetSetIndexed_BindingFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             bool set = privateObject.GetProperty<bool>("Item", BindingFlags.NonPublic | BindingFlags.Instance, 1);
             Assert.That(set, Is.False);
 
@@ -689,7 +689,7 @@
         [Test]
         public void PropertyGetSetIndexedNullName_BindingFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<bool>(null, BindingFlags.NonPublic | BindingFlags.Instance, 1);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -702,7 +702,7 @@
         [Test]
         public void ProeprtyGetSetIndexed_BindingFlags_Public()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<int>("Item", BindingFlags.Public, 2);
             }, Throws.TypeOf<MissingMethodException>());
@@ -715,7 +715,7 @@
         [Test]
         public void PropertyGetSetIndexed_WithTypes()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             bool set = privateObject.GetProperty<bool>("Item", new Type[] { typeof(int) }, 1);
             Assert.That(set, Is.False);
 
@@ -727,7 +727,7 @@
         [Test]
         public void PropertyGetSetIndexedNullName_WithTypes()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<bool>(null, new Type[] { typeof(int) }, 1);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -740,7 +740,7 @@
         [Test]
         public void PropertyGetSetIndexed_WithTypes_BindingFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             bool set = privateObject.GetProperty<bool>("Item", BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, new object[] { 1 });
             Assert.That(set, Is.False);
 
@@ -752,7 +752,7 @@
         [Test]
         public void PropertyGetSetIndexedNullName_WithTypes_BindingFlags()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<bool>(null, BindingFlags.NonPublic | BindingFlags.Instance, new Type[] { typeof(int) }, new object[] { 1 });
             }, Throws.TypeOf<ArgumentNullException>());
@@ -765,7 +765,7 @@
         [Test]
         public void PropertyGetSetIndexed_WithTypes_BindingFlags_Public()
         {
-            PrivateObject privateObject = new PrivateObject(typeof(IndexerClass));
+            PrivateObject privateObject = new(typeof(IndexerClass));
             Assert.That(() => {
                 _ = privateObject.GetProperty<bool>("Item", BindingFlags.Public, new Type[] { typeof(int) }, new object[] { 1 });
             }, Throws.TypeOf<MissingMethodException>());

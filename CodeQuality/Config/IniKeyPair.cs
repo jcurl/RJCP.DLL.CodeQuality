@@ -10,7 +10,7 @@
     /// <typeparam name="T">The object to store as the value.</typeparam>
     public abstract class IniKeyPair<T> : IDictionary<string, T>
     {
-        private readonly Dictionary<string, T> m_Database = new Dictionary<string, T>(StringComparer.CurrentCultureIgnoreCase);
+        private readonly Dictionary<string, T> m_Database = new(StringComparer.CurrentCultureIgnoreCase);
 
         /// <summary>
         /// Gets or sets the item with the specified key.
@@ -85,8 +85,8 @@
 
         void ICollection<KeyValuePair<string, T>>.Add(KeyValuePair<string, T> item)
         {
-            if (item.Key == null) throw new ArgumentException("Key is null", nameof(item));
-            if (item.Value == null) throw new ArgumentException("Value is null", nameof(item));
+            if (item.Key is null) throw new ArgumentException("Key is null", nameof(item));
+            if (item.Value is null) throw new ArgumentException("Value is null", nameof(item));
             m_Database.Add(item.Key, item.Value);
         }
 

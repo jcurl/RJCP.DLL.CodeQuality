@@ -29,7 +29,7 @@
         protected virtual void OnPublicEvent(MyPublicEventArgs args)
         {
             EventHandler<MyPublicEventArgs> handler = MyPublicEvent;
-            if (handler != null) {
+            if (handler is not null) {
                 MyPublicEvent(this, args);
             }
         }
@@ -39,7 +39,7 @@
         protected virtual void OnPrivateEvent(MyPrivateEventArgs args)
         {
             EventHandler<MyPrivateEventArgs> handler = MyPrivateEvent;
-            if (handler != null) {
+            if (handler is not null) {
                 handler(this, args);
             }
         }

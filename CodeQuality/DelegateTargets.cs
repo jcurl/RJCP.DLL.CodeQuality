@@ -6,7 +6,7 @@
     internal class DelegateTargets
     {
         private readonly Dictionary<string, Dictionary<Delegate, DelegateTarget>> m_Events =
-            new Dictionary<string, Dictionary<Delegate, DelegateTarget>>();
+            new();
 
         /// <summary>
         /// Adds the target to a look up table for later.

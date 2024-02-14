@@ -9,7 +9,7 @@
         [Test]
         public void LogTraceListenerWithTraceSource()
         {
-            TraceSource source = new TraceSource("RJCP.NUnitTraceListenerTest");
+            TraceSource source = new("RJCP.NUnitTraceListenerTest");
 
 #if NET6_0_OR_GREATER
             // On .NET Core, tracing doesn't work because it doesn't read the configuration file. We have to instantiate

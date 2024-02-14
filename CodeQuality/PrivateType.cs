@@ -158,7 +158,6 @@ namespace RJCP.CodeQuality
             return assembly.GetType(typeName, true);
         }
 
-
         /// <summary>
         /// Gets the <see cref="Type"/>  representing the <see cref="PrivateType"/> .
         /// </summary>
@@ -374,13 +373,13 @@ namespace RJCP.CodeQuality
         /// </remarks>
         public object InvokeStatic(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
-            if (parameterTypes == null) {
+            if (parameterTypes is null) {
                 return InvokeHelperStatic(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
 
             ThrowHelper.ThrowIfNull(name);
             MethodInfo method = m_ObjectType.GetMethod(name, bindingFlags | MemberDefaultBinding, null, parameterTypes, null);
-            if (method == null) {
+            if (method is null) {
                 string msg = string.Format("Private accessor member {0} not found", name);
                 throw new ArgumentException(msg);
             }

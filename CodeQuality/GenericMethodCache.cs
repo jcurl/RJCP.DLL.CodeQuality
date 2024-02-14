@@ -20,7 +20,7 @@
             MethodInfo[] methodInfoArray = new MethodInfo[candidates.Count];
             candidates.CopyTo(methodInfoArray, 0);
 
-            if (parameterTypes == null || parameterTypes.Length != 0) {
+            if (parameterTypes is null || parameterTypes.Length != 0) {
                 return RuntimeTypeHelper.SelectMethod(bindingFlags, methodInfoArray, parameterTypes, modifiers) as MethodInfo;
             }
 
@@ -39,7 +39,7 @@
         {
             get
             {
-                if (m_MethodCache == null) {
+                if (m_MethodCache is null) {
                     BuildGenericMethodCacheForType(m_ObjectType);
                 }
                 return m_MethodCache;
@@ -65,7 +65,7 @@
         // decompiled from v10.1.0.0 of Microsoft.VisualStudio.QualityTools.UnitTestFramework.
         private LinkedList<MethodInfo> GetMethodCandidates(string methodName, Type[] parameterTypes, Type[] typeArguments, BindingFlags bindingFlags)
         {
-            LinkedList<MethodInfo> methodCandidates = new LinkedList<MethodInfo>();
+            LinkedList<MethodInfo> methodCandidates = new();
             if (!MethodCache.TryGetValue(methodName, out LinkedList<MethodInfo> cachedCandidates)) {
                 return methodCandidates;
             }

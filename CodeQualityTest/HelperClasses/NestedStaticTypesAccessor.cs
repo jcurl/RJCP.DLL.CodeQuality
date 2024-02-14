@@ -4,7 +4,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticTypes";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public static class NestedStaticTypeAccessor
         {
@@ -22,7 +22,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedTypes1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public NestedTypes1Accessor() : base(AccType) { }
 

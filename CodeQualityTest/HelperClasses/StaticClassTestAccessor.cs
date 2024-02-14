@@ -4,7 +4,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.StaticClassTest";
-        private static readonly PrivateType m_Type = new PrivateType(AssemblyName, TypeName);
+        private static readonly PrivateType m_Type = new(AssemblyName, TypeName);
 
         public static int Property
         {

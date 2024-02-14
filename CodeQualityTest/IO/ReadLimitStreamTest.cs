@@ -10,8 +10,8 @@
         [Test]
         public void SimpleStreamWrapper()
         {
-            using (SimpleStream s = new SimpleStream())
-            using (ReadLimitStream r = new ReadLimitStream(s)) {
+            using (SimpleStream s = new())
+            using (ReadLimitStream r = new(s)) {
                 Assert.That(r.CanRead, Is.True);
                 Assert.That(r.CanWrite, Is.True);
                 Assert.That(r.CanSeek, Is.True);
@@ -25,7 +25,7 @@
 
         private static byte[] GetRandomBytes(int length)
         {
-            Random rnd = new Random();
+            Random rnd = new();
             byte[] initBuffer = new byte[length];
             rnd.NextBytes(initBuffer);
             return initBuffer;
@@ -37,7 +37,7 @@
             byte[] initBuffer = GetRandomBytes(65536);
 
             // No max read size is given, so it is the maximum possible.
-            using (ReadLimitStream r = new ReadLimitStream(initBuffer)) {
+            using (ReadLimitStream r = new(initBuffer)) {
                 Assert.That(r.Position, Is.EqualTo(0));
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
@@ -57,7 +57,7 @@
             byte[] initBuffer = GetRandomBytes(65536);
 
             // No max read size is given, so it is the maximum possible.
-            using (ReadLimitStream r = new ReadLimitStream(initBuffer, 128)) {
+            using (ReadLimitStream r = new(initBuffer, 128)) {
                 Assert.That(r.Position, Is.EqualTo(0));
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
@@ -78,7 +78,7 @@
             byte[] initBuffer = GetRandomBytes(4194304);
 
             // No max read size is given, so it is the maximum possible.
-            using (ReadLimitStream r = new ReadLimitStream(initBuffer, 64, 128)) {
+            using (ReadLimitStream r = new(initBuffer, 64, 128)) {
                 Assert.That(r.Position, Is.EqualTo(0));
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
@@ -99,7 +99,7 @@
             byte[] initBuffer = GetRandomBytes(65536);
             int[] sequence = new int[] { 100, 200 };
             // No max read size is given, so it is the maximum possible.
-            using (ReadLimitStream r = new ReadLimitStream(initBuffer, sequence)) {
+            using (ReadLimitStream r = new(initBuffer, sequence)) {
                 Assert.That(r.Position, Is.EqualTo(0));
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
@@ -119,8 +119,8 @@
         [Test]
         public void ReadSimpleStream([Values(128, 65536, 4194300, 4194304)] int sourceLength)
         {
-            using (SimpleStream s = new SimpleStream())
-            using (ReadLimitStream r = new ReadLimitStream(s)) {
+            using (SimpleStream s = new())
+            using (ReadLimitStream r = new(s)) {
                 s.SetLength(sourceLength);
 
                 byte[] buffer = new byte[65536];
@@ -138,8 +138,8 @@
         [Test]
         public void DisposeNoOwnStream1()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -150,8 +150,8 @@
         [Test]
         public void DisposeOwnStream1()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, true);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, true);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -162,8 +162,8 @@
         [Test]
         public void DisposeNoOwnStream2()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, 10);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, 10);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -174,8 +174,8 @@
         [Test]
         public void DisposeOwnStream2()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, 10, true);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, 10, true);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -186,8 +186,8 @@
         [Test]
         public void DisposeNoOwnStream3()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, 10, 20);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, 10, 20);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -198,8 +198,8 @@
         [Test]
         public void DisposeOwnStream3()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, 10, 20, true);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, 10, 20, true);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -210,8 +210,8 @@
         [Test]
         public void DisposeNoOwnStream4()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, new int[] { 10 });
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, new int[] { 10 });
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();
@@ -222,8 +222,8 @@
         [Test]
         public void DisposeOwnStream4()
         {
-            SimpleStream s = new SimpleStream();
-            ReadLimitStream r = new ReadLimitStream(s, new int[] { 10 }, true);
+            SimpleStream s = new();
+            ReadLimitStream r = new(s, new int[] { 10 }, true);
             Assert.That(s.IsDisposed, Is.False);
             Assert.That(r.IsDisposed, Is.False);
             r.Dispose();

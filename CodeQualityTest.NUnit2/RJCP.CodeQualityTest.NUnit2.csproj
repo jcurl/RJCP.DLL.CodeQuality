@@ -22,6 +22,7 @@
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <EnableDefaultItems>false</EnableDefaultItems>
+    <LangVersion Condition="$(TargetFramework.StartsWith('net4'))">10</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -44,6 +45,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="NUnit" Version="2.7.1" />
     <PackageReference Include="NUnitTestAdapter" Version="2.3.0" />
+    <PackageReference Include="CSharpIsNullAnalyzer" Version="0.1.495" PrivateAssets="all" />
     <ProjectReference Include="..\CodeQuality\RJCP.CodeQuality.csproj" />
   </ItemGroup>
 

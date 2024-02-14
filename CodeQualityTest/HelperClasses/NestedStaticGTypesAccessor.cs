@@ -6,7 +6,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public class NestedStaticGTypeAccessor<T>
         {
@@ -24,7 +24,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes2`1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
         public class NestedStaticGTypeAccessor
         {
@@ -42,7 +42,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes3";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public class NestedStaticGTypeAccessor
         {
@@ -60,7 +60,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes4`1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
         public class NestedStaticGTypeAccessor<U>
         {
@@ -78,7 +78,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes5`1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
         public class NestedStaticGTypeAccessor<U>
         {
@@ -97,7 +97,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedStaticGTypes6`1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
         public static class NestedStaticGTypeAccessor<U>
         {
@@ -116,7 +116,7 @@
     {
         private const string AssemblyName = AccessorTest.AssemblyName;
         private const string TypeName = "RJCP.CodeQuality.HelperClasses.NestedGTypes1`1";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
         public NestedGTypes1Accessor(T initialValue)
             : base(AccType, new Type[] { typeof(T) }, new object[] { initialValue }) { }

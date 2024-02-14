@@ -57,7 +57,7 @@
             // time.
 
             string workDirectory = null;
-            Thread workerThread = new Thread(() => { workDirectory = Deploy.WorkDirectory; });
+            Thread workerThread = new(() => { workDirectory = Deploy.WorkDirectory; });
             workerThread.Start();
             workerThread.Join();
 

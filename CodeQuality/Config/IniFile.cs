@@ -73,16 +73,16 @@
 
         private void LoadIniFile(string fileName)
         {
-            using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream file = new(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (TextReader reader = new StreamReader(file, Encoding.UTF8, true)) {
                 IniSection section = null;
 
                 while (true) {
                     string line = reader.ReadLine();
 
-                    if (line == null) {
+                    if (line is null) {
                         // End of the file. Add the pending section.
-                        if (section != null) {
+                        if (section is not null) {
                             Add(section.Header, section);
                         }
                         return;
@@ -93,7 +93,7 @@
                     if (IsBlankLine(line)) continue;
 
                     if (GetSectionHeader(line, out string header)) {
-                        if (section != null) {
+                        if (section is not null) {
                             Add(section.Header, section);
                         }
 
@@ -106,7 +106,7 @@
                         continue;
                     }
 
-                    if (section != null && GetKeyValuePair(line, out string key, out string value)) {
+                    if (section is not null && GetKeyValuePair(line, out string key, out string value)) {
                         if (section.ContainsKey(key)) continue;
                         section.Add(key, value);
                     }
@@ -187,14 +187,14 @@
             return true;
         }
 
-        private readonly static Dictionary<string, IniFile> m_Files = new Dictionary<string, IniFile>();
+        private readonly static Dictionary<string, IniFile> m_Files = new();
 
         private static string GetFullFileName(string fileName)
         {
             if (Path.IsPathRooted(fileName)) return fileName;
             fileName = Path.Combine(Environment.CurrentDirectory, fileName);
             try {
-                FileInfo fileInfo = new FileInfo(fileName);
+                FileInfo fileInfo = new(fileName);
                 return fileInfo.FullName;
             } catch (PathTooLongException) {            // The specified path, file name, or both exceed the system-defined maximum length
                 return null;
@@ -212,7 +212,7 @@
         private static IniFile GetIniFile(string fileName)
         {
             string fullName = GetFullFileName(fileName);
-            if (fullName == null) return new IniFile();
+            if (fullName is null) return new IniFile();
 
             if (!m_Files.TryGetValue(fullName, out IniFile iniFile)) {
                 try {
@@ -307,7 +307,7 @@
         public static int GetKey(string fileName, string section, string key, int defaultValue)
         {
             string value = GetKey(fileName, section, key, null);
-            if (value == null) return defaultValue;
+            if (value is null) return defaultValue;
 
             if (!int.TryParse(value, System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.InvariantCulture, out int result))
@@ -336,7 +336,7 @@
         public static int GetKey(string fileName, string section, string key, int defaultValue, System.Globalization.NumberStyles style, IFormatProvider provider)
         {
             string value = GetKey(fileName, section, key, null);
-            if (value == null) return defaultValue;
+            if (value is null) return defaultValue;
 
             if (!int.TryParse(value, style, provider, out int result))
                 return defaultValue;
@@ -357,7 +357,7 @@
         public static long GetKey(string fileName, string section, string key, long defaultValue)
         {
             string value = GetKey(fileName, section, key, null);
-            if (value == null) return defaultValue;
+            if (value is null) return defaultValue;
 
             if (!long.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out long result)) return defaultValue;
             return result;
@@ -384,7 +384,7 @@
         public static long GetKey(string fileName, string section, string key, long defaultValue, System.Globalization.NumberStyles style, IFormatProvider provider)
         {
             string value = GetKey(fileName, section, key, null);
-            if (value == null) return defaultValue;
+            if (value is null) return defaultValue;
 
             if (!long.TryParse(value, style, provider, out long result)) return defaultValue;
             return result;
@@ -404,7 +404,7 @@
         public static bool GetKey(string fileName, string section, string key, bool defaultValue)
         {
             string value = GetKey(fileName, section, key, null);
-            if (value == null) return defaultValue;
+            if (value is null) return defaultValue;
 
             if (!bool.TryParse(value, out bool result)) return defaultValue;
             return result;

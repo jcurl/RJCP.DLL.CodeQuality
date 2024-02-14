@@ -56,7 +56,7 @@ namespace RJCP.CodeQuality.NUnitExtensions.Trace
             }
 
             // Buffer the message into a single string in order to avoid shearing the message when running across multiple threads.
-            StringBuilder messageBuilder = new StringBuilder();
+            StringBuilder messageBuilder = new();
 
             string timeStamp;
             if (m_LogStart.HasValue) {
@@ -76,7 +76,7 @@ namespace RJCP.CodeQuality.NUnitExtensions.Trace
                 }
             }
 
-            if (exception != null) {
+            if (exception is not null) {
                 lines = exception.ToString().Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines) {
                     messageBuilder.Append(linePrefix).AppendLine(line);

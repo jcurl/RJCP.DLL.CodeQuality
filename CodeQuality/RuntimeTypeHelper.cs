@@ -95,20 +95,20 @@
 
         private static int FindMostSpecific(ParameterInfo[] p1, int[] paramOrder1, Type paramArrayType1, ParameterInfo[] p2, int[] paramOrder2, Type paramArrayType2, Type[] types, object[] args)
         {
-            if (paramArrayType1 != null && paramArrayType2 == null) {
+            if (paramArrayType1 is not null && paramArrayType2 is null) {
                 return 2;
             }
 
-            if (paramArrayType2 != null && paramArrayType1 == null) {
+            if (paramArrayType2 is not null && paramArrayType1 is null) {
                 return 1;
             }
 
             bool flag1 = false;
             bool flag2 = false;
             for (int index = 0; index < types.Length; ++index) {
-                if (args == null || args[index] != Type.Missing) {
-                    Type c1 = paramArrayType1 == null || paramOrder1[index] < p1.Length - 1 ? p1[paramOrder1[index]].ParameterType : paramArrayType1;
-                    Type c2 = paramArrayType2 == null || paramOrder2[index] < p2.Length - 1 ? p2[paramOrder2[index]].ParameterType : paramArrayType2;
+                if (args is null || args[index] != Type.Missing) {
+                    Type c1 = paramArrayType1 is null || paramOrder1[index] < p1.Length - 1 ? p1[paramOrder1[index]].ParameterType : paramArrayType1;
+                    Type c2 = paramArrayType2 is null || paramOrder2[index] < p2.Length - 1 ? p2[paramOrder2[index]].ParameterType : paramArrayType2;
                     if (c1 != c2 && !c1.ContainsGenericParameters && !c2.ContainsGenericParameters) {
                         switch (FindMostSpecificType(c1, c2, types[index])) {
                         case 0:
@@ -126,7 +126,7 @@
                 }
             }
             if (flag1 == flag2) {
-                if (!flag1 && p1.Length != p2.Length && args != null) {
+                if (!flag1 && p1.Length != p2.Length && args is not null) {
                     if (p1.Length == args.Length)
                         return 1;
                     if (p2.Length == args.Length)
@@ -208,7 +208,7 @@
                 ++num;
                 type = type.BaseType;
             }
-            while (type != null);
+            while (type is not null);
             return num;
         }
 

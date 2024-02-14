@@ -14,7 +14,7 @@
             // class to test name resolution conflict.
 
             string originalPath = Environment.CurrentDirectory;
-            using (ScratchPad scratch = new ScratchPad()) {
+            using (ScratchPad scratch = new()) {
                 // Default is to use the same name for the directory as the test case name, and to change the directory
                 // to be in the scratch folder.
                 Assert.That(Directory.Exists(scratch.Path), Is.True);

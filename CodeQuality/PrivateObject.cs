@@ -57,7 +57,7 @@
             ThrowHelper.ThrowIfNull(obj);
             ValidateAccessString(memberToAccess);
 
-            if (!(obj is PrivateObject privateObject))
+            if (obj is not PrivateObject privateObject)
                 privateObject = new PrivateObject(obj);
 
             string[] members = memberToAccess.Split('.');
@@ -175,7 +175,7 @@
             ThrowHelper.ThrowIfNull(type);
 
             object obj;
-            if (parameterTypes != null) {
+            if (parameterTypes is not null) {
                 ConstructorInfo constructor = type.GetConstructor(DefaultBindingFlags, null, parameterTypes, null)
                     ?? throw new ArgumentException("Constructor not found");
                 obj = constructor.Invoke(args);
@@ -460,16 +460,16 @@
         public object Invoke(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args, Type[] typeArguments)
         {
             ThrowHelper.ThrowIfNull(name);
-            if (parameterTypes == null) {
+            if (parameterTypes is null) {
                 return InvokeHelper(name, bindingFlags | BindingFlags.InvokeMethod, args);
             }
 
             MethodInfo methodInfo = m_ObjectType.GetMethod(name, bindingFlags, null, parameterTypes, null);
-            if (methodInfo == null && typeArguments != null) {
+            if (methodInfo is null && typeArguments is not null) {
                 methodInfo = m_MethodCache.GetGenericMethodFromCache(name, parameterTypes, typeArguments, bindingFlags, null);
             }
 
-            if (methodInfo == null) {
+            if (methodInfo is null) {
                 string msg = string.Format("Member {0} not found", name);
                 throw new MissingMethodException(msg);
             }
@@ -654,11 +654,11 @@
         public T GetProperty<T>(string name, BindingFlags bindingFlags, Type[] parameterTypes, object[] args)
         {
             ThrowHelper.ThrowIfNull(name);
-            if (parameterTypes == null)
+            if (parameterTypes is null)
                 return (T)InvokeHelper(name, bindingFlags | BindingFlags.GetProperty, args);
 
             PropertyInfo propInfo = m_ObjectType.GetProperty(name, bindingFlags, null, typeof(T), parameterTypes, null);
-            if (propInfo == null) {
+            if (propInfo is null) {
                 string msg = string.Format("Property {0} not found", name);
                 throw new MissingMethodException(msg);
             }
@@ -765,9 +765,9 @@
         public void SetProperty<T>(string name, BindingFlags bindingFlags, Type[] parameterTypes, T value, object[] args)
         {
             ThrowHelper.ThrowIfNull(name);
-            if (parameterTypes == null) {
+            if (parameterTypes is null) {
                 object[] invokeArgs;
-                if (args == null) {
+                if (args is null) {
                     invokeArgs = new object[1] { value };
                 } else {
                     invokeArgs = new object[args.Length + 1];
@@ -779,7 +779,7 @@
             }
 
             PropertyInfo propInfo = m_ObjectType.GetProperty(name, bindingFlags, null, typeof(T), parameterTypes, null);
-            if (propInfo == null) {
+            if (propInfo is null) {
                 string msg = string.Format("Property {0} not found", name);
                 throw new MissingMethodException(msg);
             }

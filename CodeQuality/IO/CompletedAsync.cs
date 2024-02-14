@@ -31,9 +31,9 @@
         {
             get
             {
-                if (m_AsyncWaitHandle == null) {
-                    ManualResetEvent mre = new ManualResetEvent(true);
-                    if (Interlocked.CompareExchange(ref m_AsyncWaitHandle, mre, null) != null) {
+                if (m_AsyncWaitHandle is null) {
+                    ManualResetEvent mre = new(true);
+                    if (Interlocked.CompareExchange(ref m_AsyncWaitHandle, mre, null) is not null) {
                         // Another thread created this object's event; dispose the event we just created
                         mre.Close();
                     }
@@ -48,7 +48,7 @@
 
         public static void End(IAsyncResult result)
         {
-            if (!(result is CompletedAsync asyncResult))
+            if (result is not CompletedAsync asyncResult)
                 throw new ArgumentException("Invalid IAsyncResult on End", nameof(result));
 
             asyncResult.m_AsyncWaitHandle?.Close();

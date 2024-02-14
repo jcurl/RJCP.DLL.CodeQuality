@@ -7,4 +7,3 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0056:Use index operator", Justification = ".NET Core only feature")]
 [assembly: SuppressMessage("Style", "IDE0057:Use range operator", Justification = ".NET Core only feature")]
-[assembly: SuppressMessage("Style", "IDE0074:Use compound assignment", Justification = ".NET Core only feature")]

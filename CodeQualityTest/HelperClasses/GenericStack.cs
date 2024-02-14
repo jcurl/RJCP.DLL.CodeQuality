@@ -4,7 +4,7 @@
 
     internal class GenericStack<T>
     {
-        private readonly Stack<T> m_Stack = new Stack<T>();
+        private readonly Stack<T> m_Stack = new();
 
         public void Push(T item)
         {

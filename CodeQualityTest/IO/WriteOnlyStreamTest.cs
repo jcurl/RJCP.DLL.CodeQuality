@@ -40,7 +40,7 @@
         [Test]
         public void DefaultStream()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(s.CanRead, Is.False);
                 Assert.That(s.CanWrite, Is.True);
                 Assert.That(s.CanSeek, Is.False);
@@ -84,8 +84,8 @@
         [Test]
         public void TestWriteTimeout([Values(0, -1, 100)] int timeout)
         {
-            using (SimpleStream ss = new SimpleStream())
-            using (WriteOnlyStream s = new WriteOnlyStream(ss)) {
+            using (SimpleStream ss = new())
+            using (WriteOnlyStream s = new(ss)) {
                 s.WriteTimeout = timeout;
                 Assert.That(s.WriteTimeout, Is.EqualTo(timeout));
                 Assert.That(ss.WriteTimeout, Is.EqualTo(timeout));
@@ -95,7 +95,7 @@
         [Test]
         public void DefaultStreamWriteTimeoutGet()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     _ = s.WriteTimeout;
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -105,7 +105,7 @@
         [Test]
         public void DefaultStreamWriteTimeoutSet()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     s.WriteTimeout = 0;
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -115,7 +115,7 @@
         [Test]
         public void DefaultStreamGetPosition()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(s.Position, Is.EqualTo(0));
             }
         }
@@ -123,8 +123,8 @@
         [Test]
         public void MemoryStreamGetPosition()
         {
-            using (MemoryStream m = new MemoryStream())
-            using (WriteOnlyStream s = new WriteOnlyStream(m)) {
+            using (MemoryStream m = new())
+            using (WriteOnlyStream s = new(m)) {
                 byte[] buffer = new byte[100];
                 m.Write(buffer, 0, buffer.Length);
                 Assert.That(s.Position, Is.EqualTo(100));
@@ -329,7 +329,7 @@
         [Test]
         public void DefaultStreamWriteNullBuffer()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     s.Write(null, 0, 100);
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -339,7 +339,7 @@
         [Test]
         public void DefaultStreamWriteNegativeOffset()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
                     s.Write(buffer, -1, 100);
@@ -350,7 +350,7 @@
         [Test]
         public void DefaultStreamWriteNegativeCount()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
                     s.Write(buffer, 50, -1);
@@ -361,7 +361,7 @@
         [Test]
         public void DefaultStreamWriteOutOfBounds()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
                     s.Write(buffer, 50, 51);
@@ -415,7 +415,7 @@
         public void DefaultStreamWriteAsyncCancelled()
         {
             using (var cancelSource = new CancellationTokenSource())
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 cancelSource.Cancel();
                 byte[] buffer = new byte[100];
                 Assert.That(async () => {
@@ -429,7 +429,7 @@
         public void DefaultStreamWriteAsyncNullBuffer()
         {
             using (var cancelSource = new CancellationTokenSource())
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(async () => {
                     await s.WriteAsync(null, 0, 100, cancelSource.Token);
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -441,7 +441,7 @@
         public void DefaultStreamWriteAsyncNegativeOffset()
         {
             using (var cancelSource = new CancellationTokenSource())
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, -1, 100, cancelSource.Token);
@@ -454,7 +454,7 @@
         public void DefaultStreamWriteAsyncNegativeCount()
         {
             using (var cancelSource = new CancellationTokenSource())
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 50, -1, cancelSource.Token);
@@ -467,7 +467,7 @@
         public void DefaultStreamWriteAsyncOutOfBounds()
         {
             using (var cancelSource = new CancellationTokenSource())
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 50, 51, cancelSource.Token);
@@ -500,7 +500,7 @@
         public void DefaultStreamWriteAsyncMemoryCancelled()
         {
             using (var cancelSource = new CancellationTokenSource())
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 cancelSource.Cancel();
                 ReadOnlyMemory<byte> buffer = new byte[100];
                 Assert.That(async () => {
@@ -541,13 +541,13 @@
         [Test]
         public void StreamBeginWriteEndWriteCallback([Values(false, true)] bool withStream)
         {
-            using (ManualResetEvent e = new ManualResetEvent(false))
+            using (ManualResetEvent e = new(false))
             using (WriteOnlyStream s = GetStream(withStream)) {
                 byte[] buffer = new byte[100];
                 bool rcNull = true;
                 IAsyncResult r = s.BeginWrite(buffer, 0, buffer.Length, (rc) => {
-                    rcNull = rc == null;
-                    if (rc != null) s.EndWrite(rc);
+                    rcNull = rc is null;
+                    if (rc is not null) s.EndWrite(rc);
                     e.Set();
                 }, null);
 
@@ -560,7 +560,7 @@
         [Test]
         public void DefaultStreamBeginWriteNullBuffer()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     s.BeginWrite(null, 0, 100, null, null);
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -570,7 +570,7 @@
         [Test]
         public void DefaultStreamBeginWriteNegativeOffset()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
                     s.BeginWrite(buffer, -1, 100, null, null);
@@ -581,7 +581,7 @@
         [Test]
         public void DefaultStreamBeginWriteNegativeCount()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
                     s.BeginWrite(buffer, 50, -1, null, null);
@@ -592,7 +592,7 @@
         [Test]
         public void DefaultStreamBeginWriteOutOfBounds()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
                     s.BeginWrite(buffer, 50, 51, null, null);
@@ -603,7 +603,7 @@
         [Test]
         public void DefaultStreamBeginWriteNullEnd()
         {
-            using (WriteOnlyStream s = new WriteOnlyStream()) {
+            using (WriteOnlyStream s = new()) {
                 byte[] buffer = new byte[100];
                 IAsyncResult ia = s.BeginWrite(buffer, 0, buffer.Length, null, null);
                 Assert.That(ia, Is.Not.Null);
@@ -617,7 +617,7 @@
         [Test]
         public void DisposeTwice()
         {
-            WriteOnlyStream s = new WriteOnlyStream();
+            WriteOnlyStream s = new();
             Assert.That(() => {
                 s.Dispose();
                 s.Dispose();
@@ -627,8 +627,8 @@
         [Test]
         public void DisposeOwnedStream()
         {
-            SimpleStream ss = new SimpleStream();
-            WriteOnlyStream s = new WriteOnlyStream(ss, true);
+            SimpleStream ss = new();
+            WriteOnlyStream s = new(ss, true);
             Assert.That(ss.IsDisposed, Is.False);
             s.Dispose();
             Assert.That(ss.IsDisposed, Is.True);

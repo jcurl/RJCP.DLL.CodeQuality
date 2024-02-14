@@ -323,7 +323,7 @@
 
         private static string GetFullPath(string path, string basePath)
         {
-            if (path == null) path = string.Empty;
+            path ??= string.Empty;
 
             string systemNormalizedPath;
             if (!Platform.IsUnix()) {
@@ -486,7 +486,7 @@
                 elapsed = unchecked(Environment.TickCount - tickCount);
             } while (elapsed < DeleteMaxTime);
 
-            if (lastException != null) {
+            if (lastException is not null) {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
                 lastException.Throw();
 #else
@@ -512,7 +512,7 @@
                 // Check if we need to copy the file. We only do so if it doesn't exist or if it's
                 // different (regardless of why).
                 if (File.Exists(destination)) {
-                    FileInfo itemPathInBinInfo = new FileInfo(destination);
+                    FileInfo itemPathInBinInfo = new(destination);
                     if (itemInfo.Length == itemPathInBinInfo.Length &&
                         itemInfo.LastWriteTime == itemPathInBinInfo.LastWriteTime &&
                         itemInfo.CreationTime == itemPathInBinInfo.CreationTime) return;
@@ -670,7 +670,7 @@
                 elapsed = unchecked(Environment.TickCount - tickCount);
             } while (elapsed < DeleteMaxTime);
 
-            if (lastException != null) {
+            if (lastException is not null) {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
                 lastException.Throw();
 #else
@@ -704,7 +704,7 @@
                 throw new ArgumentException("Path is a directory");
 
             CreateDirectory(WorkDirectoryAbsolute);
-            using (FileStream file = new FileStream(fullPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
+            using (FileStream file = new(fullPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
                 /* Create an Empty File */
             }
         }

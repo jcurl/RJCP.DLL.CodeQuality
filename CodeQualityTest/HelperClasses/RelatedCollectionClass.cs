@@ -15,7 +15,7 @@
 
     internal class RelatedCollectionClass
     {
-        private readonly HashSet<string> m_Set = new HashSet<string>();
+        private readonly HashSet<string> m_Set = new();
 
         public void Add(RelatedItemClass item)
         {

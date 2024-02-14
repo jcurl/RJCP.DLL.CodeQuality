@@ -62,7 +62,7 @@
         public void InitLargeFile()
         {
             SparseBlock[] large = new SparseBlock[] {
-                new SparseBlock(0x10000000_00000000, new byte[] { 0x01, 0x02 })
+                new(0x10000000_00000000, new byte[] { 0x01, 0x02 })
             };
             Stream s = new SparseStream(large, 0x20000000_00000000);
 
@@ -81,7 +81,7 @@
         public void InitAutoLength()
         {
             SparseBlock[] large = new SparseBlock[] {
-                new SparseBlock(10, new byte[] { 0x01, 0x02 })
+                new(10, new byte[] { 0x01, 0x02 })
             };
             Stream s = new SparseStream(large);
 
@@ -118,7 +118,7 @@
         public void SetReadOnly()
         {
             SparseBlock[] empty = Array.Empty<SparseBlock>();
-            SparseStream s = new SparseStream(empty, 0);
+            SparseStream s = new(empty, 0);
 
             Assert.That(s.CanRead, Is.True);
             Assert.That(s.CanSeek, Is.True);
@@ -209,7 +209,7 @@
         public void InitInsufficientLength()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
 
             Assert.That(() => {
@@ -221,10 +221,10 @@
         public void InitBlockOutOfOrder()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 1000);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -235,8 +235,8 @@
         public void InitBlockOutOfOrder2()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(8, Elf32Hdr.Slice(8, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(8, Elf32Hdr.Slice(8, 16)),
             };
             Stream s = new SparseStream(elfhdr, 1000);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -247,10 +247,10 @@
         public void InitBlockOverlap()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(12, Elf32Hdr.Slice(12, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(12, Elf32Hdr.Slice(12, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Assert.That(() => {
                 _ = new SparseStream(elfhdr, 32);
@@ -261,8 +261,8 @@
         public void InitBlockOverlap2()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(12, Elf32Hdr.Slice(12, 16)),
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
+                new(12, Elf32Hdr.Slice(12, 16)),
+                new(0, Elf32Hdr.Slice(0, 16)),
             };
             Assert.That(() => {
                 _ = new SparseStream(elfhdr, 32);
@@ -273,10 +273,10 @@
         public void ReadBlocksFromStart([Values(52, 1000)] int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -294,10 +294,10 @@
         public void ReadBlocksFromStartBeyondZero()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock (0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 1000);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -316,10 +316,10 @@
         public void ReadBlocksFromStartBeyondEof()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 52);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -337,10 +337,10 @@
         public void ReadBlocksFromStartBeyondEof2()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 55);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -359,10 +359,10 @@
         public void ReadBlocksFromStartPartial([Values(52, 1000)] int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -378,10 +378,10 @@
         public void ReadBlocksFromOffset([Values(52, 1000)] int length, [Values(0, 10)] int offset)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -398,12 +398,12 @@
         public void ReadBlocksWithGap([Values(92, 1000)] int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4)),   // 8 bytes should be zero here
-                new SparseBlock(60, Elf32PHdr.Slice(0, 16)),
-                new SparseBlock(76, Elf32PHdr.Slice(16, 16))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4)),   // 8 bytes should be zero here
+                new(60, Elf32PHdr.Slice(0, 16)),
+                new(76, Elf32PHdr.Slice(16, 16))
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -421,12 +421,12 @@
         public void ReadBlocksWithGapReadFromMiddle([Values(92, 1000)] int length, [Values(0, 10)] int offset)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4 )),   // 8 bytes should be zero here
-                new SparseBlock(60, Elf32PHdr.Slice(0, 16)),
-                new SparseBlock(76, Elf32PHdr.Slice(16, 16))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4 )),   // 8 bytes should be zero here
+                new(60, Elf32PHdr.Slice(0, 16)),
+                new(76, Elf32PHdr.Slice(16, 16))
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -444,12 +444,12 @@
         public void ReadBlocksWithGapRead([Values(92, 1000)] int length, [Values(0, 10)] int offset, [Values(52, 56)] int pos)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr.Slice(0, 16)),
-                new SparseBlock(16, Elf32Hdr.Slice(16, 16)),
-                new SparseBlock(32, Elf32Hdr.Slice(32, 16)),
-                new SparseBlock(48, Elf32Hdr.Slice(48, 4 )),   // 8 bytes should be zero here
-                new SparseBlock(60, Elf32PHdr.Slice(0, 16)),
-                new SparseBlock(76, Elf32PHdr.Slice(16, 16))
+                new(0, Elf32Hdr.Slice(0, 16)),
+                new(16, Elf32Hdr.Slice(16, 16)),
+                new(32, Elf32Hdr.Slice(32, 16)),
+                new(48, Elf32Hdr.Slice(48, 4 )),   // 8 bytes should be zero here
+                new(60, Elf32PHdr.Slice(0, 16)),
+                new(76, Elf32PHdr.Slice(16, 16))
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -466,7 +466,7 @@
         public void ReadNull()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -481,7 +481,7 @@
         public void ReadNegativeOffset()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -497,7 +497,7 @@
         public void ReadNegativeLen()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -516,7 +516,7 @@
         public void ReadOutOfBounds(int offset, int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -532,7 +532,7 @@
         public void ReadZero()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -546,7 +546,7 @@
         public void ReadAtEndZero()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -561,9 +561,9 @@
         public void PositionOutOfBounds([Values(-1, 101)] int position)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 100);
+            SparseStream s = new(elfhdr, 100);
             s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(100));
@@ -577,9 +577,9 @@
         public void SeekBeginning([Values(0, 10, 50, 900)] int seek)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 1000);
+            SparseStream s = new(elfhdr, 1000);
             s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(1000));
@@ -592,9 +592,9 @@
         public void SeekBeginningOutOfBounds([Values(-1, 101)] int position)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 100);
+            SparseStream s = new(elfhdr, 100);
             s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(100));
@@ -610,7 +610,7 @@
         public void SeekBeginningExtend()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -626,9 +626,9 @@
         public void SeekEnd([Values(0, 10, 50, 900)] int seek)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 1000);
+            SparseStream s = new(elfhdr, 1000);
             s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(1000));
@@ -641,9 +641,9 @@
         public void SeekEndOutOfBounds([Values(-1, 101)] int position, [Values(false, true)] bool setreadonly)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 100);
+            SparseStream s = new(elfhdr, 100);
             if (setreadonly) s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(100));
@@ -659,9 +659,9 @@
         public void SeekCurrent()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 1000);
+            SparseStream s = new(elfhdr, 1000);
             s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(1000));
@@ -680,9 +680,9 @@
         public void SeekCurrentOutOfBounds([Values(-51, 51)] int position)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
-            SparseStream s = new SparseStream(elfhdr, 100);
+            SparseStream s = new(elfhdr, 100);
             s.SetReadOnly();
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(100));
@@ -698,7 +698,7 @@
         public void SeekCurrentExtend()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -714,7 +714,7 @@
         public void SeekInvalid()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -754,12 +754,12 @@
         [Test]
         public void SetLengthShortenOneBlockMiddle([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -781,12 +781,12 @@
         [Test]
         public void SetLengthShortenOneBlockToEmpty([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -804,12 +804,12 @@
         [Test]
         public void SetLengthShortenOneBlockAtEnd([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -828,14 +828,14 @@
         [Test]
         public void WriteBlockAtStart([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             byte[] newData = new byte[64];
             r.NextBytes(data);
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -857,14 +857,14 @@
         [Test]
         public void WriteBlockAtStartFull([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             byte[] newData = new byte[128];
             r.NextBytes(data);
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -885,14 +885,14 @@
         [Test]
         public void WriteBlockAtStartOverlap([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             byte[] newData = new byte[256];
             r.NextBytes(data);
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -913,14 +913,14 @@
         [Test]
         public void WriteBlockAtEnd()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             byte[] newData = new byte[128];
             r.NextBytes(data);
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -943,14 +943,14 @@
         [Test]
         public void WriteBlockAtEndAndExtend()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             byte[] newData = new byte[128];
             r.NextBytes(data);
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -973,14 +973,14 @@
         [Test]
         public void WriteBlockAtEndOverlap()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             byte[] newData = new byte[128];
             r.NextBytes(data);
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block);
 
@@ -1001,7 +1001,7 @@
         public void WriteNull()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1016,7 +1016,7 @@
         public void WriteNegativeOffset()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1032,7 +1032,7 @@
         public void WriteNegativeLen()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1051,7 +1051,7 @@
         public void WriteOutOfBounds(int offset, int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1067,7 +1067,7 @@
         public void WriteZero()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1083,7 +1083,7 @@
         public void WriteAtEndZero()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1106,7 +1106,7 @@
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(10));
 
-            Span<byte> buffer = new Span<byte>(new byte[50] {
+            Span<byte> buffer = new(new byte[50] {
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
                 5, 4, 5, 4, 5, 4, 5, 4, 5, 4,
                 5, 4, 5, 4, 5, 4, 5, 4, 5, 4,
@@ -1129,7 +1129,7 @@
             Assert.That(s.Position, Is.EqualTo(0));
             Assert.That(s.Length, Is.EqualTo(10));
 
-            Span<byte> buffer = new Span<byte>(new byte[50] {
+            Span<byte> buffer = new(new byte[50] {
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
                 5, 4, 5, 4, 5, 4, 5, 4, 5, 4,
                 5, 4, 5, 4, 5, 4, 5, 4, 5, 4,
@@ -1146,10 +1146,10 @@
         public void ReadBlocksFromStartSpan([Values(52, 1000)] int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1167,10 +1167,10 @@
         public void ReadBlocksFromStartBeyondZeroSpan()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, 1000);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1189,10 +1189,10 @@
         public void ReadBlocksFromStartBeyondEofSpan()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, 52);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1210,10 +1210,10 @@
         public void ReadBlocksFromStartBeyondEof2Span()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, 55);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1232,10 +1232,10 @@
         public void ReadBlocksFromStartPartialSpan([Values(52, 1000)] int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1251,10 +1251,10 @@
         public void ReadBlocksFromOffsetSpan([Values(52, 1000)] int length, [Values(0, 10)] int offset)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1271,12 +1271,12 @@
         public void ReadBlocksWithGapSpan([Values(92, 1000)] int length)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52]),   // 8 bytes should be zero here
-                new SparseBlock(60, Elf32PHdr[0..16]),
-                new SparseBlock(76, Elf32PHdr[16..32])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52]),   // 8 bytes should be zero here
+                new(60, Elf32PHdr[0..16]),
+                new(76, Elf32PHdr[16..32])
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1294,12 +1294,12 @@
         public void ReadBlocksWithGapReadFromMiddleSpan([Values(92, 1000)] int length, [Values(0, 10)] int offset)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52]),   // 8 bytes should be zero here
-                new SparseBlock(60, Elf32PHdr[0..16]),
-                new SparseBlock(76, Elf32PHdr[16..32])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52]),   // 8 bytes should be zero here
+                new(60, Elf32PHdr[0..16]),
+                new(76, Elf32PHdr[16..32])
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1317,12 +1317,12 @@
         public void ReadBlocksWithGapReadSpan([Values(92, 1000)] int length, [Values(0, 10)] int offset, [Values(52, 56)] int pos)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr[0..16]),
-                new SparseBlock(16, Elf32Hdr[16..32]),
-                new SparseBlock(32, Elf32Hdr[32..48]),
-                new SparseBlock(48, Elf32Hdr[48..52]),   // 8 bytes should be zero here
-                new SparseBlock(60, Elf32PHdr[0..16]),
-                new SparseBlock(76, Elf32PHdr[16..32])
+                new(0, Elf32Hdr[0..16]),
+                new(16, Elf32Hdr[16..32]),
+                new(32, Elf32Hdr[32..48]),
+                new(48, Elf32Hdr[48..52]),   // 8 bytes should be zero here
+                new(60, Elf32PHdr[0..16]),
+                new(76, Elf32PHdr[16..32])
             };
             Stream s = new SparseStream(elfhdr, length);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1339,7 +1339,7 @@
         public void ReadZeroSpan()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1353,7 +1353,7 @@
         public void ReadAtEndZeroSpan()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1367,12 +1367,12 @@
         [Test]
         public void SetLengthShortenOneBlockMiddleSpan([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1394,12 +1394,12 @@
         [Test]
         public void SetLengthShortenOneBlockToEmptySpan([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1417,12 +1417,12 @@
         [Test]
         public void SetLengthShortenOneBlockAtEndSpan([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1441,14 +1441,14 @@
         [Test]
         public void WriteBlockAtStartSpan([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
             Span<byte> newData = stackalloc byte[64];
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1470,14 +1470,14 @@
         [Test]
         public void WriteBlockAtStartFullSpan([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
             Span<byte> newData = stackalloc byte[128];
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1498,14 +1498,14 @@
         [Test]
         public void WriteBlockAtStartOverlapSpan([Values(0, 16)] int readOffset)
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
             Span<byte> newData = stackalloc byte[256];
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1526,14 +1526,14 @@
         [Test]
         public void WriteBlockAtEndSpan()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
             Span<byte> newData = stackalloc byte[128];
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1556,14 +1556,14 @@
         [Test]
         public void WriteBlockAtEndAndExtendSpan()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
             Span<byte> newData = stackalloc byte[128];
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1586,14 +1586,14 @@
         [Test]
         public void WriteBlockAtEndOverlapSpan()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] data = new byte[1024];
             r.NextBytes(data);
             Span<byte> newData = stackalloc byte[128];
             r.NextBytes(newData);
 
             SparseBlock[] block = new SparseBlock[] {
-                new SparseBlock(128, data)
+                new(128, data)
             };
             Stream s = new SparseStream(block);
 
@@ -1614,7 +1614,7 @@
         public void WriteZeroSpan()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1630,7 +1630,7 @@
         public void WriteAtEndZeroSpan()
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
-                new SparseBlock(0, Elf32Hdr)
+                new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
             Assert.That(s.Position, Is.EqualTo(0));
@@ -1652,7 +1652,7 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                    new SparseBlock(0, Elf32Hdr)
+                    new(0, Elf32Hdr)
                 };
                 Stream s = new SparseStream(elfhdr, 100);
 
@@ -1675,7 +1675,7 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                    new SparseBlock(0, Elf32Hdr)
+                    new(0, Elf32Hdr)
                 };
                 Stream s = new SparseStream(elfhdr, 100);
                 byte[] buffer = new byte[100];
@@ -1699,7 +1699,7 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                    new SparseBlock(0, Elf32Hdr)
+                    new(0, Elf32Hdr)
                 };
                 Stream s = new SparseStream(elfhdr, 100);
                 byte[] buffer = new byte[100];
@@ -1721,9 +1721,9 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                    new SparseBlock(0, Elf32Hdr)
+                    new(0, Elf32Hdr)
                 };
-                SparseStream s = new SparseStream(elfhdr, 100);
+                SparseStream s = new(elfhdr, 100);
                 byte[] buffer = new byte[100];
 
                 try {
@@ -1743,9 +1743,9 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                    new SparseBlock(0, Elf32Hdr)
+                    new(0, Elf32Hdr)
                 };
-                SparseStream s = new SparseStream(elfhdr, 100);
+                SparseStream s = new(elfhdr, 100);
                 byte[] buffer = new byte[100];
 
                 try {
@@ -1767,7 +1767,7 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                        new SparseBlock(0, Elf32Hdr)
+                        new(0, Elf32Hdr)
                     };
                 Stream s = new SparseStream(elfhdr, 100);
                 Memory<byte> buffer = new byte[100];
@@ -1789,7 +1789,7 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                        new SparseBlock(0, Elf32Hdr)
+                        new(0, Elf32Hdr)
                     };
                 Stream s = new SparseStream(elfhdr, 100);
                 Memory<byte> buffer = new byte[100];
@@ -1811,9 +1811,9 @@
                 tokenSource.Cancel();
 
                 SparseBlock[] elfhdr = new SparseBlock[] {
-                    new SparseBlock(0, Elf32Hdr)
+                    new(0, Elf32Hdr)
                 };
-                SparseStream s = new SparseStream(elfhdr, 100);
+                SparseStream s = new(elfhdr, 100);
                 Memory<byte> buffer = new byte[100];
 
                 try {

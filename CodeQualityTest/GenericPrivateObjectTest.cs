@@ -11,7 +11,7 @@
         [Test]
         public void GenericTypes()
         {
-            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName,
+            PrivateObject privateObject = new(AccessorTest.AssemblyName,
                 "RJCP.CodeQuality.HelperClasses.ObjectGenericClassTest`2",
                 new Type[] { typeof(int), typeof(string) },   // Constructor signature
                 new object[] { 9, "abc" },                    // Values to the constructor
@@ -28,7 +28,7 @@
         public void PrivateCtorFromGenericTypes()
         {
             Type genericType = typeof(ObjectGenericClassTest<object, string>);
-            PrivateObject privateObject = new PrivateObject(AccessorTest.AssemblyName,
+            PrivateObject privateObject = new(AccessorTest.AssemblyName,
                 genericType.GetGenericTypeDefinition().FullName,
                 new Type[] { typeof(string) },                // Constructor signature
                 new object[] { "abc" },                       // Values to the constructor

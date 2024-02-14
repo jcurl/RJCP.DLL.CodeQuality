@@ -61,7 +61,7 @@
             try {
                 m_PrivateObject = new PrivateObject(type.ReferencedType, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -89,7 +89,7 @@
             try {
                 m_PrivateObject = new PrivateObject(type.ReferencedType, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -119,7 +119,7 @@
             try {
                 m_PrivateObject = new PrivateObject(assemblyName, typeName, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -150,7 +150,7 @@
             try {
                 m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -201,7 +201,7 @@
             try {
                 m_PrivateObject = new PrivateObject(assemblyName, typeName, parameterTypes, args, typeArguments);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -231,7 +231,7 @@
             try {
                 return m_PrivateObject.GetFieldOrProperty(propertyName, BindingFlags);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -257,7 +257,7 @@
             try {
                 m_PrivateObject.SetFieldOrProperty(propertyName, BindingFlags, value);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -282,7 +282,7 @@
             try {
                 return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -308,7 +308,7 @@
             try {
                 return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -335,7 +335,7 @@
             try {
                 return m_PrivateObject.GetProperty<T>(propertyName, BindingFlags, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -360,7 +360,7 @@
             try {
                 m_PrivateObject.SetProperty(propertyName, BindingFlags, value);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -386,7 +386,7 @@
             try {
                 m_PrivateObject.SetProperty(propertyName, BindingFlags, value, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -414,7 +414,7 @@
             try {
                 m_PrivateObject.SetProperty(propertyName, BindingFlags, parameterTypes, value, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -440,7 +440,7 @@
             try {
                 return m_PrivateObject.Invoke(methodName, BindingFlags, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -467,7 +467,7 @@
             try {
                 return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -495,7 +495,7 @@
             try {
                 return m_PrivateObject.Invoke(methodName, BindingFlags, parameterTypes, args, typeArguments);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -528,7 +528,7 @@
             try {
                 eventInfo.AddEventHandler(m_PrivateObject.Target, delegateEventHandler);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -561,7 +561,7 @@
             try {
                 eventInfo.RemoveEventHandler(m_PrivateObject.Target, delegateEventHandler);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -579,7 +579,7 @@
         /// <param name="args">The <see cref="EventArgs"/> arguments.</param>
         public delegate void AccessorEventHandler(object sender, object args);
 
-        private readonly DelegateTargets m_EventTargets = new DelegateTargets();
+        private readonly DelegateTargets m_EventTargets = new();
 
         /// <summary>
         /// Adds the event handler to the event specified by name.
@@ -648,7 +648,7 @@
             try {
                 return type.InvokeStatic(methodName, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -680,7 +680,7 @@
             try {
                 return type.InvokeStatic(methodName, parameterTypes, args);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -713,7 +713,7 @@
             try {
                 return type.InvokeStatic(methodName, parameterTypes, args, typeArguments);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -739,7 +739,7 @@
             try {
                 return type.GetStaticFieldOrProperty(name);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER
@@ -765,7 +765,7 @@
             try {
                 type.SetStaticFieldOrProperty(name, value);
             } catch (TargetInvocationException ex) {
-                if (ex.InnerException == null) {
+                if (ex.InnerException is null) {
                     throw;
                 } else {
 #if NET45_OR_GREATER || NET6_0_OR_GREATER

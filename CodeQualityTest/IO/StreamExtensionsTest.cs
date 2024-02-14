@@ -14,11 +14,11 @@
         [Test]
         public void ReadMemoryStream()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] rnd = new byte[100];
             r.NextBytes(rnd);
 
-            using (MemoryStream ms = new MemoryStream()) {
+            using (MemoryStream ms = new()) {
                 ms.Write(rnd, 0, rnd.Length);
                 byte[] data = ms.ReadStream();
                 Assert.That(data, Is.EqualTo(rnd));
@@ -28,11 +28,11 @@
         [Test]
         public void ReadStream()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] rnd = new byte[100];
             r.NextBytes(rnd);
 
-            using (SparseStream ms = new SparseStream()) {
+            using (SparseStream ms = new()) {
                 ms.Write(rnd, 0, rnd.Length);
                 byte[] data = ms.ReadStream();
                 Assert.That(data, Is.EqualTo(rnd));
@@ -42,7 +42,7 @@
         [Test]
         public void ReadStreamWriteOnly()
         {
-            using (SimpleStream ws = new SimpleStream()) {
+            using (SimpleStream ws = new()) {
                 ws.Mode = StreamMode.Write;
                 Assert.That(() => {
                     _ = ws.ReadStream();
@@ -53,7 +53,7 @@
         [Test]
         public void ReadStreamNoSeek()
         {
-            using (SimpleStream ws = new SimpleStream()) {
+            using (SimpleStream ws = new()) {
                 ws.Mode = StreamMode.Write | StreamMode.Read;
                 Assert.That(() => {
                     _ = ws.ReadStream();
@@ -64,7 +64,7 @@
         [Test]
         public void ReadStreamLarge()
         {
-            using (SparseStream ms = new SparseStream()) {
+            using (SparseStream ms = new()) {
                 ms.SetLength((long)int.MaxValue + 100);
                 Assert.That(() => {
                     _ = ms.ReadStream();
@@ -76,11 +76,11 @@
         [Test]
         public async Task ReadMemoryStreamAsync()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] rnd = new byte[100];
             r.NextBytes(rnd);
 
-            using (MemoryStream ms = new MemoryStream()) {
+            using (MemoryStream ms = new()) {
                 ms.Write(rnd, 0, rnd.Length);
                 byte[] data = await ms.ReadStreamAsync();
                 Assert.That(data, Is.EqualTo(rnd));
@@ -90,11 +90,11 @@
         [Test]
         public async Task ReadStreamAsync()
         {
-            Random r = new Random();
+            Random r = new();
             byte[] rnd = new byte[100];
             r.NextBytes(rnd);
 
-            using (SparseStream ms = new SparseStream()) {
+            using (SparseStream ms = new()) {
                 ms.Write(rnd, 0, rnd.Length);
                 byte[] data = await ms.ReadStreamAsync();
                 Assert.That(data, Is.EqualTo(rnd));
@@ -104,7 +104,7 @@
         [Test]
         public void ReadStreamAsyncWriteOnly()
         {
-            using (SimpleStream ws = new SimpleStream()) {
+            using (SimpleStream ws = new()) {
                 ws.Mode = StreamMode.Write;
                 Assert.That(async () => {
                     _ = await ws.ReadStreamAsync();
@@ -115,7 +115,7 @@
         [Test]
         public void ReadStreamAsyncNoSeek()
         {
-            using (SimpleStream ws = new SimpleStream()) {
+            using (SimpleStream ws = new()) {
                 ws.Mode = StreamMode.Write | StreamMode.Read;
                 Assert.That(async () => {
                     _ = await ws.ReadStreamAsync();
@@ -126,7 +126,7 @@
         [Test]
         public void ReadStreamAsyncLarge()
         {
-            using (SparseStream ms = new SparseStream()) {
+            using (SparseStream ms = new()) {
                 ms.SetLength((long)int.MaxValue + 100);
                 Assert.That(async () => {
                     _ = await ms.ReadStreamAsync();
