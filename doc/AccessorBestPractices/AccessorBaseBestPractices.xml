@@ -11,18 +11,18 @@
       <surname>Curl</surname>
     </author>
 
-    <pubdate>2023-05-07</pubdate>
+    <pubdate>2024-02-15</pubdate>
   </articleinfo>
 
   <section>
     <title>Abstract</title>
 
     <para>There are many best practices and philosophies for unit testing of
-    components in .NET FX (desktop versions 2.0 and later), with tools such as
-    xUnit, nUnit and MSTest among others, supported by Visual Studio, Mono IDE
-    and extensions in NuGet. This article provides examples and "how to" for
-    testing using nUnit and reflection technologies using the RJCP.CodeQuality
-    library.</para>
+    components in .NET FX (desktop versions 2.0 and later), as well as .NET
+    Core, with tools such as xUnit, nUnit and MSTest among others, supported
+    by Visual Studio, Mono IDE and extensions in NuGet. This article provides
+    examples and "how to" for testing using nUnit and reflection technologies
+    using the RJCP.CodeQuality library.</para>
   </section>
 
   <section>
@@ -73,23 +73,24 @@
         <para>The other perspective is that software should be broken down
         into its simplest components using the <ulink
         url="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)">SOLID
-        principle</ulink>. Typical engineering practices also suggest breaking
-        work down into its simplest components, that would require testing of
-        those simpler components which are built upon for more complex
-        components. The author of this document sees it is much more pragmatic
-        to test simple classes that may be internal to an assembly and
-        ensuring the correctness of building blocks, which also simplify the
-        implementation of test cases for more complex components by making
-        assumptions that the simpler components work. The internal types
-        should specify public methods which are then tested and made public
-        via Accessor classes.</para>
+        principle</ulink>. On top of these components, more complex components
+        would be built. While in a C++ ecosystem this is relatively simple
+        (almost all classes are public, just include them), C# uses the
+        concept of assemblies and internal details are not exposed so simply.
+        The author of this document sees it is much more pragmatic to test
+        simple classes that may be internal to an assembly and ensuring the
+        correctness of building blocks, which also simplify the implementation
+        of test cases for more complex components by making assumptions that
+        the simpler components work. The internal types should specify public
+        methods which are then tested and made public via Accessor
+        classes.</para>
 
         <para>For example, testing the insertion and removal of an object in a
         collection is simple. If a more complex class were to use the
         collection and the collection is not directly exposed, the number of
         conditions required to test the more complex class may be
-        significantly higher than being able to test both classes directly.
-        Some safety standards, such as ASIL also take this approach.</para>
+        significantly higher than being able to test both classes
+        directly.</para>
       </section>
 
       <section>
@@ -222,9 +223,9 @@
       <title>InternalsVisibleTo</title>
 
       <para>Multiple languages offer features for enabling internal visibility
-      to specific components. In C++ this is the friend keyword. In C# there
-      is the <literal>internal</literal> keyword which makes types and methods
-      public to code within the assembly. The
+      to specific components. In C++ this is the friend keyword (and should be
+      used sparingly). In C# there is the <literal>internal</literal> keyword
+      which makes types and methods public to code within the assembly. The
       <literal>InternalsVisibleTo</literal> attribute of the assembly can list
       other assemblies that should see internal methods as public.</para>
 
@@ -482,7 +483,7 @@
     public int Property { get; set; }
 
     public void DoSomething() {
-      Console.WriteLine("{0}", Property);
+      Console.WriteLine($"{Property}");
     }
   }
 }</programlisting>
@@ -498,12 +499,10 @@
   public class MyClassAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyClassAccessor(int initialValue)
-      : base(AccType, initialValue)
-    { }
+      : base(AccType, initialValue) { }
 
     public int Property {
       get { return (int)GetFieldOrProperty(nameof(Property)); }
@@ -528,14 +527,12 @@
   public class MyClassAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyClassAccessor(int initialValue)
       : base(AccType,
         new Type[] { typeof(int) },
-        new object[] { initialValue })
-    { }
+        new object[] { initialValue }) { }
 
     public int Property {
       get { return (int)GetFieldOrProperty(nameof(Property)); }
@@ -571,7 +568,7 @@
 
     public int Property { get; set; }
 
-    private Dictionary&lt;int, int&gt; m_Values = new Dictionary&lt;int, int&gt;();
+    private Dictionary&lt;int, int&gt; m_Values = new();
     public int this[int index] {
       get {
         if (m_Values.TryGetValue(index, out int value))
@@ -593,12 +590,10 @@
   public class MyClassAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyClassAccessor(int initialValue)
-      : base(AccType, initialValue)
-    { }
+      : base(AccType, initialValue) { }
 
     public int Property {
       get { return GetProperty&lt;int&gt;(nameof(Property)); }
@@ -630,7 +625,7 @@
   internal static class MyStaticTest {
     public static int Property { get; set; }
     public static void DoSomething() {
-      Console.WriteLine("{0}", Property);
+      Console.WriteLine($"{Property}");
     }
   }
 } </programlisting>
@@ -645,8 +640,7 @@
   public static class MyStaticTestAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyStaticTest";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public static int Property {
       get {
@@ -659,7 +653,7 @@
       }
     }
 
-    public static void DoSomething {
+    public static void DoSomething() {
       AccessorBase.InvokeStatic(AccType, nameof(DoSomething));
     }
   }
@@ -744,8 +738,7 @@
   public class MyTestAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyTest";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyTestAccessor() : base(AccType) { }
 
@@ -764,6 +757,10 @@
   }
 }</programlisting>
       </example>
+
+      <para>Similarly, if you're calling a static method, remove the line
+      <code>var instance</code>, and replace its usage with
+      <code>null</code>.</para>
     </section>
 
     <section>
@@ -800,8 +797,7 @@
   public class MyTestAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyTest";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyTestAccessor() : base(AccType) { }
 
@@ -822,6 +818,10 @@
 
       <para>The example above can be used as a basis for more complex
       accessors by using Linq expressions.</para>
+
+      <para>Similarly, if you're calling a static method, remove the line
+      <code>var instance</code>, and replace its usage with
+      <code>null</code>.</para>
     </section>
 
     <section>
@@ -841,7 +841,7 @@
 
     public static int Property { get; set; }
     public static void DoSomething() {
-      Console.WriteLine("{0}", Property);
+      Console.WriteLine($"{Property}");
     }
   }
 }</programlisting>
@@ -858,8 +858,7 @@
   public class MyTestAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyTest";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyTestAccessor(int initialValue)
       : base(AccType,
@@ -878,7 +877,7 @@
       }
     }
 
-    public static void DoSomething {
+    public static void DoSomething() {
       AccessorBase.InvokeStatic(AccType, nameof(DoSomething));
     }
   }
@@ -950,9 +949,9 @@
       MyClass c = new MyClass(42);
       MyClassAccessor ca = new MyClassAccessor(c);
 
-      Console.WriteLine("Field is: {0}", ca.GetValue());
+      Console.WriteLine($"Field is: {ca.GetValue()}");
       c.SetValue(102);
-      Console.WriteLine("Field is now: {0}", ca.GetValue());
+      Console.WriteLine($"Field is now: {ca.GetValue()}");
     }
   }
 }</programlisting>
@@ -1017,9 +1016,9 @@
       MyClassDerived c = new MyClassDerived(42);
       MyClassAccessor ca = new MyClassAccessor(c);
 
-      Console.WriteLine("Field is: {0}", ca.GetValue());
+      Console.WriteLine($"Field is: {ca.GetValue()}");
       c.SetValue(102);
-      Console.WriteLine("Field is now: {0}", ca.GetValue());
+      Console.WriteLine($"Field is now: {ca.GetValue()}");
     }
   }
 }</programlisting>
@@ -1043,7 +1042,7 @@
     public int Value { get; set; }
 
     public virtual void DoSomething() {
-      Console.WriteLine("{0}", Value);
+      Console.WriteLine($"{Value}");
     }
   }
 
@@ -1055,7 +1054,7 @@
     }
 
     public override void DoSomething() {
-      Console.WriteLine("{0}: {1}", Description, Value);
+      Console.WriteLine($"{Description}: {Value}");
     }
   }
 }</programlisting>
@@ -1070,23 +1069,19 @@
   public class MyBaseAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyBase";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     protected MyBaseAccessor(PrivateType pType,
       Type[] parameterTypes, object[] args)
-      : base(pType, parameterTypes, args)
-    { }
+      : base(pType, parameterTypes, args) { }
 
     public MyBaseAccessor(PrivateObject pObj)
-      : base(pObj)
-    { }
+      : base(pObj) { }
 
     public MyBaseAccessor(int value)
       : base(AccType,
         new Type[] { typeof(int) },
-        new object[] { value })
-    { }
+        new object[] { value }) { }
 
     public int Value {
       get { return (int)GetFieldOrProperty(nameof(Value)); }
@@ -1106,18 +1101,15 @@
 
     protected MyDerivedAccessor(
       PrivateType pType, Type[] parameterTypes, object[] args)
-      : base(pType, parameterTypes, args)
-    { }
+      : base(pType, parameterTypes, args) { }
 
     public MyDerivedAccessor(PrivateObject pObj)
-      : base(pObj)
-    { }
+      : base(pObj) { }
 
     public MyDerivedAccessor(int value, string description)
       : base(AccType,
         new Type[] { typeof(int), typeof(string) },
-        new object[] { value, description })
-    { }
+        new object[] { value, description }) { }
 
     public string Description {
       get { return (string)GetFieldOrProperty(nameof(Description)); }
@@ -1200,7 +1192,7 @@
               <title>Recast BaseAccessor to DerivedAccessor explicitly</title>
 
               <programlisting language="csharp">MyDerivedAccessor derived = FactoryAccessor.Create();
-MyBaseAccessor bclass = new MyBaseAccessor(
+MyBaseAccessor bclass = new(
   new PrivateObject(derived.PrivateTargetObject, MyBaseAccessor.AccType));</programlisting>
             </example>
 
@@ -1225,7 +1217,7 @@ MyBaseAccessor bclass = new MyBaseAccessor(
               <title>Recast BaseAccessor to DerivedAccessor</title>
 
               <programlisting language="csharp">MyBaseAccessor bclass = FactoryAccessor.Create();
-MyDerivedAccessor derived = new MyDerivedAccessor(
+MyDerivedAccessor derived = new(
   new PrivateObject(bclass.PrivateTargetObject));</programlisting>
             </example>
 
@@ -1294,13 +1286,12 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.GenericClass`1";
     public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+      new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
     public GenericClassAccessor()
       : base(AccType,
         new Type[] { },         // Constructor signature to use.
-        new object[] { })       // Parameters
-    { }
+        new object[] { }) { }   // Parameters
 
     public void Push(T item) {
       Invoke(nameof(Push), item);
@@ -1342,12 +1333,11 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.GenericClass`1";
     public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName,
+      new(AssemblyName, TypeName,
         new Type[] { OtherAccessor.AccType.ReferencedType });
 
     public GenericClassPrivateTypeAccessor()
-      : base(AccType, new Type[] { }, new object[] { })
-    { }
+      : base(AccType, new Type[] { }, new object[] { }) { }
 
     public void Push(OtherAccessor item) {
       Invoke(nameof(Push), item.PrivateTargetObject);
@@ -1400,8 +1390,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
   public static class NestedStaticTypesAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.NestedStaticTypes";
-    private static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public static class NestedStaticTypeAccessor {
       private static readonly PrivateType AccType =
@@ -1453,8 +1442,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
   public static class NestedStaticGTypesAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.NestedStaticGTypes";
-    private static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public static class NestedStaticGTypeAccessor&lt;T&gt; {
       private static readonly PrivateType AccType =
@@ -1501,7 +1489,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.NestedStaticGTypes`1";
     public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+      new (AssemblyName, TypeName, new Type[] { typeof(T) });
 
     public static class NestedStaticGTypeAccessor {
       public static readonly PrivateType AccType =
@@ -1552,8 +1540,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
   internal static class NestedStaticGTypesAccessor {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.NestedStaticGTypes";
-    private static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     internal static class NestedStaticGTypeAccessor {
       private static readonly PrivateType AccType = 
@@ -1590,8 +1577,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
   internal class NestedStaticGTypes&lt;T&gt; {
     internal class NestedStaticGType&lt;U&gt; {
       public static string Name&lt;V&gt;() {
-        return String.Format("{0}+{1}+{2}",
-          typeof(T), typeof(U), typeof(V));
+        return $"{typeof(T)}+{typeof(U)}+{typeof(V)}";
       }
     }
   }
@@ -1609,7 +1595,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
     private const string AssemblyName = "Assembly";
     private const string TypeName = "Namespace.NestedStaticGTypes`1";
     public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+      new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
     public class NestedStaticGTypeAccessor&lt;U&gt; {
       private static readonly PrivateType AccType =
@@ -1669,8 +1655,7 @@ MyDerivedAccessor derived = new MyDerivedAccessor(
   public class NestedTypesAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.NestedTypes";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public NestedTypesAccessor() : base(AccType) { }
 
@@ -1741,8 +1726,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
 
     public NestedGTypesAccessor(T initialValue)
       : base(AccType,
-        new Type[] { typeof(T) }, new object[] { initialValue })
-    { }
+        new Type[] { typeof(T) }, new object[] { initialValue }) { }
 
     public string Value() { return (string)Invoke(nameof(Value)); }
 
@@ -1754,8 +1738,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
 
       public NestedGTypeAccessor(U initialValue)
         : base(AccType,
-          new Type[] { typeof(U) }, new object[] { initialValue })
-      { }
+          new Type[] { typeof(U) }, new object[] { initialValue }) { }
 
       public string ValueNested() {
         return (string)Invoke(nameof(ValueNested));
@@ -1804,12 +1787,10 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public class RelatedClassTestAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.RelatedClassTest";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public RelatedClassTestAccessor(PrivateObject obj)
-      : base(obj)
-    { }
+      : base(obj) { }
 
     public RelatedClassTestAccessor(int initialValue)
       : base(AccType,
@@ -1825,8 +1806,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public class RelatedClassTestFactoryAccessor: AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.RelatedClassTestFactory";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public RelatedClassTestFactoryAccessor() : base(AccType) { }
 
@@ -1871,9 +1851,9 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
     private HashSet&lt;string&gt; m_Set = new HashSet&lt;string&gt;();
 
     public void Add(RelatedItemClass item) {
-      if (m_Set.Contains(item.Value)) {
+      if (m_Set.Contains(item.Value))
         throw new ArgumentException("Item already in collection", nameof(item));
-      }
+
       m_Set.Add(item.Value);
     }
 
@@ -1895,8 +1875,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public class RelatedItemClassAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.RelatedItemClass";
-    public static PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static PrivateType AccType = new(AssemblyName, TypeName);
 
     public RelatedItemClassAccessor(string value)
       : base(AccType, new Type[] { typeof(string) }, new object[] { value })
@@ -1912,8 +1891,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public class RelatedCollectionClassAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.RelatedCollectionClass";
-    public static PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static PrivateType AccType = new(AssemblyName, TypeName);
 
     public RelatedCollectionClassAccessor() : base(AccType) { }
 
@@ -1978,8 +1956,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public MyClassAccessor : AccessorBase {
     private const string Assembly = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(Assembly, TypeName);
+    public static readonly PrivateType AccType = new(Assembly, TypeName);
 
     public MyClassAccessor() : base(AccType) { }
 
@@ -2045,15 +2022,13 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public static class MyValuesAccessor {
     private const string Assembly = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyValues";
-    public static readonly PrivateType AccType =
-      new PrivateType(Assembly, TypeName);
+    public static readonly PrivateType AccType = new(Assembly, TypeName);
   }
 
   public class MyClassAccessor : AccessorBase {
     private const string Assembly = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(Assembly, TypeName);
+    public static readonly PrivateType AccType = new(Assembly, TypeName);
 
     public MyClassAccessor() : base(AccType) { }
 
@@ -2110,8 +2085,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public class MyEventHandlerAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "MyEventClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyEventHandlerAccessor() : base(AccType) { }
 
@@ -2215,8 +2189,7 @@ public class NestedGTypesAccessor&lt;T&gt; : AccessorBase {
   public class MyEventClassAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyEventClass";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyEventClassAccessor() : base(AccType) { }
 
@@ -2462,16 +2435,11 @@ public void RaisePrivateEvent() {
           <title>Non-Public Exception</title>
 
           <programlisting language="csharp">namespace RJCP.Assembly {
-  using System.Runtime.Serialization;
-
-  [Serializable()]
   internal class MyException : System.Exception {
     public MyException() : base() { }
     public MyException(string message) : base(message) { }
     public MyException(string message, System.Exception inner)
       : base(message, inner) { }
-    protected MyException(SerializationInfo info, StreamingContext context)
-      : base(info, context) { }
   }
 
   internal class ClassException {
@@ -2495,8 +2463,7 @@ public void RaisePrivateEvent() {
   public class MyExceptionAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.MyException";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public MyExceptionAccessor(PrivateObject obj) : base(obj) { }
   }
@@ -2504,8 +2471,7 @@ public void RaisePrivateEvent() {
   public class ClassExceptionAccessor : AccessorBase {
     private const string AssemblyName = "Assembly";
     private const string TypeName = "RJCP.Assembly.ClassException";
-    public static readonly PrivateType AccType =
-      new PrivateType(AssemblyName, TypeName);
+    public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
     public ClassExceptionAccessor() : base(AccType) { }
 
