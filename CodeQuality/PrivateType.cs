@@ -71,10 +71,8 @@ namespace RJCP.CodeQuality
         /// </remarks>
         public PrivateType(string assemblyName, string typeName)
         {
-            ThrowHelper.ThrowIfNull(assemblyName);
-            ThrowHelper.ThrowIfNull(typeName);
-            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
+            ThrowHelper.ThrowIfNullOrEmpty(assemblyName);
+            ThrowHelper.ThrowIfNullOrEmpty(typeName);
 
             m_ObjectType = GetPrivateType(assemblyName, typeName);
         }
@@ -136,10 +134,8 @@ namespace RJCP.CodeQuality
         /// <remarks>This constructor is used to obtain a well defined type from a generic type.</remarks>
         public PrivateType(string assemblyName, string typeName, Type[] typeArguments)
         {
-            ThrowHelper.ThrowIfNull(assemblyName);
-            ThrowHelper.ThrowIfNull(typeName);
-            if (string.IsNullOrEmpty(assemblyName)) throw new ArgumentException("Assembly Name is null or empty", nameof(assemblyName));
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
+            ThrowHelper.ThrowIfNullOrEmpty(assemblyName);
+            ThrowHelper.ThrowIfNullOrEmpty(typeName);
 
             Type type = GetPrivateType(assemblyName, typeName)
                 ?? throw new ArgumentException("typeName is invalid", nameof(typeName));
@@ -177,8 +173,7 @@ namespace RJCP.CodeQuality
         /// </exception>
         public PrivateType GetNestedType(string typeName)
         {
-            ThrowHelper.ThrowIfNull(typeName);
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
+            ThrowHelper.ThrowIfNullOrEmpty(typeName);
 
             Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding)
                 ?? throw new ArgumentException("Type not found", nameof(typeName));
@@ -221,8 +216,7 @@ namespace RJCP.CodeQuality
         /// </exception>
         public PrivateType GetNestedType(string typeName, Type[] typeArguments)
         {
-            ThrowHelper.ThrowIfNull(typeName);
-            if (string.IsNullOrEmpty(typeName)) throw new ArgumentException("Type Name is null or empty", nameof(typeName));
+            ThrowHelper.ThrowIfNullOrEmpty(typeName);
 
             Type nestedType = m_ObjectType.GetNestedType(typeName, MemberDefaultBinding)
                 ?? throw new ArgumentException("Type not found", nameof(typeName));

@@ -154,8 +154,7 @@
         /// <exception cref="ArgumentException"><paramref name="name"/> is empty.</exception>
         public ScratchPad(string name, ScratchOptions options)
         {
-            ThrowHelper.ThrowIfNull(name);
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name is empty", nameof(name));
+            ThrowHelper.ThrowIfNullOrEmpty(name);
             Initialize(name, options);
         }
 
@@ -388,8 +387,7 @@
         /// <exception cref="ArgumentException"><paramref name="path"/> is empty.</exception>
         public void DeployEmptyFile(string path)
         {
-            ThrowHelper.ThrowIfNull(path);
-            if (string.IsNullOrEmpty(path)) throw new ArgumentException("Empty file name", nameof(path));
+            ThrowHelper.ThrowIfNullOrEmpty(path);
 
             string newPath = System.IO.Path.Combine(RelativePath, path);
             Deploy.EmptyFile(newPath);
