@@ -14,6 +14,12 @@
     [TestFixture]
     public class SparseStreamTest
     {
+#if NET40
+            private static readonly SparseBlock[] EmptySparseBlock = new SparseBlock[0];
+#else
+            private static readonly SparseBlock[] EmptySparseBlock = Array.Empty<SparseBlock>();
+#endif
+
         [Test]
         public void InitNullDataBlock()
         {
@@ -25,7 +31,7 @@
         [Test]
         public void InitNegativeLength()
         {
-            SparseBlock[] empty = Array.Empty<SparseBlock>();
+            SparseBlock[] empty = EmptySparseBlock;
             Assert.That(() => {
                 _ = new SparseStream(empty, -1);
             }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -96,7 +102,7 @@
         [Test]
         public void InitEmptyWriteSimple()
         {
-            SparseBlock[] empty = Array.Empty<SparseBlock>();
+            SparseBlock[] empty = EmptySparseBlock;
             Stream s = new SparseStream(empty, 0);
 
             Assert.That(s.CanRead, Is.True);
@@ -117,7 +123,7 @@
         [Test]
         public void SetReadOnly()
         {
-            SparseBlock[] empty = Array.Empty<SparseBlock>();
+            SparseBlock[] empty = EmptySparseBlock;
             SparseStream s = new(empty, 0);
 
             Assert.That(s.CanRead, Is.True);
@@ -152,7 +158,7 @@
         [Test]
         public void ZeroFileReadFull()
         {
-            SparseBlock[] empty = Array.Empty<SparseBlock>();
+            SparseBlock[] empty = EmptySparseBlock;
             Stream s = new SparseStream(empty, 10);
 
             Assert.That(s.Position, Is.EqualTo(0));
@@ -174,7 +180,7 @@
         [Test]
         public void ZeroFileReadWithOffset()
         {
-            SparseBlock[] empty = Array.Empty<SparseBlock>();
+            SparseBlock[] empty = EmptySparseBlock;
             Stream s = new SparseStream(empty, 10);
 
             Assert.That(s.Position, Is.EqualTo(0));
