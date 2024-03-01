@@ -30,7 +30,7 @@
             set
             {
                 ThrowHelper.ThrowIfNull(key);
-                ThrowHelper.ThrowIfNull(value);
+                ThrowHelper.ThrowIfNull(value, nameof(IniKeyPair<T>));
                 m_Database[key] = value;
             }
         }

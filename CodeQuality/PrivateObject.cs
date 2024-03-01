@@ -296,7 +296,7 @@
             get { return m_Instance; }
             set
             {
-                ThrowHelper.ThrowIfNull(value);
+                ThrowHelper.ThrowIfNull(value, nameof(Target));
                 m_Instance = value;
                 m_ObjectType = value.GetType();
             }

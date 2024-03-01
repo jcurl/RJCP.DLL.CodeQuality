@@ -149,9 +149,8 @@
             {
                 if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
                 if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
+                ThrowHelper.ThrowIfNegative(value, nameof(Position));
 
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(value));
                 m_Position = value;
                 if (m_Position > m_Length) m_Length = m_Position;
             }
@@ -220,10 +219,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             return ReadInternal(count);
         }
@@ -301,10 +297,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
             cancellationToken.ThrowIfCancellationRequested();
 
             return Task.FromResult(ReadInternal(count));
@@ -379,10 +372,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             IAsyncResult result = new CompletedAsync<int>(state, ReadInternal(count));
             if (callback is not null) callback(result);
@@ -493,20 +483,19 @@
 
             switch (origin) {
             case SeekOrigin.Begin:
+                ThrowHelper.ThrowIfNegative(offset);
                 m_Position = offset;
                 if (m_Position > m_Length) m_Length = m_Position;
                 break;
             case SeekOrigin.Current:
-                if (long.MaxValue - m_Position < offset) {
-                    throw new IOException("Offset would exceed beyond end of file");
-                }
+                ThrowHelper.ThrowIfLessThan(offset, -m_Position);
+                ThrowHelper.ThrowIfGreaterThan(offset, long.MaxValue - m_Position);
                 m_Position += offset;
                 if (m_Position > m_Length) m_Length = m_Position;
                 break;
             case SeekOrigin.End:
-                if (m_Length < offset) {
-                    throw new ArgumentException("Offset would exceed beyond beginning of file", nameof(offset));
-                }
+                ThrowHelper.ThrowIfNegative(offset);
+                ThrowHelper.ThrowIfGreaterThan(offset, m_Length);
                 m_Position = m_Length - offset;
                 break;
             default:
@@ -561,10 +550,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             WriteInternal(count);
         }
@@ -630,10 +616,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
             cancellationToken.ThrowIfCancellationRequested();
 
             WriteInternal(count);
@@ -705,10 +688,7 @@
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             IAsyncResult result = new CompletedAsync(state);
             if (callback is not null) callback(result);

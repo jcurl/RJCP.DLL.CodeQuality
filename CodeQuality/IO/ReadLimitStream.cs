@@ -198,8 +198,8 @@
         public ReadLimitStream(Stream stream, int minReadLength, int maxReadLength, bool ownsStream)
         {
             ThrowHelper.ThrowIfNull(stream);
-            if (minReadLength < 1) throw new ArgumentOutOfRangeException(nameof(minReadLength), "Must be 1 or greater");
-            if (maxReadLength < minReadLength) throw new ArgumentOutOfRangeException(nameof(maxReadLength), $"Must be {minReadLength} or greater");
+            ThrowHelper.ThrowIfLessThan(minReadLength, 1);
+            ThrowHelper.ThrowIfLessThan(maxReadLength, minReadLength);
 
             if (stream is MemoryStream memStream) {
                 // A small optimization for reading tests, we set the beginning of the stream.

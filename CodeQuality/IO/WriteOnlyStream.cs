@@ -408,10 +408,7 @@
             }
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
         }
 
 #if NET6_0_OR_GREATER
@@ -468,10 +465,7 @@
             if (m_Stream is not null) return m_Stream.WriteAsync(buffer, offset, count, cancellationToken);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             cancellationToken.ThrowIfCancellationRequested();
             return Task.CompletedTask;
@@ -543,10 +537,7 @@
             if (m_Stream is not null) return m_Stream.BeginWrite(buffer, offset, count, callback, state);
 
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             IAsyncResult result = new CompletedAsync(state);
             if (callback is not null) callback(result);

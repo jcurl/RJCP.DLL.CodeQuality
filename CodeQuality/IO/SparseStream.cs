@@ -25,7 +25,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
         public SparseBlock(long offset, byte[] data)
         {
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Offset may not be negative");
+            ThrowHelper.ThrowIfNegative(offset);
             ThrowHelper.ThrowIfNull(data);
             Offset = offset;
             Data = data;
@@ -40,7 +40,7 @@
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="offset"/> may not be negative</exception>
         public SparseBlock(long offset, Span<byte> data)
         {
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "Offset may not be negative");
+            ThrowHelper.ThrowIfNegative(offset);
             Offset = offset;
             Data = data.ToArray();
         }
@@ -108,7 +108,7 @@
         public SparseStream(IEnumerable<SparseBlock> data, long length)
         {
             ThrowHelper.ThrowIfNull(data);
-            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length), "Length may not be negative");
+            ThrowHelper.ThrowIfNegative(length);
 
             foreach (SparseBlock block in data) {
                 if (block.Data.LongLength > int.MaxValue) {
@@ -213,11 +213,9 @@
             set
             {
                 if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+                ThrowHelper.ThrowIfNegative(value, nameof(Position));
+                if (!m_CanWrite) ThrowHelper.ThrowIfGreaterThan(value, m_Length, nameof(Position));
 
-                if (value < 0 || (!m_CanWrite && value > m_Length)) {
-                    string message = string.Format("Position must be positive and may not exceed length {0}", m_Length);
-                    throw new ArgumentException(message, nameof(value));
-                }
                 m_Position = value;
                 if (m_Position > m_Length) m_Length = m_Position;
             }
@@ -287,10 +285,7 @@
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
 #if NET6_0_OR_GREATER
             return Read(buffer.AsSpan(offset, count));
@@ -494,22 +489,22 @@
 
             switch (origin) {
             case SeekOrigin.Begin:
-                if (offset < 0 || (!m_CanWrite && offset > m_Length)) {
-                    throw new ArgumentOutOfRangeException(nameof(offset), "Seek offset goes beyond length");
-                }
+                ThrowHelper.ThrowIfNegative(offset);
+                if (!m_CanWrite) ThrowHelper.ThrowIfGreaterThan(offset, m_Length);
                 m_Position = offset;
                 if (m_Position > m_Length) m_Length = m_Position;
                 break;
             case SeekOrigin.End:
-                if (offset < 0 || offset > m_Length) {
-                    throw new ArgumentOutOfRangeException(nameof(offset), "Seek offset from end goes beyond length");
-                }
+                ThrowHelper.ThrowIfNegative(offset);
+                ThrowHelper.ThrowIfGreaterThan(offset, m_Length);
                 m_Position = m_Length - offset;
                 break;
             case SeekOrigin.Current:
-                if (offset + m_Position < 0 || (!m_CanWrite && (offset + m_Position > m_Length))) {
-                    throw new ArgumentOutOfRangeException(nameof(offset), "Seek offset from current goes beyond length");
-                }
+                ThrowHelper.ThrowIfLessThan(offset, -m_Position);
+                ThrowHelper.ThrowIfGreaterThan(offset,
+                    m_CanWrite ?
+                        long.MaxValue - m_Position :
+                        m_Length - m_Position);
                 m_Position += offset;
                 if (m_Position > m_Length) m_Length = m_Position;
                 break;
@@ -719,10 +714,7 @@
             if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
             if (!CanWrite) throw new InvalidOperationException();
 
-            ThrowHelper.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The offset and count would exceed the boundaries of the array");
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
 #if NET6_0_OR_GREATER
             return DirectWrite(position, buffer.AsSpan(offset, count));

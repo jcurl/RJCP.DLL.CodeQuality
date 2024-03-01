@@ -684,7 +684,7 @@
             using (SimpleStream s = new()) {
                 Assert.That(() => {
                     _ = s.Seek(seekEnd, SeekOrigin.End);
-                }, Throws.TypeOf<ArgumentException>());
+                }, Throws.TypeOf<ArgumentOutOfRangeException>());
                 Assert.That(s.Position, Is.EqualTo(0));
                 Assert.That(s.Length, Is.EqualTo(0));
             }
@@ -759,7 +759,7 @@
                 s.Position = long.MaxValue - 1;
                 Assert.That(() => {
                     _ = s.Seek(100, SeekOrigin.Current);
-                }, Throws.TypeOf<IOException>());
+                }, Throws.TypeOf<ArgumentOutOfRangeException>());
                 Assert.That(s.Position, Is.EqualTo(long.MaxValue - 1));
                 Assert.That(s.Length, Is.EqualTo(long.MaxValue));
             }

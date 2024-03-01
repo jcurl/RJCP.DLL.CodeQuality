@@ -576,7 +576,7 @@
 
             Assert.That(() => {
                 s.Position = position;
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
