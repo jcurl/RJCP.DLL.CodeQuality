@@ -137,7 +137,7 @@
                 return;
             }
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
         }
 
 #if NET6_0_OR_GREATER || NET462_OR_GREATER
@@ -154,7 +154,7 @@
             if (m_Stream is not null)
                 return m_Stream.FlushAsync(cancellationToken);
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             return Task.CompletedTask;
         }
 #endif
@@ -407,7 +407,7 @@
                 return;
             }
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
         }
 
@@ -425,7 +425,7 @@
                 return;
             }
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
         }
 #endif
 
@@ -464,7 +464,7 @@
         {
             if (m_Stream is not null) return m_Stream.WriteAsync(buffer, offset, count, cancellationToken);
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -490,7 +490,7 @@
         {
             if (m_Stream is not null) return m_Stream.WriteAsync(buffer, cancellationToken);
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             cancellationToken.ThrowIfCancellationRequested();
             return new ValueTask();
         }
@@ -508,7 +508,7 @@
                 return;
             }
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
         }
 
         /// <summary>
@@ -536,7 +536,7 @@
         {
             if (m_Stream is not null) return m_Stream.BeginWrite(buffer, offset, count, callback, state);
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
             IAsyncResult result = new CompletedAsync(state);
@@ -556,7 +556,7 @@
                 return;
             }
 
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfNull(asyncResult);
             CompletedAsync.End(asyncResult);
         }

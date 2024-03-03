@@ -147,7 +147,7 @@
             get { return m_Position; }
             set
             {
-                if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+                ThrowHelper.ThrowIfDisposed(IsDisposed, this);
                 if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
                 ThrowHelper.ThrowIfNegative(value, nameof(Position));
 
@@ -164,7 +164,7 @@
         /// <remarks>Flushing the stream has no operation.</remarks>
         public override void Flush()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             /* Nothing to do */
         }
@@ -183,7 +183,7 @@
         /// <returns>Task.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             cancellationToken.ThrowIfCancellationRequested();
             return Task.CompletedTask;
@@ -217,7 +217,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
@@ -239,7 +239,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override int Read(Span<byte> buffer)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             return ReadInternal(buffer.Length);
         }
@@ -295,7 +295,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
             cancellationToken.ThrowIfCancellationRequested();
@@ -323,7 +323,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -340,7 +340,7 @@
         /// <returns>The unsigned byte cast to an Int32, or -1 if at the end of the stream.</returns>
         public override int ReadByte()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             int read = ReadInternal(1);
             return read == 0 ? -1 : 0;
@@ -370,7 +370,7 @@
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
@@ -393,7 +393,7 @@
         /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override int EndRead(IAsyncResult asyncResult)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ThrowHelper.ThrowIfNull(asyncResult);
             if (asyncResult is not CompletedAsync<int> readAsync)
@@ -418,7 +418,7 @@
         /// </remarks>
         public override void CopyTo(Stream destination, int bufferSize)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             byte[] buffer = new byte[bufferSize];
             int written = 0;
@@ -452,7 +452,7 @@
         /// </remarks>
         public override async Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Read)) throw new NotSupportedException("Read is not supported");
             ReadOnlyMemory<byte> buffer = new byte[bufferSize];
             int written = 0;
@@ -478,7 +478,7 @@
         /// <remarks>Updates the position of the stream.</remarks>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
 
             switch (origin) {
@@ -513,7 +513,7 @@
         /// <remarks>Updates the length of the stream. If shortened, the <see cref="Position"/> is updated.</remarks>
         public override void SetLength(long value)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             if (!IsMode(StreamMode.Seek)) throw new NotSupportedException("Seek is not supported");
 
@@ -548,7 +548,7 @@
         /// <remarks>Updates the position, without actually writing anything.</remarks>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
@@ -574,7 +574,7 @@
         /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override void Write(ReadOnlySpan<byte> buffer)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             WriteInternal(buffer.Length);
         }
@@ -614,7 +614,7 @@
         /// <returns>A task indicating when the write operation is complete.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
             cancellationToken.ThrowIfCancellationRequested();
@@ -641,7 +641,7 @@
         /// <returns>A <see cref="ValueTask"/> indicating when the write operation is complete.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             cancellationToken.ThrowIfCancellationRequested();
             WriteInternal(buffer.Length);
@@ -657,7 +657,7 @@
         /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override void WriteByte(byte value)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             WriteInternal(1);
         }
@@ -686,7 +686,7 @@
         /// <returns>An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
@@ -709,7 +709,7 @@
         /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public override void EndWrite(IAsyncResult asyncResult)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!IsMode(StreamMode.Write)) throw new NotSupportedException("Write is not supported");
             ThrowHelper.ThrowIfNull(asyncResult);
             CompletedAsync.End(asyncResult);

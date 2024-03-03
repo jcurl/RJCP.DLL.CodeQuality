@@ -800,6 +800,7 @@ Quality:
 - Code cleanup (DOTNET-833)
 - Upgrade .NET Standard 2.1 to .NET 6.0 (DOTNET-936, DOTNET-938, DOTNET-942,
   DOTNET-945, DOTNET-959)
+- Update to .NET 8.0 (DOTNET-982, DOTNET-983, DOTNET-989, DOTNET-990)
 - AccessorBaseBestPractices: Fix minor details (DOTNET-960)
 
 ### 7.2. Version 0.6.0
@@ -877,7 +878,7 @@ Quality:
 - NUnit3: Fix test case when --work is given to the runner (HELIOS-1310)
 - CoreDump: Remove implementation as it's moved to CrashReporter (HELIOS-1294)
 - Accessor: Add documentation for best practices (HELIOS-1333)
-- ScratchPad: Strip function paranthesis '()' from end of test name
+- ScratchPad: Strip function parenthesis '()' from end of test name
 
 ### 7.7. Version 0.4.3
 
@@ -971,4 +972,4 @@ Quality:
 
 ### 7.14. Version 0.1.0
 
-- Initiial Release for NUnix 2.x
+- Initial Release for NUnit 2.x

@@ -212,7 +212,7 @@
             get { return m_Position; }
             set
             {
-                if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+                ThrowHelper.ThrowIfDisposed(IsDisposed, this);
                 ThrowHelper.ThrowIfNegative(value, nameof(Position));
                 if (!m_CanWrite) ThrowHelper.ThrowIfGreaterThan(value, m_Length, nameof(Position));
 
@@ -230,7 +230,7 @@
         /// </remarks>
         public override void Flush()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             /* Nothing to do */
         }
@@ -247,7 +247,7 @@
         /// <returns>A task that is completed, as there is nothing to flush.</returns>
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             return Task.CompletedTask;
@@ -284,7 +284,7 @@
         /// </returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
 
 #if NET6_0_OR_GREATER
@@ -350,7 +350,7 @@
         /// </returns>
         public override int Read(Span<byte> buffer)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             int count = buffer.Length;
             int offset = 0;
@@ -434,7 +434,7 @@
         /// <returns>The function returns immediately with the number of bytes read.</returns>
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             int read = Read(buffer, offset, count);
@@ -459,7 +459,7 @@
         /// </returns>
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             int read = Read(buffer.Span);
@@ -485,7 +485,7 @@
         /// <returns>The new position within the current stream.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             switch (origin) {
             case SeekOrigin.Begin:
@@ -522,7 +522,7 @@
         /// <exception cref="ObjectDisposedException">This object has been disposed of.</exception>
         public override void SetLength(long value)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!CanWrite) throw new InvalidOperationException();
 
             m_Length = value;
@@ -633,7 +633,7 @@
         /// <returns>Task that completes immediately.</returns>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             Write(buffer, offset, count);
@@ -660,7 +660,7 @@
         /// <returns>Task that completes immediately.</returns>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             Write(buffer.Span);
@@ -711,7 +711,7 @@
         /// <returns>The new position.</returns>
         public long DirectWrite(long position, byte[] buffer, int offset, int count)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!CanWrite) throw new InvalidOperationException();
 
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
@@ -783,7 +783,7 @@
         /// <returns>The new position.</returns>
         public long DirectWrite(long position, ReadOnlySpan<byte> buffer)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
             if (!CanWrite) throw new InvalidOperationException();
 
             int count = buffer.Length;
@@ -875,7 +875,7 @@
         /// <returns>The new position. The method returns immediately.</returns>
         public Task<long> DirectWriteAsync(long position, byte[] buffer, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             long write = DirectWrite(position, buffer);
@@ -940,7 +940,7 @@
         /// <returns>The new position. The method returns immediately.</returns>
         public Task<long> DirectWriteAsync(long position, byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             long write = DirectWrite(position, buffer, offset, count);
@@ -966,7 +966,7 @@
         /// <returns>The new position. The method returns immediately.</returns>
         public ValueTask<long> DirectWriteAsync(long position, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(SimpleStream));
+            ThrowHelper.ThrowIfDisposed(IsDisposed, this);
 
             cancellationToken.ThrowIfCancellationRequested();
             long write = DirectWrite(position, buffer.Span);
