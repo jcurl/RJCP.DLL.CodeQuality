@@ -102,33 +102,33 @@
         }
 
         [Test]
-        public void ReadStreamAsyncWriteOnly()
+        public async Task ReadStreamAsyncWriteOnly()
         {
             using (SimpleStream ws = new()) {
                 ws.Mode = StreamMode.Write;
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await ws.ReadStreamAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             }
         }
 
         [Test]
-        public void ReadStreamAsyncNoSeek()
+        public async Task ReadStreamAsyncNoSeek()
         {
             using (SimpleStream ws = new()) {
                 ws.Mode = StreamMode.Write | StreamMode.Read;
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await ws.ReadStreamAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             }
         }
 
         [Test]
-        public void ReadStreamAsyncLarge()
+        public async Task ReadStreamAsyncLarge()
         {
             using (SparseStream ms = new()) {
                 ms.SetLength((long)int.MaxValue + 100);
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await ms.ReadStreamAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             }

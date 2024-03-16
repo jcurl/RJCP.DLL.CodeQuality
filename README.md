@@ -6,8 +6,8 @@ testing with the NUnit Framework than just Unit Testing.
 You can deploy files, get the current work directory and implement accessors (in
 most cases) for internal and private classes.
 
-It is intended for use with NUnit 3.x and has backwards compatibility to NUnit
-2.7.1 for older legacy projects.
+It is intended for use with NUnit 3.x and 4.x and has backwards compatibility to
+NUnit 2.7.1 for older legacy projects.
 
 There is no direct reference from `CodeQuality.NUnitExtensions` to the
 `NUnit.Framework` itself, so it will use the version of the library you choose
@@ -24,7 +24,7 @@ for your project.
     - [2.2.3. Creating a New File](#223-creating-a-new-file)
     - [2.2.4. The Current Directory](#224-the-current-directory)
       - [2.2.4.1. The Current Directory for NUnit 2.7.1](#2241-the-current-directory-for-nunit-271)
-      - [2.2.4.2. The Current Directory for NUnit 3.x](#2242-the-current-directory-for-nunit-3x)
+      - [2.2.4.2. The Current Directory for NUnit 3.x and 4.x](#2242-the-current-directory-for-nunit-3x-and-4x)
       - [2.2.4.3. Comparison between NUnit 2.7.1 and 3.x](#2243-comparison-between-nunit-271-and-3x)
       - [2.2.4.4. NUnit 2.x GUI Workaround](#2244-nunit-2x-gui-workaround)
     - [2.2.5. Configuration of NUnitExtensions WorkDirectory](#225-configuration-of-nunitextensions-workdirectory)
@@ -51,6 +51,7 @@ for your project.
   - [5.1. .NET Core ILogger](#51-net-core-ilogger)
 - [6. References](#6-references)
 - [7. Release History](#7-release-history)
+  - [Version 0.x](#version-0x)
   - [7.1. Version 0.6.1](#71-version-061)
   - [7.2. Version 0.6.0](#72-version-060)
   - [7.3. Version 0.5.1.1](#73-version-0511)
@@ -68,9 +69,9 @@ for your project.
 
 ## 1. NUnit Extensions Library Compatibility
 
-This library is intended to work with NUnit 2.6.x and NUnit 3.x. Even though the
-two libraries are incompatible with each other, there are many similarities that
-still make NUnitExtensions work.
+This library is intended to work with NUnit 2.6.x and NUnit 3.x and 4.x. Even
+though the libraries are incompatible with each other, there are many
+similarities that still make NUnitExtensions work.
 
 There is no compile time dependency from this library to NUnit. The dependencies
 are resolved at run time.
@@ -257,7 +258,7 @@ You will also notice that the work directory is based on the directory where the
 console runner is started, except if the `/work` command line option is
 provided.
 
-##### 2.2.4.2. The Current Directory for NUnit 3.x
+##### 2.2.4.2. The Current Directory for NUnit 3.x and 4.x
 
 When running in Visual Studio 2015 IDE:
 
@@ -777,6 +778,13 @@ This implementation allows to fix this problem.
 [1] [GitHub Issue #3919](https://github.com/nunit/nunit/issues/3919)
 
 ## 7. Release History
+
+### Version 0.x
+
+Quality:
+
+- Add test cases to ensure the library works with NUnit 4.1.0 (and 3.x, 2.7.1)
+  (DOTNET-1007)
 
 ### 7.1. Version 0.6.1
 

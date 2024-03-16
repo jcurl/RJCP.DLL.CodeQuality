@@ -436,20 +436,20 @@
         }
 
         [Test]
-        public void ReadAsyncNullBuffer()
+        public async Task ReadAsyncNullBuffer()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await s.ReadAsync(null, 0, 100);
                 }, Throws.TypeOf<ArgumentNullException>());
             }
         }
 
         [Test]
-        public void ReadAsyncNegativeOffset()
+        public async Task ReadAsyncNegativeOffset()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     _ = await s.ReadAsync(buffer, -1, 100);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -457,10 +457,10 @@
         }
 
         [Test]
-        public void ReadAsyncNegativeCount()
+        public async Task ReadAsyncNegativeCount()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     _ = await s.ReadAsync(buffer, 50, -1);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -468,10 +468,10 @@
         }
 
         [Test]
-        public void ReadAsyncOutOfBounds()
+        public async Task ReadAsyncOutOfBounds()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     _ = await s.ReadAsync(buffer, 50, 51);
                 }, Throws.TypeOf<ArgumentException>());
@@ -479,12 +479,12 @@
         }
 
         [Test]
-        public void ReadAsyncCancelled()
+        public async Task ReadAsyncCancelled()
         {
             using (var cts = new CancellationTokenSource())
             using (SimpleStream s = new()) {
                 cts.Cancel();
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     _ = await s.ReadAsync(buffer, 0, buffer.Length, cts.Token);
                 }, Throws.TypeOf<OperationCanceledException>());
@@ -600,12 +600,12 @@
         }
 
         [Test]
-        public void ReadAsyncMemCancelled()
+        public async Task ReadAsyncMemCancelled()
         {
             using (var cts = new CancellationTokenSource())
             using (SimpleStream s = new()) {
                 cts.Cancel();
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     Memory<byte> buffer = new byte[100];
                     _ = await s.ReadAsync(buffer, cts.Token);
                 }, Throws.TypeOf<OperationCanceledException>());
@@ -1133,20 +1133,20 @@
         }
 
         [Test]
-        public void WriteAsyncNullBuffer()
+        public async Task WriteAsyncNullBuffer()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await s.WriteAsync(null, 0, 100);
                 }, Throws.TypeOf<ArgumentNullException>());
             }
         }
 
         [Test]
-        public void WriteAsyncNegativeOffset()
+        public async Task WriteAsyncNegativeOffset()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, -1, 100);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -1154,10 +1154,10 @@
         }
 
         [Test]
-        public void WriteAsyncNegativeCount()
+        public async Task WriteAsyncNegativeCount()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 50, -1);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -1165,10 +1165,10 @@
         }
 
         [Test]
-        public void WriteAsyncOutOfBounds()
+        public async Task WriteAsyncOutOfBounds()
         {
             using (SimpleStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 50, 51);
                 }, Throws.TypeOf<ArgumentException>());
@@ -1176,12 +1176,12 @@
         }
 
         [Test]
-        public void WriteAsyncCancelled()
+        public async Task WriteAsyncCancelled()
         {
             using (var cts = new CancellationTokenSource())
             using (SimpleStream s = new()) {
                 cts.Cancel();
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 0, buffer.Length, cts.Token);
                 }, Throws.TypeOf<OperationCanceledException>());
@@ -1287,12 +1287,12 @@
         }
 
         [Test]
-        public void WriteAsyncMemCancelled()
+        public async Task WriteAsyncMemCancelled()
         {
             using (var cts = new CancellationTokenSource())
             using (SimpleStream s = new()) {
                 cts.Cancel();
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     ReadOnlyMemory<byte> buffer = new byte[100];
                     await s.WriteAsync(buffer, cts.Token);
                 }, Throws.TypeOf<OperationCanceledException>());

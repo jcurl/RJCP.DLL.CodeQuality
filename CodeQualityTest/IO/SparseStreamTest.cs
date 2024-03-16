@@ -15,9 +15,9 @@
     public class SparseStreamTest
     {
 #if NET40
-            private static readonly SparseBlock[] EmptySparseBlock = new SparseBlock[0];
+        private static readonly SparseBlock[] EmptySparseBlock = new SparseBlock[0];
 #else
-            private static readonly SparseBlock[] EmptySparseBlock = Array.Empty<SparseBlock>();
+        private static readonly SparseBlock[] EmptySparseBlock = Array.Empty<SparseBlock>();
 #endif
 
         [Test]

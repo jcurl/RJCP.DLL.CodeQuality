@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- Implicit top import required explicitly to change build output path -->
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <MSBuildProjectExtensionsPath>legacy\obj</MSBuildProjectExtensionsPath>
+    <BaseIntermediateOutputPath>legacy\obj</BaseIntermediateOutputPath>
+    <OutputPath>legacy\bin\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net48</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+    <DefineConstants>$(DefineConstants);NET40_LEGACY</DefineConstants>
+
+    <AssemblyName>RJCP.CodeQualityTest40.NUnit3</AssemblyName>
+    <AssemblyTitle>RJCP.CodeQualityTest40.NUnit3</AssemblyTitle>
+    <Product>RJCP.CodeQuality</Product>
+    <RootNamespace>RJCP.CodeQuality</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2016-2024, Jason Curl</Copyright>
+    <Company></Company>
+    <Description>NUnit Test Harness for RJCP.CodeQuality using NUnit 3.x.</Description>
+    <Version>1.0.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <LangVersion Condition="$(TargetFramework.StartsWith('net4'))">10</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.15.5" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.0.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="CSharpIsNullAnalyzer" Version="0.1.495" PrivateAssets="all" />
+    <ProjectReference Include="..\CodeQuality\RJCP.CodeQuality.csproj">
+      <SetTargetFramework>TargetFramework=net40</SetTargetFramework>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployBackPathTest.cs" Link="NUnitExtensions\DeployBackPathTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployForwardPathTest.cs" Link="NUnitExtensions\DeployForwardPathTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\DeployProperties.cs" Link="NUnitExtensions\DeployProperties.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\ScratchPad2ndTest.cs" Link="NUnitExtensions\ScratchPad2ndTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\ScratchPadTest.cs" Link="NUnitExtensions\ScratchPadTest.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <None Include="..\CodeQualityTest\NUnitExtensions\Trace\NUnitLoggerTest.cs" Link="NUnitExtensions\Trace\NUnitLoggerTest.cs" />
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\Trace\NUnitTraceListenerTest.cs" Link="NUnitExtensions\Trace\NUnitTraceListenerTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+    <Compile Include="..\CodeQualityTest\NUnitExtensions\Trace\NUnitLoggerTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="Resources\test1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\test2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Implicit top import required explicitly to change build output path -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

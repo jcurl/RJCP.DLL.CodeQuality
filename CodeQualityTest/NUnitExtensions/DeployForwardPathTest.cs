@@ -75,7 +75,7 @@
             Deploy.Item("Resources/test1.txt", Deploy.WorkDirectory);
 
             string file = Path.Combine(Deploy.WorkDirectory, "test1.txt");
-            Assert.That(File.Exists(file), "File '{0}' not found", file);
+            Assert.That(File.Exists(file), $"File '{file}' not found");
         }
 
         [Test]
@@ -86,7 +86,7 @@
             Deploy.Item("Resources/test1.txt", subDirectory);
 
             string file = Path.Combine(subDirectory, "test1.txt");
-            Assert.That(File.Exists(file), "File '{0}' not found", file);
+            Assert.That(File.Exists(file), $"File '{file}' not found");
         }
 
         [Test]

@@ -153,10 +153,10 @@
 
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
-        public void StreamFlushAsync([Values(false, true)] bool withStream)
+        public async Task StreamFlushAsync([Values(false, true)] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await s.FlushAsync();
                 }, Throws.Nothing);
             }
@@ -190,11 +190,11 @@
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public void StreamReadAsync([Values(false, true)] bool withStream)
+        public async Task StreamReadAsync([Values(false, true)] bool withStream)
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = GetStream(withStream)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.ReadAsync(buffer, 0, buffer.Length, cancelSource.Token);
                 }, Throws.TypeOf<NotSupportedException>());
@@ -204,11 +204,11 @@
 
 #if NET6_0_OR_GREATER
         [Test]
-        public void StreamReadAsyncMemory([Values(false, true)] bool withStream)
+        public async Task StreamReadAsyncMemory([Values(false, true)] bool withStream)
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = GetStream(withStream)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     Memory<byte> buffer = new byte[100];
                     await s.ReadAsync(buffer, cancelSource.Token);
                 }, Throws.TypeOf<NotSupportedException>());
@@ -260,11 +260,11 @@
 
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
-        public void StreamCopyToAsync([Values(false, true)] bool withStream)
+        public async Task StreamCopyToAsync([Values(false, true)] bool withStream)
         {
             using (Stream d = new MemoryStream())
             using (WriteOnlyStream s = GetStream(withStream)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await s.CopyToAsync(d);
                 }, Throws.TypeOf<NotSupportedException>());
             }
@@ -412,13 +412,13 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public void DefaultStreamWriteAsyncCancelled()
+        public async Task DefaultStreamWriteAsyncCancelled()
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = new()) {
                 cancelSource.Cancel();
                 byte[] buffer = new byte[100];
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await s.WriteAsync(buffer, 0, buffer.Length, cancelSource.Token);
                 }, Throws.TypeOf<OperationCanceledException>());
             }
@@ -426,11 +426,11 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public void DefaultStreamWriteAsyncNullBuffer()
+        public async Task DefaultStreamWriteAsyncNullBuffer()
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await s.WriteAsync(null, 0, 100, cancelSource.Token);
                 }, Throws.TypeOf<ArgumentNullException>());
             }
@@ -438,11 +438,11 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public void DefaultStreamWriteAsyncNegativeOffset()
+        public async Task DefaultStreamWriteAsyncNegativeOffset()
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, -1, 100, cancelSource.Token);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -451,11 +451,11 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public void DefaultStreamWriteAsyncNegativeCount()
+        public async Task DefaultStreamWriteAsyncNegativeCount()
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 50, -1, cancelSource.Token);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -464,11 +464,11 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public void DefaultStreamWriteAsyncOutOfBounds()
+        public async Task DefaultStreamWriteAsyncOutOfBounds()
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = new()) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
                     await s.WriteAsync(buffer, 50, 51, cancelSource.Token);
                 }, Throws.TypeOf<ArgumentException>());
@@ -497,13 +497,13 @@
         }
 
         [Test]
-        public void DefaultStreamWriteAsyncMemoryCancelled()
+        public async Task DefaultStreamWriteAsyncMemoryCancelled()
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = new()) {
                 cancelSource.Cancel();
                 ReadOnlyMemory<byte> buffer = new byte[100];
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await s.WriteAsync(buffer, cancelSource.Token);
                 }, Throws.TypeOf<OperationCanceledException>());
             }
