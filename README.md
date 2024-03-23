@@ -51,21 +51,21 @@ for your project.
   - [5.1. .NET Core ILogger](#51-net-core-ilogger)
 - [6. References](#6-references)
 - [7. Release History](#7-release-history)
-  - [Version 0.x](#version-0x)
-  - [7.1. Version 0.6.1](#71-version-061)
-  - [7.2. Version 0.6.0](#72-version-060)
-  - [7.3. Version 0.5.1.1](#73-version-0511)
-  - [7.4. Version 0.5.1](#74-version-051)
-  - [7.5. Version 0.5.0.1](#75-version-0501)
-  - [7.6. Version 0.5.0](#76-version-050)
-  - [7.7. Version 0.4.3](#77-version-043)
-  - [7.8. Version 0.4.2](#78-version-042)
-  - [7.9. Version 0.4.1](#79-version-041)
-  - [7.10. Version 0.4.0](#710-version-040)
-  - [7.11. Version 0.3.0](#711-version-030)
-  - [7.12. Version 0.2.1](#712-version-021)
-  - [7.13. Version 0.2.0](#713-version-020)
-  - [7.14. Version 0.1.0](#714-version-010)
+  - [7.1. Version 0.6.2](#71-version-062)
+  - [7.2. Version 0.6.1](#72-version-061)
+  - [7.3. Version 0.6.0](#73-version-060)
+  - [7.4. Version 0.5.1.1](#74-version-0511)
+  - [7.5. Version 0.5.1](#75-version-051)
+  - [7.6. Version 0.5.0.1](#76-version-0501)
+  - [7.7. Version 0.5.0](#77-version-050)
+  - [7.8. Version 0.4.3](#78-version-043)
+  - [7.9. Version 0.4.2](#79-version-042)
+  - [7.10. Version 0.4.1](#710-version-041)
+  - [7.11. Version 0.4.0](#711-version-040)
+  - [7.12. Version 0.3.0](#712-version-030)
+  - [7.13. Version 0.2.1](#713-version-021)
+  - [7.14. Version 0.2.0](#714-version-020)
+  - [7.15. Version 0.1.0](#715-version-010)
 
 ## 1. NUnit Extensions Library Compatibility
 
@@ -779,14 +779,16 @@ This implementation allows to fix this problem.
 
 ## 7. Release History
 
-### Version 0.x
+### 7.1. Version 0.6.2
 
 Quality:
 
 - Add test cases to ensure the library works with NUnit 4.1.0 (and 3.x, 2.7.1)
   (DOTNET-1007)
+- Internally update `await` calls with `ConfigureAwait(false)` via CA2007
+  warning.
 
-### 7.1. Version 0.6.1
+### 7.2. Version 0.6.1
 
 Features:
 
@@ -811,7 +813,7 @@ Quality:
 - Update to .NET 8.0 (DOTNET-982, DOTNET-983, DOTNET-989, DOTNET-990)
 - AccessorBaseBestPractices: Fix minor details (DOTNET-960)
 
-### 7.2. Version 0.6.0
+### 7.3. Version 0.6.0
 
 Features:
 
@@ -839,13 +841,13 @@ Quality:
 - CodeQuality: Use the platform code from RJCP.Core.Environment (DOTNET-729)
 - Use ExceptionDispatchInfo when raising inner exceptions (DOTNET-784)
 
-### 7.3. Version 0.5.1.1
+### 7.4. Version 0.5.1.1
 
 Quality:
 
 - Enable CLSCompliant
 
-### 7.4. Version 0.5.1
+### 7.5. Version 0.5.1
 
 Features:
 
@@ -861,11 +863,11 @@ Quality:
 - CodeQuality: Correct code documentation (HELIOS-1661)
 - CodeQuality: Update README.md to use the correct app.config settings
 
-### 7.5. Version 0.5.0.1
+### 7.6. Version 0.5.0.1
 
 - Update NuGet package information
 
-### 7.6. Version 0.5.0
+### 7.7. Version 0.5.0
 
 Features:
 
@@ -888,20 +890,20 @@ Quality:
 - Accessor: Add documentation for best practices (HELIOS-1333)
 - ScratchPad: Strip function parenthesis '()' from end of test name
 
-### 7.7. Version 0.4.3
+### 7.8. Version 0.4.3
 
 Quality:
 
 - Clean up benign warnings (HELIOS-1162, HELIOS-1169, HELIOS-1196, HELIOS-1206)
 
-### 7.8. Version 0.4.2
+### 7.9. Version 0.4.2
 
 Features:
 
 - Resources: Static class to iterate and print all resource strings
   (HELIOS-1101)
 
-### 7.9. Version 0.4.1
+### 7.10. Version 0.4.1
 
 Features:
 
@@ -916,7 +918,7 @@ Quality:
   (HELIOS-869)
 - Allow software to compile on Linux
 
-### 7.10. Version 0.4.0
+### 7.11. Version 0.4.0
 
 Features:
 
@@ -933,7 +935,7 @@ Quality:
 
 - NUnitExtensions: Speed up File and Directory Delete operations (HELIOS-433)
 
-### 7.11. Version 0.3.0
+### 7.12. Version 0.3.0
 
 Features:
 
@@ -957,11 +959,11 @@ Quality:
 - Refactor PrivateTypes and PrivateObject to remove extra classes (HELIOS-241)
 - PrivateObject(object, PrivateType) now allows null for object (HELIOS-255)
 
-### 7.12. Version 0.2.1
+### 7.13. Version 0.2.1
 
 - Internal refactoring, no external changes
 
-### 7.13. Version 0.2.0
+### 7.14. Version 0.2.0
 
 Features:
 
@@ -978,6 +980,6 @@ Quality:
 - Make `Deploy.Item()` more efficient (DOTNET-13)
 - Interpret backslashes on Linux as as a path separator (HELIOS-47)
 
-### 7.14. Version 0.1.0
+### 7.15. Version 0.1.0
 
 - Initial Release for NUnit 2.x

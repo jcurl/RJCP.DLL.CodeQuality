@@ -20,7 +20,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.CodeQuality</PackageProjectUrl>
     <Description>Common functions to augment unit and integration testing, with some focus on the NUnit Test Framework.</Description>
-    <Version>0.6.1</Version>
+    <Version>0.6.2</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

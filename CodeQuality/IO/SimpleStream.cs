@@ -458,7 +458,7 @@
             int written = 0;
             while (written < m_Length) {
                 int write = (int)Math.Min(bufferSize, m_Length - written);
-                await destination.WriteAsync(buffer[0..write], cancellationToken);
+                await destination.WriteAsync(buffer[0..write], cancellationToken).ConfigureAwait(false);
                 written += write;
             }
         }

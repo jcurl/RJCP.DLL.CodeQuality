@@ -101,13 +101,13 @@
 #if NET6_0_OR_GREATER
             Memory<byte> memBuff = buffer.AsMemory();
             while (pos < streamLen) {
-                int read = await stream.ReadAsync(memBuff[pos..]);
+                int read = await stream.ReadAsync(memBuff[pos..]).ConfigureAwait(false);
                 if (read == 0) return memBuff[0..pos].ToArray();
                 pos += read;
             }
 #else
             while (pos < streamLen) {
-                int read = await stream.ReadAsync(buffer, pos, streamLen - pos);
+                int read = await stream.ReadAsync(buffer, pos, streamLen - pos).ConfigureAwait(false);
                 if (read == 0) return buffer.Take(pos).ToArray();
                 pos += read;
             }
