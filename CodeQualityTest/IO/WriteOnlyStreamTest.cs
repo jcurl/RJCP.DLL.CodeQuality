@@ -169,7 +169,7 @@
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
                     byte[] buffer = new byte[100];
-                    s.Read(buffer, 0, 100);
+                    _ = s.Read(buffer, 0, 100);
                 }, Throws.TypeOf<NotSupportedException>());
             }
         }
@@ -181,7 +181,7 @@
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
                     Span<byte> buffer = stackalloc byte[100];
-                    s.Read(buffer);
+                    _ = s.Read(buffer);
                 }, Throws.TypeOf<NotSupportedException>());
             }
         }
@@ -196,7 +196,7 @@
             using (WriteOnlyStream s = GetStream(withStream)) {
                 await Assert.ThatAsync(async () => {
                     byte[] buffer = new byte[100];
-                    await s.ReadAsync(buffer, 0, buffer.Length, cancelSource.Token);
+                    _ = await s.ReadAsync(buffer, 0, buffer.Length, cancelSource.Token);
                 }, Throws.TypeOf<NotSupportedException>());
             }
         }
@@ -210,7 +210,7 @@
             using (WriteOnlyStream s = GetStream(withStream)) {
                 await Assert.ThatAsync(async () => {
                     Memory<byte> buffer = new byte[100];
-                    await s.ReadAsync(buffer, cancelSource.Token);
+                    _ = await s.ReadAsync(buffer, cancelSource.Token);
                 }, Throws.TypeOf<NotSupportedException>());
             }
         }

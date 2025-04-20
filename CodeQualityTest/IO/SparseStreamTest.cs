@@ -1687,7 +1687,7 @@
                 byte[] buffer = new byte[100];
 
                 try {
-                    await s.ReadAsync(buffer, 0, buffer.Length, tokenSource.Token);
+                    _ = await s.ReadAsync(buffer, 0, buffer.Length, tokenSource.Token);
                 } catch (OperationCanceledException) {
                     /* Test passes */
                 } catch {
@@ -1779,7 +1779,7 @@
                 Memory<byte> buffer = new byte[100];
 
                 try {
-                    await s.ReadAsync(buffer, tokenSource.Token);
+                    _ = await s.ReadAsync(buffer, tokenSource.Token);
                 } catch (OperationCanceledException) {
                     /* Test passes */
                 } catch {
