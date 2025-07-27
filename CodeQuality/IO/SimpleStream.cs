@@ -383,6 +383,7 @@
         /// Ends an asynchronous write operation.
         /// </summary>
         /// <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+        /// <returns>The number of bytes that were read.</returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="asyncResult"/> is <see langword="null"/>.
         /// </exception>
