@@ -44,7 +44,7 @@
                             StackTrace stackTrace = new();
                             string workingAssembly = null;
                             foreach (StackFrame frame in stackTrace.GetFrames()) {
-                                string frameAssembly = frame.GetMethod().ReflectedType.Assembly.Location;
+                                string frameAssembly = frame.GetMethod()?.ReflectedType?.Assembly?.Location;
                                 if (frameAssembly is not null && frameAssembly != workingAssembly) {
                                     string configFileName = string.Format("{0}.config", frameAssembly);
                                     if (System.IO.File.Exists(configFileName)) {
