@@ -16,8 +16,8 @@
                 Assert.That(r.CanWrite, Is.True);
                 Assert.That(r.CanSeek, Is.True);
                 Assert.That(r.CanTimeout, Is.True);
-                Assert.That(r.Length, Is.EqualTo(0));
-                Assert.That(r.Position, Is.EqualTo(0));
+                Assert.That(r.Length, Is.Zero);
+                Assert.That(r.Position, Is.Zero);
                 Assert.That(r.WriteTimeout, Is.EqualTo(Timeout.Infinite));
                 Assert.That(r.ReadTimeout, Is.EqualTo(Timeout.Infinite));
             }
@@ -38,7 +38,7 @@
 
             // No max read size is given, so it is the maximum possible.
             using (ReadLimitStream r = new(initBuffer)) {
-                Assert.That(r.Position, Is.EqualTo(0));
+                Assert.That(r.Position, Is.Zero);
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
                 int length = 0;
@@ -58,7 +58,7 @@
 
             // No max read size is given, so it is the maximum possible.
             using (ReadLimitStream r = new(initBuffer, 128)) {
-                Assert.That(r.Position, Is.EqualTo(0));
+                Assert.That(r.Position, Is.Zero);
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
                 int length = 0;
@@ -79,7 +79,7 @@
 
             // No max read size is given, so it is the maximum possible.
             using (ReadLimitStream r = new(initBuffer, 64, 128)) {
-                Assert.That(r.Position, Is.EqualTo(0));
+                Assert.That(r.Position, Is.Zero);
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
                 int length = 0;
@@ -100,7 +100,7 @@
             int[] sequence = new int[] { 100, 200 };
             // No max read size is given, so it is the maximum possible.
             using (ReadLimitStream r = new(initBuffer, sequence)) {
-                Assert.That(r.Position, Is.EqualTo(0));
+                Assert.That(r.Position, Is.Zero);
                 Assert.That(r.Length, Is.EqualTo(initBuffer.Length));
 
                 int length = 0;

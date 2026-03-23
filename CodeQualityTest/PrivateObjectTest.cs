@@ -591,7 +591,7 @@
         {
             PrivateObject privateObject = new(typeof(IndexerClass));
             int value = privateObject.GetProperty<int>("Prop");
-            Assert.That(value, Is.EqualTo(0));
+            Assert.That(value, Is.Zero);
 
             privateObject.SetProperty("Prop", 2);
             value = privateObject.GetProperty<int>("Prop");
@@ -616,7 +616,7 @@
         {
             PrivateObject privateObject = new(typeof(IndexerClass));
             int value = privateObject.GetProperty<int>("Prop", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.That(value, Is.EqualTo(0));
+            Assert.That(value, Is.Zero);
 
             privateObject.SetProperty("Prop", BindingFlags.NonPublic | BindingFlags.Instance, 2);
             value = privateObject.GetProperty<int>("Prop", BindingFlags.NonPublic | BindingFlags.Instance);

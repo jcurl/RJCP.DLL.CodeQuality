@@ -30,7 +30,7 @@
         }
 
         [Test]
-        public void NullBaseStream([Values(false, true)] bool ownsStream)
+        public void NullBaseStream([Values] bool ownsStream)
         {
             Assert.That(() => {
                 _ = new WriteOnlyStream(null, ownsStream);
@@ -45,7 +45,7 @@
                 Assert.That(s.CanWrite, Is.True);
                 Assert.That(s.CanSeek, Is.False);
                 Assert.That(s.CanTimeout, Is.False);
-                Assert.That(s.Length, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
             }
         }
 
@@ -57,12 +57,12 @@
                 Assert.That(s.CanWrite, Is.True);
                 Assert.That(s.CanSeek, Is.False);
                 Assert.That(s.CanTimeout, Is.False);
-                Assert.That(s.Length, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
             }
         }
 
         [Test]
-        public void StreamReadTimeoutGet([Values(false, true)] bool withStream)
+        public void StreamReadTimeoutGet([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -72,7 +72,7 @@
         }
 
         [Test]
-        public void StreamReadTimeoutSet([Values(false, true)] bool withStream)
+        public void StreamReadTimeoutSet([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -116,7 +116,7 @@
         public void DefaultStreamGetPosition()
         {
             using (WriteOnlyStream s = new()) {
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -132,7 +132,7 @@
         }
 
         [Test]
-        public void StreamSetPosition([Values(false, true)] bool withStream)
+        public void StreamSetPosition([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -142,7 +142,7 @@
         }
 
         [Test]
-        public void StreamFlush([Values(false, true)] bool withStream)
+        public void StreamFlush([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -153,7 +153,7 @@
 
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
-        public async Task StreamFlushAsync([Values(false, true)] bool withStream)
+        public async Task StreamFlushAsync([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 await Assert.ThatAsync(async () => {
@@ -164,7 +164,7 @@
 #endif
 
         [Test]
-        public void StreamRead([Values(false, true)] bool withStream)
+        public void StreamRead([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -176,7 +176,7 @@
 
 #if NET6_0_OR_GREATER
         [Test]
-        public void StreamReadSpan([Values(false, true)] bool withStream)
+        public void StreamReadSpan([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -190,7 +190,7 @@
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public async Task StreamReadAsync([Values(false, true)] bool withStream)
+        public async Task StreamReadAsync([Values] bool withStream)
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = GetStream(withStream)) {
@@ -204,7 +204,7 @@
 
 #if NET6_0_OR_GREATER
         [Test]
-        public async Task StreamReadAsyncMemory([Values(false, true)] bool withStream)
+        public async Task StreamReadAsyncMemory([Values] bool withStream)
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = GetStream(withStream)) {
@@ -217,7 +217,7 @@
 #endif
 
         [Test]
-        public void StreamReadByte([Values(false, true)] bool withStream)
+        public void StreamReadByte([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -227,7 +227,7 @@
         }
 
         [Test]
-        public void StreamBeginRead([Values(false, true)] bool withStream)
+        public void StreamBeginRead([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -238,7 +238,7 @@
         }
 
         [Test]
-        public void StreamEndRead([Values(false, true)] bool withStream)
+        public void StreamEndRead([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -248,7 +248,7 @@
         }
 
         [Test]
-        public void StreamCopyTo([Values(false, true)] bool withStream)
+        public void StreamCopyTo([Values] bool withStream)
         {
             using (Stream d = new MemoryStream())
             using (WriteOnlyStream s = GetStream(withStream)) {
@@ -260,7 +260,7 @@
 
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
-        public async Task StreamCopyToAsync([Values(false, true)] bool withStream)
+        public async Task StreamCopyToAsync([Values] bool withStream)
         {
             using (Stream d = new MemoryStream())
             using (WriteOnlyStream s = GetStream(withStream)) {
@@ -273,8 +273,8 @@
 
         [Test]
         public void StreamSeek(
-            [Values(false, true)] bool withStream,
-            [Values(SeekOrigin.Begin, SeekOrigin.Current, SeekOrigin.End)] SeekOrigin seek)
+            [Values] bool withStream,
+            [Values] SeekOrigin seek)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -284,7 +284,7 @@
         }
 
         [Test]
-        public void StreamSetLength([Values(false, true)] bool withStream)
+        public void StreamSetLength([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 Assert.That(() => {
@@ -294,7 +294,7 @@
         }
 
         [Test]
-        public void StreamWrite([Values(false, true)] bool withStream)
+        public void StreamWrite([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 byte[] buffer = new byte[100];
@@ -305,24 +305,24 @@
                     Assert.That(s.Position, Is.EqualTo(100));
                     Assert.That(s.Length, Is.EqualTo(100));
                 } else {
-                    Assert.That(s.Position, Is.EqualTo(0));
-                    Assert.That(s.Length, Is.EqualTo(0));
+                    Assert.That(s.Position, Is.Zero);
+                    Assert.That(s.Length, Is.Zero);
                 }
             }
         }
 
         [Test]
-        public void StreamWriteZeroBytes([Values(false, true)] bool withStream)
+        public void StreamWriteZeroBytes([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 byte[] buffer = new byte[100];
                 s.Write(buffer, 0, 0);
                 if (withStream) {
-                    Assert.That(s.BaseStream.Position, Is.EqualTo(0));
-                    Assert.That(s.BaseStream.Length, Is.EqualTo(0));
+                    Assert.That(s.BaseStream.Position, Is.Zero);
+                    Assert.That(s.BaseStream.Length, Is.Zero);
                 }
-                Assert.That(s.Position, Is.EqualTo(0));
-                Assert.That(s.Length, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
+                Assert.That(s.Length, Is.Zero);
             }
         }
 
@@ -371,7 +371,7 @@
 
 #if NET6_0_OR_GREATER
         [Test]
-        public void StreamWriteSpan([Values(false, true)] bool withStream)
+        public void StreamWriteSpan([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 ReadOnlySpan<byte> buffer = stackalloc byte[100];
@@ -382,8 +382,8 @@
                     Assert.That(s.Position, Is.EqualTo(100));
                     Assert.That(s.Length, Is.EqualTo(100));
                 } else {
-                    Assert.That(s.Position, Is.EqualTo(0));
-                    Assert.That(s.Length, Is.EqualTo(0));
+                    Assert.That(s.Position, Is.Zero);
+                    Assert.That(s.Length, Is.Zero);
                 }
             }
         }
@@ -392,7 +392,7 @@
 #if NET6_0_OR_GREATER || NET462_OR_GREATER && !NET40_LEGACY
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "TestCase")]
-        public async Task StreamWriteAsync([Values(false, true)] bool withStream)
+        public async Task StreamWriteAsync([Values] bool withStream)
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = GetStream(withStream)) {
@@ -404,8 +404,8 @@
                     Assert.That(s.Position, Is.EqualTo(100));
                     Assert.That(s.Length, Is.EqualTo(100));
                 } else {
-                    Assert.That(s.Position, Is.EqualTo(0));
-                    Assert.That(s.Length, Is.EqualTo(0));
+                    Assert.That(s.Position, Is.Zero);
+                    Assert.That(s.Length, Is.Zero);
                 }
             }
         }
@@ -478,7 +478,7 @@
 
 #if NET6_0_OR_GREATER
         [Test]
-        public async Task StreamWriteAsyncMemory([Values(false, true)] bool withStream)
+        public async Task StreamWriteAsyncMemory([Values] bool withStream)
         {
             using (var cancelSource = new CancellationTokenSource())
             using (WriteOnlyStream s = GetStream(withStream)) {
@@ -490,8 +490,8 @@
                     Assert.That(s.Position, Is.EqualTo(100));
                     Assert.That(s.Length, Is.EqualTo(100));
                 } else {
-                    Assert.That(s.Position, Is.EqualTo(0));
-                    Assert.That(s.Length, Is.EqualTo(0));
+                    Assert.That(s.Position, Is.Zero);
+                    Assert.That(s.Length, Is.Zero);
                 }
             }
         }
@@ -511,7 +511,7 @@
 #endif
 
         [Test]
-        public void StreamWriteByte([Values(false, true)] bool withStream)
+        public void StreamWriteByte([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 s.WriteByte(0x00);
@@ -521,14 +521,14 @@
                     Assert.That(s.Position, Is.EqualTo(1));
                     Assert.That(s.Length, Is.EqualTo(1));
                 } else {
-                    Assert.That(s.Position, Is.EqualTo(0));
-                    Assert.That(s.Length, Is.EqualTo(0));
+                    Assert.That(s.Position, Is.Zero);
+                    Assert.That(s.Length, Is.Zero);
                 }
             }
         }
 
         [Test]
-        public void StreamBeginWriteEndWrite([Values(false, true)] bool withStream)
+        public void StreamBeginWriteEndWrite([Values] bool withStream)
         {
             using (WriteOnlyStream s = GetStream(withStream)) {
                 byte[] buffer = new byte[100];
@@ -539,7 +539,7 @@
         }
 
         [Test]
-        public void StreamBeginWriteEndWriteCallback([Values(false, true)] bool withStream)
+        public void StreamBeginWriteEndWriteCallback([Values] bool withStream)
         {
             using (ManualResetEvent e = new(false))
             using (WriteOnlyStream s = GetStream(withStream)) {

@@ -3,6 +3,12 @@
     using Microsoft.Extensions.Logging;
     using NUnit.Framework;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     [TestFixture]
     public class NUnitLoggerTest
     {
@@ -34,7 +40,7 @@
         }
 
         private static ILoggerFactory s_LogFactory;
-        private static readonly object s_Lock = new();
+        private static readonly Lock s_Lock = new();
 
         private static ILoggerFactory LoggerInstance
         {

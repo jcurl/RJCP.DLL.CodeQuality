@@ -5,9 +5,15 @@
     using System.IO;
     using System.Reflection;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     internal partial class TestContextAccessor
     {
-        private static readonly object s_Lock = new();
+        private static readonly Lock s_Lock = new();
         private static TestContextAccessor s_TestContext;
 
         public static TestContextAccessor Instance

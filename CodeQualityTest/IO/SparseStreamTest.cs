@@ -108,8 +108,8 @@
             Assert.That(s.CanRead, Is.True);
             Assert.That(s.CanSeek, Is.True);
             Assert.That(s.CanWrite, Is.True);   // Writing is by default enabled.
-            Assert.That(s.Position, Is.EqualTo(0));
-            Assert.That(s.Length, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
+            Assert.That(s.Length, Is.Zero);
 
             s.Write(new byte[] { 0 }, 0, 1);
             Assert.That(s.Position, Is.EqualTo(1));
@@ -129,15 +129,15 @@
             Assert.That(s.CanRead, Is.True);
             Assert.That(s.CanSeek, Is.True);
             Assert.That(s.CanWrite, Is.True);   // Writing is by default enabled.
-            Assert.That(s.Position, Is.EqualTo(0));
-            Assert.That(s.Length, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
+            Assert.That(s.Length, Is.Zero);
 
             s.SetReadOnly();
             Assert.That(s.CanRead, Is.True);
             Assert.That(s.CanSeek, Is.True);
             Assert.That(s.CanWrite, Is.False);
-            Assert.That(s.Position, Is.EqualTo(0));
-            Assert.That(s.Length, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
+            Assert.That(s.Length, Is.Zero);
 
             Assert.That(() => {
                 s.Write(new byte[] { 0 }, 0, 1);
@@ -161,7 +161,7 @@
             SparseBlock[] empty = EmptySparseBlock;
             Stream s = new SparseStream(empty, 10);
 
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(10));
 
             byte[] buffer = new byte[50] {
@@ -183,7 +183,7 @@
             SparseBlock[] empty = EmptySparseBlock;
             Stream s = new SparseStream(empty, 10);
 
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(10));
 
             byte[] buffer = new byte[50] {
@@ -233,7 +233,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 1000);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
         }
 
@@ -245,7 +245,7 @@
                 new(8, Elf32Hdr.Slice(8, 16)),
             };
             Stream s = new SparseStream(elfhdr, 1000);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
         }
 
@@ -285,7 +285,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             byte[] buffer = new byte[52];
@@ -306,7 +306,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 1000);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
 
             byte[] buffer = new byte[64];
@@ -328,7 +328,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 52);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(52));
 
             byte[] buffer = new byte[64];
@@ -349,7 +349,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, 55);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(55));     // Expect to read some zeroes at the end.
 
             byte[] buffer = new byte[64];
@@ -371,7 +371,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             byte[] buffer = new byte[40];
@@ -390,7 +390,7 @@
                 new(48, Elf32Hdr.Slice(48, 4))
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             byte[] buffer = new byte[52];
@@ -412,7 +412,7 @@
                 new(76, Elf32PHdr.Slice(16, 16))
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             byte[] buffer = new byte[92];
@@ -435,7 +435,7 @@
                 new(76, Elf32PHdr.Slice(16, 16))
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             byte[] buffer = new byte[92];
@@ -458,7 +458,7 @@
                 new(76, Elf32PHdr.Slice(16, 16))
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             byte[] buffer = new byte[92];
@@ -475,7 +475,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Assert.That(() => {
@@ -490,7 +490,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -506,7 +506,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -525,7 +525,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -541,11 +541,11 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
-            Assert.That(s.Read(buffer, 0, 0), Is.EqualTo(0));
+            Assert.That(s.Read(buffer, 0, 0), Is.Zero);
         }
 
         [Test]
@@ -555,12 +555,12 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
             s.Position = 100;
-            Assert.That(s.Read(buffer, 0, 100), Is.EqualTo(0));
+            Assert.That(s.Read(buffer, 0, 100), Is.Zero);
         }
 
         [Test]
@@ -571,7 +571,7 @@
             };
             SparseStream s = new(elfhdr, 100);
             s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Assert.That(() => {
@@ -587,7 +587,7 @@
             };
             SparseStream s = new(elfhdr, 1000);
             s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
 
             s.Seek(seek, SeekOrigin.Begin);
@@ -602,7 +602,7 @@
             };
             SparseStream s = new(elfhdr, 100);
             s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             s.Position = 50;
@@ -619,7 +619,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             s.Position = 50;
@@ -636,7 +636,7 @@
             };
             SparseStream s = new(elfhdr, 1000);
             s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
 
             s.Seek(seek, SeekOrigin.End);
@@ -644,14 +644,14 @@
         }
 
         [Test]
-        public void SeekEndOutOfBounds([Values(-1, 101)] int position, [Values(false, true)] bool setreadonly)
+        public void SeekEndOutOfBounds([Values(-1, 101)] int position, [Values] bool setreadonly)
         {
             SparseBlock[] elfhdr = new SparseBlock[] {
                 new(0, Elf32Hdr)
             };
             SparseStream s = new(elfhdr, 100);
             if (setreadonly) s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             s.Position = 50;
@@ -669,7 +669,7 @@
             };
             SparseStream s = new(elfhdr, 1000);
             s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
 
             s.Seek(10, SeekOrigin.Current);
@@ -690,7 +690,7 @@
             };
             SparseStream s = new(elfhdr, 100);
             s.SetReadOnly();
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             s.Position = 50;
@@ -707,7 +707,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             s.Position = 50;
@@ -723,7 +723,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             s.Position = 50;
@@ -737,11 +737,11 @@
         public void SetLength()
         {
             Stream s = new SparseStream();
-            Assert.That(s.Position, Is.EqualTo(0));
-            Assert.That(s.Length, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
+            Assert.That(s.Length, Is.Zero);
 
             s.SetLength(50);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(50));
         }
 
@@ -749,8 +749,8 @@
         public void SetPositionExtend()
         {
             Stream s = new SparseStream();
-            Assert.That(s.Position, Is.EqualTo(0));
-            Assert.That(s.Length, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
+            Assert.That(s.Length, Is.Zero);
 
             s.Position = 50;
             Assert.That(s.Position, Is.EqualTo(50));
@@ -768,7 +768,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(128 + data.Length));
 
             s.Position = 1024;
@@ -795,11 +795,11 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(128 + data.Length));
 
             s.SetLength(64);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(64));
 
             byte[] readBuffer = new byte[1024];
@@ -818,11 +818,11 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.SetLength(1280);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1280));
 
             byte[] readBuffer = new byte[1536];
@@ -844,7 +844,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Write(newData, 0, newData.Length);
@@ -873,7 +873,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Write(newData, 0, newData.Length);
@@ -901,7 +901,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Write(newData, 0, newData.Length);
@@ -929,7 +929,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Seek(128, SeekOrigin.End);
@@ -959,7 +959,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Seek(64, SeekOrigin.End);
@@ -1010,7 +1010,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Assert.That(() => {
@@ -1025,7 +1025,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -1041,7 +1041,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -1060,7 +1060,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -1076,12 +1076,12 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
             s.Write(buffer, 0, 0);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
         }
 
@@ -1092,7 +1092,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             byte[] buffer = new byte[100];
@@ -1109,7 +1109,7 @@
             SparseBlock[] empty = Array.Empty<SparseBlock>();
             Stream s = new SparseStream(empty, 10);
 
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(10));
 
             Span<byte> buffer = new(new byte[50] {
@@ -1132,7 +1132,7 @@
             SparseBlock[] empty = Array.Empty<SparseBlock>();
             Stream s = new SparseStream(empty, 10);
 
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(10));
 
             Span<byte> buffer = new(new byte[50] {
@@ -1158,7 +1158,7 @@
                 new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             Span<byte> buffer = stackalloc byte[52];
@@ -1179,7 +1179,7 @@
                 new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, 1000);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1000));
 
             Span<byte> buffer = stackalloc byte[64];
@@ -1201,7 +1201,7 @@
                 new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, 52);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(52));
 
             Span<byte> buffer = stackalloc byte[64];
@@ -1222,7 +1222,7 @@
                 new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, 55);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(55));     // Expect to read some zeroes at the end.
 
             Span<byte> buffer = stackalloc byte[64];
@@ -1244,7 +1244,7 @@
                 new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             Span<byte> buffer = stackalloc byte[40];
@@ -1263,7 +1263,7 @@
                 new(48, Elf32Hdr[48..52])
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             Span<byte> buffer = stackalloc byte[52];
@@ -1285,7 +1285,7 @@
                 new(76, Elf32PHdr[16..32])
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             Span<byte> buffer = stackalloc byte[92];
@@ -1308,7 +1308,7 @@
                 new(76, Elf32PHdr[16..32])
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             Span<byte> buffer = stackalloc byte[92];
@@ -1331,7 +1331,7 @@
                 new(76, Elf32PHdr[16..32])
             };
             Stream s = new SparseStream(elfhdr, length);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(length));
 
             Span<byte> buffer = stackalloc byte[92];
@@ -1348,11 +1348,11 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Span<byte> buffer = stackalloc byte[100];
-            Assert.That(s.Read(buffer[0..0]), Is.EqualTo(0));
+            Assert.That(s.Read(buffer[0..0]), Is.Zero);
         }
 
         [Test]
@@ -1362,12 +1362,12 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Span<byte> buffer = stackalloc byte[100];
             s.Position = 100;
-            Assert.That(s.Read(buffer), Is.EqualTo(0));
+            Assert.That(s.Read(buffer), Is.Zero);
         }
 
         [Test]
@@ -1381,7 +1381,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(128 + data.Length));
 
             s.Position = 1024;
@@ -1408,11 +1408,11 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(128 + data.Length));
 
             s.SetLength(64);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(64));
 
             Span<byte> readBuffer = stackalloc byte[1024];
@@ -1431,11 +1431,11 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.SetLength(1280);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1280));
 
             Span<byte> readBuffer = stackalloc byte[1536];
@@ -1457,7 +1457,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Write(newData);
@@ -1486,7 +1486,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Write(newData);
@@ -1514,7 +1514,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Write(newData);
@@ -1542,7 +1542,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Seek(128, SeekOrigin.End);
@@ -1572,7 +1572,7 @@
                 new(128, data)
             };
             Stream s = new SparseStream(block, 1536);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(1536));
 
             s.Seek(64, SeekOrigin.End);
@@ -1623,12 +1623,12 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Span<byte> buffer = stackalloc byte[100];
             s.Write(buffer[0..0]);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
         }
 
@@ -1639,7 +1639,7 @@
                 new(0, Elf32Hdr)
             };
             Stream s = new SparseStream(elfhdr, 100);
-            Assert.That(s.Position, Is.EqualTo(0));
+            Assert.That(s.Position, Is.Zero);
             Assert.That(s.Length, Is.EqualTo(100));
 
             Span<byte> buffer = stackalloc byte[100];

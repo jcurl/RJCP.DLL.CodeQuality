@@ -6,9 +6,15 @@
     using System.Diagnostics;
 #endif
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     internal class NUnitExtensionsSection : ConfigurationSection
     {
-        private static readonly object s_SettingsLock = new();
+        private static readonly Lock s_SettingsLock = new();
         private static NUnitExtensionsSection s_Settings;
 
 #if NETFRAMEWORK

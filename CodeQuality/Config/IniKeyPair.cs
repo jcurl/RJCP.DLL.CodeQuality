@@ -30,7 +30,11 @@
             set
             {
                 ThrowHelper.ThrowIfNull(key);
+#if NET10_0_OR_GREATER
+                ThrowHelper.ThrowIfNull(value, nameof(IniKeyPair<>));
+#else
                 ThrowHelper.ThrowIfNull(value, nameof(IniKeyPair<T>));
+#endif
                 m_Database[key] = value;
             }
         }

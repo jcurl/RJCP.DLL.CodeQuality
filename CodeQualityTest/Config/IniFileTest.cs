@@ -218,28 +218,28 @@
         public void GetKeyBoolTrue()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
-            Assert.That(IniFile.GetKey(path, "SectionType", "bool", false), Is.EqualTo(true));
+            Assert.That(IniFile.GetKey(path, "SectionType", "bool", false), Is.True);
         }
 
         [Test]
         public void GetKeyBoolFalse()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
-            Assert.That(IniFile.GetKey(path, "SectionType", "bool2", true), Is.EqualTo(false));
+            Assert.That(IniFile.GetKey(path, "SectionType", "bool2", true), Is.False);
         }
 
         [Test]
         public void GetKeyBoolDefault()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
-            Assert.That(IniFile.GetKey(path, "SectionType", "boolbad", true), Is.EqualTo(true));
+            Assert.That(IniFile.GetKey(path, "SectionType", "boolbad", true), Is.True);
         }
 
         [Test]
         public void GetKeyBoolMissing()
         {
             string path = Path.Combine(Deploy.TestDirectory, "Resources", "Config", "Test.ini");
-            Assert.That(IniFile.GetKey(path, "SectionType", "boolmissing", true), Is.EqualTo(true));
+            Assert.That(IniFile.GetKey(path, "SectionType", "boolmissing", true), Is.True);
         }
 
         [Test]

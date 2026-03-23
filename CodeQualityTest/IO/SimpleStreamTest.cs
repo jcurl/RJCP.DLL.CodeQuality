@@ -23,8 +23,8 @@
                 Assert.That(s.CanWrite, Is.True);
                 Assert.That(s.CanSeek, Is.True);
                 Assert.That(s.CanTimeout, Is.True);
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
                 Assert.That(s.WriteTimeout, Is.EqualTo(Timeout.Infinite));
                 Assert.That(s.ReadTimeout, Is.EqualTo(Timeout.Infinite));
             }
@@ -73,8 +73,8 @@
         {
             using (SimpleStream s = new()) {
                 s.Flush();
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -84,8 +84,8 @@
         {
             using (SimpleStream s = new()) {
                 await s.FlushAsync();
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 #endif
@@ -124,9 +124,9 @@
             using (SimpleStream s = new()) {
                 byte[] buffer = new byte[100];
                 int read = s.Read(buffer, 0, buffer.Length);
-                Assert.That(read, Is.EqualTo(0));
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -137,9 +137,9 @@
                 s.SetLength(100);
                 byte[] buffer = new byte[100];
                 int read = s.Read(buffer, 0, 0);
-                Assert.That(read, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(100));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -233,7 +233,7 @@
             using (SimpleStream s = new()) {
                 s.SetLength(1000);
                 int readbyte = s.ReadByte();
-                Assert.That(readbyte, Is.EqualTo(0));
+                Assert.That(readbyte, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(1000));
                 Assert.That(s.Position, Is.EqualTo(1));
             }
@@ -246,7 +246,7 @@
                 s.SetLength(100);
                 s.Position = 99;
                 int readbyte = s.ReadByte();
-                Assert.That(readbyte, Is.EqualTo(0));
+                Assert.That(readbyte, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(100));
                 Assert.That(s.Position, Is.EqualTo(100));
             }
@@ -258,8 +258,8 @@
             using (SimpleStream s = new()) {
                 int readbyte = s.ReadByte();
                 Assert.That(readbyte, Is.EqualTo(-1));
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -270,7 +270,7 @@
                 s.SetLength(long.MaxValue);
                 s.Position = long.MaxValue - 1;
                 int readbyte = s.ReadByte();
-                Assert.That(readbyte, Is.EqualTo(0));
+                Assert.That(readbyte, Is.Zero);
                 Assert.That(s.Position, Is.EqualTo(long.MaxValue));
                 Assert.That(s.Length, Is.EqualTo(long.MaxValue));
             }
@@ -416,9 +416,9 @@
             using (SimpleStream s = new()) {
                 byte[] buffer = new byte[100];
                 int read = await s.ReadAsync(buffer, 0, buffer.Length);
-                Assert.That(read, Is.EqualTo(0));
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -429,9 +429,9 @@
                 s.SetLength(100);
                 byte[] buffer = new byte[100];
                 int read = await s.ReadAsync(buffer, 0, 0);
-                Assert.That(read, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(100));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -527,9 +527,9 @@
             using (SimpleStream s = new()) {
                 Span<byte> buffer = stackalloc byte[100];
                 int read = s.Read(buffer);
-                Assert.That(read, Is.EqualTo(0));
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -540,9 +540,9 @@
                 s.SetLength(100);
                 Span<byte> buffer = stackalloc byte[100];
                 int read = s.Read(buffer[0..0]);
-                Assert.That(read, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(100));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -580,9 +580,9 @@
             using (SimpleStream s = new()) {
                 Memory<byte> buffer = new byte[100];
                 int read = await s.ReadAsync(buffer);
-                Assert.That(read, Is.EqualTo(0));
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -593,9 +593,9 @@
                 s.SetLength(100);
                 Memory<byte> buffer = new byte[100];
                 int read = await s.ReadAsync(buffer[0..0]);
-                Assert.That(read, Is.EqualTo(0));
+                Assert.That(read, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(100));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -685,8 +685,8 @@
                 Assert.That(() => {
                     _ = s.Seek(seekEnd, SeekOrigin.End);
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
-                Assert.That(s.Position, Is.EqualTo(0));
-                Assert.That(s.Length, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
+                Assert.That(s.Length, Is.Zero);
             }
         }
 
@@ -784,7 +784,7 @@
         {
             using (SimpleStream s = new()) {
                 s.SetLength(1000);
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Position, Is.Zero);
                 Assert.That(s.Length, Is.EqualTo(1000));
             }
         }
@@ -836,8 +836,8 @@
             using (SimpleStream s = new()) {
                 byte[] buffer = new byte[100];
                 s.Write(buffer, 0, 0);
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -1116,8 +1116,8 @@
             using (SimpleStream s = new()) {
                 byte[] buffer = new byte[100];
                 await s.WriteAsync(buffer, 0, 0);
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -1222,8 +1222,8 @@
             using (SimpleStream s = new()) {
                 ReadOnlySpan<byte> buffer = stackalloc byte[100];
                 s.Write(buffer[0..0]);
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 
@@ -1270,8 +1270,8 @@
             using (SimpleStream s = new()) {
                 ReadOnlyMemory<byte> buffer = new byte[100];
                 await s.WriteAsync(buffer[0..0]);
-                Assert.That(s.Length, Is.EqualTo(0));
-                Assert.That(s.Position, Is.EqualTo(0));
+                Assert.That(s.Length, Is.Zero);
+                Assert.That(s.Position, Is.Zero);
             }
         }
 

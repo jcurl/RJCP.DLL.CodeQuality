@@ -1,6 +1,7 @@
 ﻿namespace RJCP.CodeQuality.NUnitExtensions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using NUnit.Framework;
 
@@ -189,6 +190,8 @@
         }
 
         [Test]
+        [SuppressMessage("Style", "NUnit4002:Use Specific constraint", Justification = "Legacy")]
+        [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "NUnit4002 is valid for other projects")]
         public void ScratchPadEmptyFile()
         {
             using (ScratchPad scratch = new()) {

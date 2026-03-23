@@ -76,7 +76,7 @@
             accessor.MyPublicEvent += handler1;
             accessor.DoWork(45);
             Assert.That(count1, Is.EqualTo(45));
-            Assert.That(count2, Is.EqualTo(0));
+            Assert.That(count2, Is.Zero);
 
             accessor.MyPublicEvent += handler2;
             accessor.DoWork(10);
@@ -132,7 +132,7 @@
             accessor.MyPrivateEvent += handler1;
             accessor.DoWork(45);
             Assert.That(count1, Is.EqualTo(45));
-            Assert.That(count2, Is.EqualTo(0));
+            Assert.That(count2, Is.Zero);
 
             accessor.MyPrivateEvent += handler2;
             accessor.DoWork(10);
@@ -209,7 +209,7 @@
         {
             GenericClassTestAccessor accessor = new(5);
 
-            Assert.That(accessor.GetCount(), Is.EqualTo(0));
+            Assert.That(accessor.GetCount(), Is.Zero);
             accessor.AddItem();
 
             Assert.That(accessor.GetCount(), Is.EqualTo(1));

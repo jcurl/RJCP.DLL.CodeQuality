@@ -19,7 +19,7 @@
             foreach (KeyValuePair<string, string> item in section) {
                 count++;
             }
-            Assert.That(count, Is.EqualTo(0));
+            Assert.That(count, Is.Zero);
         }
 
         [Test]
@@ -288,7 +288,7 @@
             foreach (KeyValuePair<string, string> item in section) {
                 count++;
             }
-            Assert.That(count, Is.EqualTo(0));
+            Assert.That(count, Is.Zero);
         }
 
         [Test]
@@ -305,7 +305,7 @@
             foreach (KeyValuePair<string, string> item in section) {
                 count++;
             }
-            Assert.That(count, Is.EqualTo(0));
+            Assert.That(count, Is.Zero);
         }
 
         [Test]
@@ -427,7 +427,7 @@
             foreach (string key in section.Keys) {
                 count++;
             }
-            Assert.That(count, Is.EqualTo(0));
+            Assert.That(count, Is.Zero);
         }
 
         [Test]
@@ -645,7 +645,7 @@
             foreach (string value in section.Values) {
                 count++;
             }
-            Assert.That(count, Is.EqualTo(0));
+            Assert.That(count, Is.Zero);
         }
 
         [Test]
