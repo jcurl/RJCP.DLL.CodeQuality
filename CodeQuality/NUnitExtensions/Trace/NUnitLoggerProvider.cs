@@ -6,6 +6,9 @@ namespace RJCP.CodeQuality.NUnitExtensions.Trace
     /// <summary>
     /// An NUnit Logger Provider for .NET Core and Logging.
     /// </summary>
+    /// <remarks>
+    /// For examples on how to integrate with your NUnit test projects, refer to <see cref="NUnitLoggerExtensions"/>.
+    /// </remarks>
     [CLSCompliant(false)]
     public sealed class NUnitLoggerProvider : ILoggerProvider
     {

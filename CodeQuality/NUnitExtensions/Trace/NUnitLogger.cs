@@ -8,6 +8,9 @@ namespace RJCP.CodeQuality.NUnitExtensions.Trace
     /// <summary>
     /// The NUnit Logger that writes to the TestContext.
     /// </summary>
+    /// <remarks>
+    /// For examples on how to integrate with your NUnit test projects, refer to <see cref="NUnitLoggerExtensions"/>.
+    /// </remarks>
     [CLSCompliant(false)]
     public sealed class NUnitLogger : ILogger
     {
